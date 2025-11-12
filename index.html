@@ -1,13 +1,162 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>KHK - Přihláška</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <title>.:: Členská přihláška ::.</title>
+  <link rel="shortcut icon" href="img/favicon.png">
+  <link href='https://fonts.googleapis.com/css?family=Work Sans' rel='stylesheet'>
+  <link rel="stylesheet" href="CSS/struktura.css">
+  <link rel="stylesheet" href="CSS/nadpisy.css">
+  <link rel="stylesheet" href="CSS/inputs.css">
+  <link rel="stylesheet" href="CSS/modal.css">
+</head>
+<body>
+<noscript>
+  <pre>
+  
+  
+  
+    Vážený uživateli,
+    
+    tato interaktivní přihláška používá ke svému běhu skriptovací jazyk JavaScript, který není Vašim prohlížečem podporován, nebo jej máte zakázaný.
+    
+    Chcete-li pokračovat, <a href="https://www.enable-javascript.com/cz/" target=_blank data-message="instrukce jak povolit JavaScript">povolte jej</a> a stránku znova načtěte.
+     
+    Více o tomto skriptovacím jazyce se dočtete např. na <a href="https://cs.wikipedia.org/wiki/JavaScript" target=_blank data-message="Wikipedie - JavaScript">wikipedii</a>.
+    
+    
+    Pokud nemůžete, nebo z jakéhokoli důvodu nechcete JavaScript povolit a chcete se stát členem, s přihláškou Vám rádi pomůžeme.
+    
+    V tom případě využijte kontaktů <a href="https://www.komora-khk.cz/kontakt/" target=_blank data-message="informace o kontaktech">zde &raquo;&raquo;</a>.
+    
+    
+    
+    Děkujeme za Váš zájem 
+    
+    Tým KHK KHK
+  </pre>
+</noscript>
+<div id=container><form id=frmPrihlaska autocomplete="off">
+
+<div class=box1>
+  <h3>Identifikační číslo (IČ):</h3>
+  <input type=text class=longtext id=txtIC placeholder="Zadejte Vaše IČ">
+  <button id=btnIC data-message="načti údaje z RES">Načíst</button>
+</div>
+
+<div class=box1>
+  <h3>Subjekt:</h3>
+  <address id=adresa data-message="načteno z RES" class=label-promotion></address>
+</div>
+
+<div class=box1>
+  <h3>Korespondenční adresa (zadejte, pokud se liší):</h3>
+  <input type=text id=txtNazevSubjektu placeholder="Název subjektu" data-message="přidat osobu">
+  <input type=checkbox class=hidenable id=cbAdresa checked><label>adresa shodná s adresou sídla</label>
+  <div class=hidenable>
+    <input type=text id=txtUlice placeholder="Ulice a číslo popisné">
+    <input type=text id=txtMesto placeholder="Město">
+    <input type=text id=txtPSC placeholder="PSČ">
+  </div>
+</div>
+<div class=box5>
+    <h4>Kontaktní osoby:</h4>
+    <div class=box4>
+        <div class=clear></div>
+        <div class=box2>
+            <h5 data-message="podepisující osoba">Statutární zástupce</h5>
+            <div class="oddel"></div>
+            <input type=text name=txtJmeno placeholder="Jméno a Příjmení" list=lOsoby>
+            <input type=text name=txtFunkce placeholder="Funkce">
+            <input type=tel name=txtTel placeholder="Telefonní číslo">
+            <input type=email name=txtEmail placeholder="E-mail">
+        </div>
+        <div class=box3>
+            <h5 data-message="osoba určena pro komunikaci">Hlavní kontaktní osoba</h5>
+            <input type=checkbox class=hidenable id=cbKontakt><label data-message="osoba určena pro komunikaci">hlavní kontaktní osoba je statutární zástupce</label>
+            <div class=hidenable>
+              <input type=text name=txtJmeno placeholder="Jméno a Příjmení" list=lOsoby>
+              <input type=text name=txtFunkce placeholder="Funkce">
+              <input type=tel name=txtTel placeholder="Telefonní číslo">
+              <input type=email name=txtEmail placeholder="E-mail">
+            </div>
+        </div>
+        <div class=clear></div>
+        <div class=box2>
+            <button id=add data-message="přidat další osobu">+</button>
+        </div>
+        <div class=clear></div>
+    </div>
+</div>
+
+<div class=box1>
+  <h3>Popis podnikání:</h3>
+  <textarea id=txtPopis placeholder="Zadejte výstižně popis Vašeho podnikání"></textarea>
+</div>
+
+<div class=box1>
+  <h3>Obor činnosti dle <span data-message="klasifikace ekonomických činností">CZ NACE</span> (zaškrtněte alespoň jednu převažující):</h3>
+  <address id=nace class=label-promotion></address>
+</div>
+
+<div class=box1>
+  <h3>Forma:</h3>
+  <address id=forma class=label-promotion data-message="načteno z RES"></address>
+</div>
+
+<div class=box1>
+  <h3>Počet zaměstnanců (vyberte):</h3>
+    <div id=divPZam data-message="načteno z RES"></div>
+  <select id=txtPZam>
+    <option>Bez zaměstnanců</option>
+    <option>1 - 5 zaměstnanců</option>
+    <option>6 - 9 zaměstnanců</option>
+    <option>10 - 19 zaměstnanců</option>
+    <option>20 - 24 zaměstnanců</option>
+    <option>25 - 49 zaměstnanců</option>
+    <option>50 - 99 zaměstnanců</option>
+    <option>100 - 199 zaměstnanců</option>
+    <option>200 - 249 zaměstnanců</option>
+    <option>250 - 499 zaměstnanců</option>
+    <option>500 - 999 zaměstnanců</option>
+    <option>1000 - 1499 zaměstnanců</option>
+    <option>1500 - 1999 zaměstnanců</option>
+    <option>2000 - 2499 zaměstnanců</option>
+    <option>2500 - 2999 zaměstnanců</option>
+    <option>3000 - 3999 zaměstnanců</option>
+    <option>4000 - 4999 zaměstnanců</option>
+    <option>5000 - 9999 zaměstnanců</option>
+    <option>10 000 a více zaměstnanců</option>
+    </select>
+</div>
+
+<div class=box1>
+  <h3>Datová schránka (vyberte):</h3>
+  <select id=txtDS class=label-promotion></select>
+</div>
+
+<div class=box1>
+  <h3>Chceme se stát členem jednatelství (vyberte):</h3>
+    <select id=txtJednatelstvi>
+    <option>Hradec Králové</option>
+    <option>Rychnov nad Kněžnou</option>
+    <option>Náchod</option>
+    <option>Trutnov</option>
+    <option>Jičín</option>
+    </select>
+</div>
+
+<div class=box1>
+<h3>Zpracování osobních údajů:</h3>
+<input type=checkbox id=cbPersonalize><label data-message="kliknutím zobrazíte podmínky"><a href="https://www.komora-khk.cz/prihlaska/souhlas-se-zpracovanim-osobnich-udaju/" target="_blank">souhlasím se zpracováním osobních údajů</a></label>
+</div>
+
+<button id=btnSubmit data-message="odeslat přihlášku ke zpracování" disabled>Odeslat</button>
+<datalist id=lOsoby>
+</datalist>
+</form>
+<script src="js/sablona.js"></script>
+</div>
+</body>
 </html>

@@ -1,0 +1,104 @@
+/* Inputs CSS - Form inputs styling */
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+textarea,
+select {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: 'Work Sans', sans-serif;
+  transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="email"]:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #0066cc;
+}
+
+input.longtext {
+  max-width: 300px;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+input[type="checkbox"] {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+label {
+  display: inline-block;
+  margin-bottom: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button {
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: 'Work Sans', sans-serif;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #0052a3;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+button#btnIC {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+button#btnSubmit {
+  margin-top: 20px;
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+button#add {
+  background-color: #28a745;
+  font-size: 20px;
+  padding: 8px 16px;
+  margin-top: 10px;
+}
+
+button#add:hover {
+  background-color: #218838;
+}
+
+.label-promotion {
+  display: block;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-left: 3px solid #0066cc;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+address {
+  font-style: normal;
+}
