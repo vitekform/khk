@@ -10,7 +10,7 @@
   padding: 40px 20px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .form-container {
@@ -45,8 +45,6 @@
 
 .form-content {
   padding: 12px 24px;
-  max-height: calc(100vh - 250px);
-  overflow-y: auto;
 }
 
 .question-card {
