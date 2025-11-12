@@ -6,9 +6,6 @@ import Select from "react-select";
 
 function App() {
 
-    const MAX_PAGES = 12;
-
-    const [page, setPage] = useState(0)
     const [ico, setIco] = useState("00000000")
     const [companyName, setCompanyName] = useState("")
     const [dic, setDic] = useState("")
@@ -59,33 +56,21 @@ function App() {
         })
     }
 
-    function handleNext() {
-        // check if all fields are filled (marked as required in the input)
+    function handleSubmit() {
+        // Validate all required fields
         let invalid = false;
-        document.querySelectorAll('.form-content input').forEach(input => {
+        document.querySelectorAll('.form-content input[required]').forEach(input => {
             if (!input.checkValidity()) {
                 input.reportValidity();
                 invalid = true;
             }
         });
 
-        if (!invalid) {
-            if (page === 0) {
-                fetchDetailsFromICO();
-            }
-            setPage(page + 1);
-        }
-        else {
+        if (invalid) {
             alert("Prosím prvně vyplňte nutná pole!");
+            return;
         }
 
-    }
-
-    function handleBack() {
-        setPage(page - 1);
-    }
-
-    function handleSubmit() {
         // Create JSON with all data
         const data = {
             "ico": ico,
@@ -130,10 +115,17 @@ function App() {
         })
     }
 
-    function getHTMLContent(page) {
-        if (page === 0) {
-            return (
-                <>
+  return (
+    <>
+        <div className="form-wrapper">
+            <div className="form-container">
+                <div className="form-header">
+                    <h1 className="form-title">Registrační formulář</h1>
+                    <p className="form-description">Vyplňte prosím všechny údaje o vaší firmě</p>
+                </div>
+
+                <div className="form-content">
+                    {/* IČO Section */}
                     <div className="question-card">
                         <label className="question">Prosím zadejte vaše IČO</label>
                         <input
@@ -147,13 +139,16 @@ function App() {
                             required
                             value={ico}
                         />
+                        <button
+                            type="button"
+                            className="btn-load"
+                            onClick={fetchDetailsFromICO}
+                        >
+                            Načíst
+                        </button>
                     </div>
-                </>
-            )
-        }
-        else if (page === 1) {
-            return (
-                <>
+
+                    {/* Company Information */}
                     <div className="question-card">
                         <label className="question">Jméno Firmy</label>
                         <input
@@ -214,12 +209,8 @@ function App() {
                             value={zip}>
                         </input>
                     </div>
-                </>
-            )
-        }
-        else if (page === 2) {
-            return (
-                <>
+
+                    {/* Contact Information */}
                     <div className="question-card">
                         <label className="question">Kontaktní Telefon</label>
                         <input
@@ -240,12 +231,8 @@ function App() {
                             value={email}>
                         </input>
                     </div>
-                </>
-            )
-        }
-        else if (page === 3) {
-            return (
-                <>
+
+                    {/* Statutory Representative */}
                     <div className="question-card">
                         <label className="question">Jméno Statutárního Zástupce</label>
                         <input
@@ -286,12 +273,8 @@ function App() {
                             value={functionStatutary}>
                         </input>
                     </div>
-                </>
-            )
-        }
-        else if (page === 4) {
-            return (
-                <>
+
+                    {/* Legal Form */}
                     <div className="question-card">
                         <label className="question">Právní Forma</label>
                         <input
@@ -302,12 +285,8 @@ function App() {
                             value={legalForm}>
                         </input>
                     </div>
-                </>
-            )
-        }
-        else if (page === 5) {
-            return (
-                <>
+
+                    {/* Website */}
                     <div className="question-card">
                         <label className="question">Vaše webové stránky</label>
                         <input
@@ -318,12 +297,8 @@ function App() {
                             value={web}>
                         </input>
                     </div>
-                </>
-            )
-        }
-        else if (page === 6) {
-            return (
-                <>
+
+                    {/* Registration Information */}
                     <div className="question-card">
                         <label className="question">Datum Registrace v obchodním rejstříku nebo u živnostenského úřadu</label>
                         <p>Ve formátu mm/dd/yyyy</p>
@@ -352,12 +327,8 @@ function App() {
                             value={mark}>
                         </input>
                     </div>
-                </>
-            )
-        }
-        else if (page === 7) {
-            return (
-                <>
+
+                    {/* Meeting Representative */}
                     <div className="question-card">
                         <label className="question">Jméno Zástupce pro jednání</label>
                         <input
@@ -398,12 +369,8 @@ function App() {
                             value={functionMeeting}>
                         </input>
                     </div>
-                </>
-            )
-        }
-        else if (page === 8) {
-            return (
-                <>
+
+                    {/* Financial Information */}
                     <div className="question-card">
                         <label className="question">Počet Zaměstnanců</label>
                         <label><input type="radio" name="employeeNum" onChange={e => setEmployeeNum(e.target.value)} value="0" checked={employeeNum === "0"} /> Bez Zaměstnanců</label>
@@ -446,12 +413,8 @@ function App() {
                         <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="5" checked={export_ === "5"} /> 300 miliónů - 1 miliarda</label>
                         <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="6" checked={export_ === "6"} /> Více než 1 miliarda</label>
                     </div>
-                </>
-            )
-        }
-        else if (page === 9) {
-            return (
-                <>
+
+                    {/* Industry */}
                     <div className="question-card">
                         <label className="question">Převažující obor činnosti dle CZ-NACE</label>
                         <input
@@ -462,89 +425,40 @@ function App() {
                             value={industry}>
                         </input>
                     </div>
-                </>
-            )
-        }
-        else if (page === 10) {
-            return (
-                <div className="question-card">
-                    <label className="question">Uveďte země, kam exportujete/chcete exportovat</label>
-                    <Select
-                        isMulti
-                        options={countryOptions}
-                        value={exportCountries}
-                        onChange={setExportCountries}
-                        placeholder="Začni psát název země..."
-                    />
-                </div>
-            );
-        }
-        else if (page === 11) {
-            return (
-                <div className="question-card">
-                    <label className="question">Uveďte země, kam importujete/chcete importovat</label>
-                    <Select
-                        isMulti
-                        options={countryOptions}
-                        value={importCountries}
-                        onChange={setImportCountries}
-                        placeholder="Začni psát název země..."
-                    />
-                </div>
-            );
-        }
-    }
-  return (
-    <>
-        <div className="form-wrapper">
-            <div className="form-container">
-                <div className="form-header">
-                    <h1 className="form-title">Registrační formulář</h1>
-                    <p className="form-description">Vyplňte prosím všechny údaje o vaší firmě</p>
-                </div>
 
-                <div className="form-content">
-                    {getHTMLContent(page)}
+                    {/* Export Countries */}
+                    <div className="question-card">
+                        <label className="question">Uveďte země, kam exportujete/chcete exportovat</label>
+                        <Select
+                            isMulti
+                            options={countryOptions}
+                            value={exportCountries}
+                            onChange={setExportCountries}
+                            placeholder="Začni psát název země..."
+                        />
+                    </div>
+
+                    {/* Import Countries */}
+                    <div className="question-card">
+                        <label className="question">Uveďte země, kam importujete/chcete importovat</label>
+                        <Select
+                            isMulti
+                            options={countryOptions}
+                            value={importCountries}
+                            onChange={setImportCountries}
+                            placeholder="Začni psát název země..."
+                        />
+                    </div>
                 </div>
 
                 <div className="form-navigation">
-                    {page > 0 && (
-                        <button
-                            type="button"
-                            className="btn-back"
-                            onClick={handleBack}
-                        >
-                            Zpět
-                        </button>
-                    )}
-                    {page + 1 < MAX_PAGES && (
-                        <button
-                            type="button"
-                            className="btn-next"
-                            onClick={handleNext}
-                        >
-                            Další
-                        </button>
-                    )}
-                    {page + 1 === MAX_PAGES && (
-                        <button
-                            type="submit"
-                            className="btn-submit"
-                            onClick={handleSubmit}
-                        >
-                            Odeslat
-                        </button>
-                    )}
-                </div>
-
-                <div className="form-progress">
-                    <div className="progress-bar">
-                        <div
-                            className="progress-fill"
-                            style={{width: `${((page + 1) / MAX_PAGES) * 100}%`}}
-                        ></div>
-                    </div>
-                    <p className="progress-text">Krok {page + 1} z {MAX_PAGES}</p>
+                    <button
+                        type="submit"
+                        className="btn-submit"
+                        onClick={handleSubmit}
+                    >
+                        Odeslat
+                    </button>
                 </div>
             </div>
         </div>
