@@ -47,7 +47,7 @@ body {
   margin-top: 10px;
 }
 
-.hidenable input[type="checkbox"]:not(:checked) ~ div {
+input[type="checkbox"].hidenable:checked ~ .hidenable {
   display: none;
 }
 
