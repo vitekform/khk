@@ -29,8 +29,8 @@
             city: data.sidlo?.nazevObce,
             psc: data.sidlo?.psc,
             legal_form: data.pravniForma,
-            reg_place: data.dalsiUdaje?.spisovaZnacka,
             reg_date: data.datumVzniku,
+            mark: data.dalsiUdaje?.spisovaZnacka,
             timestamp: Date.now()
         };
 
