@@ -1,6 +1,4 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
@@ -21,8 +19,8 @@ function App() {
     function fetchDetailsFromICO() {
         fetch("/api/getDetails", {body: JSON.stringify({"ico": ico}), method: "POST", headers: {
             "Content-Type": "application/json"
-            }}).then((res) => {
-            let json = res.json();
+            }}).then(async (res) => {
+            let json = await res.json();
             setCompanyName(json.name);
             setDic(json.dic);
             let ulice = json.street;
@@ -35,6 +33,17 @@ function App() {
             setRegDate(json.reg_date);
             setRegPlace(json.reg_place);
         })
+    }
+
+    function handleNext() {
+        if (page === 0) {
+            fetchDetailsFromICO();
+        }
+        setPage(page + 1);
+    }
+
+    function handleBack() {
+        setPage(page - 1);
     }
 
     function getHTMLContent(page) {
@@ -124,33 +133,84 @@ function App() {
             )
         }
         else if (page === 2) {
-            <>
-                <div className="question-card">
-                    <label className="question">Kontaktní Telefon</label>
-                    <input
-                        type="tel"
-                        onChange={e => {setPhone(e.target.value)}}
-                        required
-                        placeholder="+420 777 777 777"
-                        value={phone}>
-                    </input>
-                </div>
-                <div className="question-card">
-                    <label className="question">Kontaktní E-Mail</label>
-                    <input
-                        type="email"
-                        onChange={e => {setEmail(e.target.value)}}
-                        required
-                        placeholder="pepa.novak@gmail.com"
-                        value={email}>
-                    </input>
-                </div>
-            </>
+            return (
+                <>
+                    <div className="question-card">
+                        <label className="question">Kontaktní Telefon</label>
+                        <input
+                            type="tel"
+                            onChange={e => {setPhone(e.target.value)}}
+                            required
+                            placeholder="+420 777 777 777"
+                            value={phone}>
+                        </input>
+                    </div>
+                    <div className="question-card">
+                        <label className="question">Kontaktní E-Mail</label>
+                        <input
+                            type="email"
+                            onChange={e => {setEmail(e.target.value)}}
+                            required
+                            placeholder="pepa.novak@gmail.com"
+                            value={email}>
+                        </input>
+                    </div>
+                </>
+            )
         }
     }
   return (
     <>
-        <div id={"form_container"}>
+        <div className="form-wrapper">
+            <div className="form-container">
+                <div className="form-header">
+                    <h1 className="form-title">Registrační formulář</h1>
+                    <p className="form-description">Vyplňte prosím všechny údaje o vaší firmě</p>
+                </div>
+
+                <div className="form-content">
+                    {getHTMLContent(page)}
+                </div>
+
+                <div className="form-navigation">
+                    {page > 0 && (
+                        <button
+                            type="button"
+                            className="btn-back"
+                            onClick={handleBack}
+                        >
+                            Zpět
+                        </button>
+                    )}
+                    {page < 2 && (
+                        <button
+                            type="button"
+                            className="btn-next"
+                            onClick={handleNext}
+                        >
+                            Další
+                        </button>
+                    )}
+                    {page === 2 && (
+                        <button
+                            type="submit"
+                            className="btn-submit"
+                        >
+                            Odeslat
+                        </button>
+                    )}
+                </div>
+
+                <div className="form-progress">
+                    <div className="progress-bar">
+                        <div
+                            className="progress-fill"
+                            style={{width: `${((page + 1) / 3) * 100}%`}}
+                        ></div>
+                    </div>
+                    <p className="progress-text">Krok {page + 1} z 3</p>
+                </div>
+            </div>
         </div>
     </>
   )
