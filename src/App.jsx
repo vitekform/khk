@@ -2,6 +2,9 @@ import { useState } from 'react'
 import './App.css'
 
 function App() {
+
+    const MAX_PAGES = 4;
+
     const [page, setPage] = useState(0)
     const [ico, setIco] = useState("00000000")
     const [companyName, setCompanyName] = useState("")
@@ -10,11 +13,14 @@ function App() {
     const [state, setState] = useState("")
     const [city, setCity] = useState("")
     const [zip, setZip] = useState("")
-    const [legalForm, setLegalForm] = useState("")
     const [regDate, setRegDate] = useState("")
     const [regPlace, setRegPlace] = useState("")
     const [phone, setPhone] = useState("")
     const [email, setEmail] = useState("")
+    const [phoneStatutary, setPhoneStatutary] = useState("")
+    const [emailStatutary, setEmailStatutary] = useState("")
+    const [functionStatutary, setFunctionStatutary] = useState("")
+    const [legalForm, setLegalForm] = useState("")
 
     function fetchDetailsFromICO() {
         fetch("/api/getDetails", {body: JSON.stringify({"ico": ico}), method: "POST", headers: {
@@ -36,10 +42,25 @@ function App() {
     }
 
     function handleNext() {
-        if (page === 0) {
-            fetchDetailsFromICO();
+        // check if all fields are filled (marked as required in the input)
+        let invalid = false;
+        document.querySelectorAll('.form-content input').forEach(input => {
+            if (!input.checkValidity()) {
+                input.reportValidity();
+                invalid = true;
+            }
+        });
+
+        if (!invalid) {
+            if (page === 0) {
+                fetchDetailsFromICO();
+            }
+            setPage(page + 1);
         }
-        setPage(page + 1);
+        else {
+            alert("Prosím prvně vyplňte nutná pole!");
+        }
+
     }
 
     function handleBack() {
@@ -61,6 +82,7 @@ function App() {
                             maxLength="8"
                             placeholder="Vaše IČO"
                             required
+                            value={ico}
                         />
                     </div>
                 </>
@@ -158,6 +180,58 @@ function App() {
                 </>
             )
         }
+        else if (page === 3) {
+            return (
+                <>
+                    <div className="question-card">
+                        <label className="question">Kontaktní Telefon Statutárního Zástupce</label>
+                        <input
+                            type="tel"
+                            onChange={e => {setPhoneStatutary(e.target.value)}}
+                            required
+                            placeholder="+420 777 777 777"
+                            value={phoneStatutary}>
+                        </input>
+                    </div>
+                    <div className="question-card">
+                        <label className="question">Kontaktní E-Mail Statutárního Zástupce</label>
+                        <input
+                            type="email"
+                            onChange={e => {setEmailStatutary(e.target.value)}}
+                            required
+                            placeholder="pepa.novak@gmail.com"
+                            value={emailStatutary}>
+                        </input>
+                    </div>
+                    <div className="question-card">
+                        <label className="question">Funkce Statutárního Zástupce</label>
+                        <input
+                            type="text"
+                            onChange={e => {setFunctionStatutary(e.target.value)}}
+                            required
+                            placeholder="Funkce Statutárního Zástupce"
+                            value={functionStatutary}>
+                        </input>
+                    </div>
+                </>
+            )
+        }
+        else if (page === 4) {
+            return (
+                <>
+                    <div className="question-card">
+                        <label className="question">Právní Forma</label>
+                        <input
+                            type="text"
+                            onChange={e => {setLegalForm(e.target.value)}}
+                            required
+                            placeholder="Právní Forma"
+                            value={legalForm}>
+                        </input>
+                    </div>
+                </>
+            )
+        }
     }
   return (
     <>
@@ -182,7 +256,7 @@ function App() {
                             Zpět
                         </button>
                     )}
-                    {page < 2 && (
+                    {page < MAX_PAGES && (
                         <button
                             type="button"
                             className="btn-next"
@@ -191,7 +265,7 @@ function App() {
                             Další
                         </button>
                     )}
-                    {page === 2 && (
+                    {page === MAX_PAGES && (
                         <button
                             type="submit"
                             className="btn-submit"
@@ -205,10 +279,10 @@ function App() {
                     <div className="progress-bar">
                         <div
                             className="progress-fill"
-                            style={{width: `${((page + 1) / 3) * 100}%`}}
+                            style={{width: `${((page + 1) / 4) * 100}%`}}
                         ></div>
                     </div>
-                    <p className="progress-text">Krok {page + 1} z 3</p>
+                    <p className="progress-text">Krok {page + 1} z 4</p>
                 </div>
             </div>
         </div>
