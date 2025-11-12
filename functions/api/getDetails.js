@@ -30,7 +30,7 @@
             psc: data.sidlo?.psc,
             legal_form: data.pravniForma,
             reg_date: data.datumVzniku,
-            mark: data.dalsiUdaje?.spisovaZnacka,
+            znacka: data.dalsiUdaje?.find(u => u.spisovaZnacka)?.spisovaZnacka,
             timestamp: Date.now()
         };
 
