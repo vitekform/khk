@@ -165,7 +165,7 @@ function App() {
                 <>
                     <h2 className="section-title">Subjekt</h2>
                     <div className="question-card">
-                        <label className="question">Jméno Firmy</label>
+                        <label className="question">Jméno firmy</label>
                         <input
                         type="text"
                         onChange={e => {setCompanyName(e.target.value)}}
@@ -175,7 +175,7 @@ function App() {
                         </input>
                     </div>
                     <div className="question-card">
-                        <label className="question">DIČ Firmy</label>
+                        <label className="question">DIČ firmy</label>
                         <input
                             type="text"
                             onChange={e => {setDic(e.target.value)}}
@@ -185,7 +185,7 @@ function App() {
                         </input>
                     </div>
                     <div className="question-card">
-                        <label className="question">Ulice a Číslo popisné</label>
+                        <label className="question">Ulice a číslo popisné</label>
                         <input
                             type="text"
                             onChange={e => {setStreet_and_number(e.target.value)}}
@@ -232,7 +232,7 @@ function App() {
                 <>
                     <h2 className="section-title">Korespondenční adresa</h2>
                     <div className="question-card">
-                        <label className="question">Kontaktní Telefon</label>
+                        <label className="question">Kontaktní telefon</label>
                         <input
                             type="tel"
                             onChange={e => {setPhone(e.target.value)}}
@@ -242,7 +242,7 @@ function App() {
                         </input>
                     </div>
                     <div className="question-card">
-                        <label className="question">Kontaktní E-Mail</label>
+                        <label className="question">Kontaktní email</label>
                         <input
                             type="email"
                             onChange={e => {setEmail(e.target.value)}}
@@ -259,7 +259,7 @@ function App() {
                 <>
                     <h2 className="section-title">Statutární zástupce</h2>
                     <div className="question-card">
-                        <label className="question">Jméno Statutárního Zástupce</label>
+                        <label className="question">Jméno statutárního zástupce</label>
                         <input
                             type={"text"}
                             onChange={e => {setNameStatuary(e.target.value)}}
@@ -269,7 +269,7 @@ function App() {
                         </input>
                     </div>
                     <div className="question-card">
-                        <label className="question">Kontaktní Telefon Statutárního Zástupce</label>
+                        <label className="question">Kontaktní telefon statutárního zástupce</label>
                         <input
                             type="tel"
                             onChange={e => {setPhoneStatutary(e.target.value)}}
@@ -279,7 +279,7 @@ function App() {
                         </input>
                     </div>
                     <div className="question-card">
-                        <label className="question">Kontaktní E-Mail Statutárního Zástupce</label>
+                        <label className="question">Kontaktní email statutárního zástupce</label>
                         <input
                             type="email"
                             onChange={e => {setEmailStatutary(e.target.value)}}
@@ -289,12 +289,12 @@ function App() {
                         </input>
                     </div>
                     <div className="question-card">
-                        <label className="question">Funkce Statutárního Zástupce</label>
+                        <label className="question">Funkce statutárního zástupce</label>
                         <input
                             type="text"
                             onChange={e => {setFunctionStatutary(e.target.value)}}
                             required
-                            placeholder="Funkce Statutárního Zástupce"
+                            placeholder="Funkce statutárního zástupce"
                             value={functionStatutary}>
                         </input>
                     </div>
@@ -306,12 +306,12 @@ function App() {
                 <>
                     <h2 className="section-title">Právní forma</h2>
                     <div className="question-card">
-                        <label className="question">Právní Forma</label>
+                        <label className="question">Právní forma</label>
                         <input
                             type="text"
                             onChange={e => {setLegalForm(e.target.value)}}
                             required
-                            placeholder="Právní Forma"
+                            placeholder="Právní forma"
                             value={legalForm}>
                         </input>
                     </div>
@@ -325,9 +325,9 @@ function App() {
                     <div className="question-card">
                         <label className="question">Vaše webové stránky</label>
                         <input
-                            type={"url"}
+                            type={"text"}
+                            pattern="^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                             onChange={e => {setWeb(e.target.value)}}
-                            defaultValue={"none"}
                             placeholder="URL vašich webových stránek"
                             value={web}>
                         </input>
@@ -340,30 +340,30 @@ function App() {
                 <>
                     <h2 className="section-title">Registrační údaje</h2>
                     <div className="question-card">
-                        <label className="question">Datum Registrace v obchodním rejstříku nebo u živnostenského úřadu</label>
+                        <label className="question">Datum registrace v obchodním rejstříku nebo u živnostenského úřadu</label>
                         <p>Ve formátu mm/dd/yyyy</p>
                         <input
                             type={"date"}
                             onChange={e => {setRegDate(e.target.value)}}
-                            placeholder="Datum Registrace"
+                            placeholder="Datum registrace"
                             value={regDate}>
                         </input>
                     </div>
                     <div className="question-card">
-                        <label className="question">Místo Registrace v obchodním rejstříku nebo u živnostenského úřadu</label>
+                        <label className="question">Místo registrace v obchodním rejstříku nebo u živnostenského úřadu</label>
                         <input
                             type={"text"}
                             onChange={e => {setRegPlace(e.target.value)}}
-                            placeholder="Místo Registrace"
+                            placeholder="Místo registrace"
                             value={regPlace}>
                         </input>
                     </div>
                     <div className="question-card">
-                        <label className="question">Spisová Značka</label>
+                        <label className="question">Spisová značka</label>
                         <input
                             type={"text"}
                             onChange={e => {setMark(e.target.value)}}
-                            placeholder="Spisová Značka"
+                            placeholder="Spisová značka"
                             value={mark}>
                         </input>
                     </div>
@@ -375,7 +375,7 @@ function App() {
                 <>
                     <h2 className="section-title">Zástupce pro jednání</h2>
                     <div className="question-card">
-                        <label className="question">Jméno Zástupce pro jednání</label>
+                        <label className="question">Jméno zástupce pro jednání</label>
                         <input
                             type={"text"}
                             onChange={e => {setNameMeeting(e.target.value)}}
@@ -385,7 +385,7 @@ function App() {
                         </input>
                     </div>
                     <div className="question-card">
-                        <label className="question">Kontaktní Telefon Zástupce pro jednání</label>
+                        <label className="question">Kontaktní telefon zástupce pro jednání</label>
                         <input
                             type="tel"
                             onChange={e => {setPhoneMeeting(e.target.value)}}
@@ -395,7 +395,7 @@ function App() {
                         </input>
                     </div>
                     <div className="question-card">
-                        <label className="question">Kontaktní E-Mail Zástupce pro jednání</label>
+                        <label className="question">Kontaktní email zástupce pro jednání</label>
                         <input
                             type="email"
                             onChange={e => {setEmailMeeting(e.target.value)}}
@@ -405,12 +405,12 @@ function App() {
                         </input>
                     </div>
                     <div className="question-card">
-                        <label className="question">Funkce Zástupce pro jednání</label>
+                        <label className="question">Funkce zástupce pro jednání</label>
                         <input
                             type="text"
                             onChange={e => {setFunctionMeeting(e.target.value)}}
                             required
-                            placeholder="Funkce Zástupce pro jednání"
+                            placeholder="Funkce zástupce pro jednání"
                             value={functionMeeting}>
                         </input>
                     </div>
@@ -422,7 +422,7 @@ function App() {
                 <>
                     <h2 className="section-title">Informace o podniku</h2>
                     <div className="question-card">
-                        <label className="question">Počet Zaměstnanců</label>
+                        <label className="question">Počet zaměstnanců</label>
                         <label><input type="radio" name="employeeNum" onChange={e => setEmployeeNum(e.target.value)} value="0" checked={employeeNum === "0"} /> Bez Zaměstnanců</label>
                         <label><input type="radio" name="employeeNum" onChange={e => setEmployeeNum(e.target.value)} value="1" checked={employeeNum === "1"} /> 1-9 Zaměstnanců</label>
                         <label><input type="radio" name="employeeNum" onChange={e => setEmployeeNum(e.target.value)} value="2" checked={employeeNum === "2"} /> 10-49 Zaměstnanců</label>
@@ -494,7 +494,7 @@ function App() {
                             options={countryOptions}
                             value={exportCountries}
                             onChange={setExportCountries}
-                            placeholder="Začni psát název země..."
+                            placeholder="Začněte psát název země..."
                         />
                     </div>
                 </>
@@ -505,13 +505,13 @@ function App() {
                 <>
                     <h2 className="section-title">Importní země</h2>
                     <div className="question-card">
-                        <label className="question">Uveďte země, kam importujete/chcete importovat</label>
+                        <label className="question">Uveďte země, odkuď importujete/chcete importovat</label>
                         <Select
                             isMulti
                             options={countryOptions}
                             value={importCountries}
                             onChange={setImportCountries}
-                            placeholder="Začni psát název země..."
+                            placeholder="Začněte psát název země..."
                         />
                     </div>
                 </>
