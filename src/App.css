@@ -1,4 +1,4 @@
-/* Google Forms-inspired styling */
+/* Czech e-government forms styling */
 
 * {
   box-sizing: border-box;
@@ -6,209 +6,354 @@
 
 .form-wrapper {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 40px 20px;
+  background: #f5f7fa;
+  padding: 0;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+}
+
+.step-guide {
+  background: white;
+  border-bottom: 1px solid #e0e4e8;
+  padding: 32px 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.step-guide-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.step-item {
+  flex: 1;
+  text-align: center;
+  position: relative;
+}
+
+.step-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 20px;
+  right: -10px;
+  width: 20px;
+  height: 2px;
+  background: #e0e4e8;
+  z-index: 0;
+}
+
+.step-icon {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  background: #e8f0fe;
+  color: #1565c0;
+  display: flex;
   align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 18px;
+  border: 2px solid #1565c0;
+  position: relative;
+  z-index: 1;
+}
+
+.step-item.active .step-icon {
+  background: #1565c0;
+  color: white;
+}
+
+.step-item.completed .step-icon {
+  background: #4caf50;
+  border-color: #4caf50;
+  color: white;
+}
+
+.step-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #37474f;
+  margin-bottom: 4px;
+}
+
+.step-description {
+  font-size: 12px;
+  color: #78909c;
+  line-height: 1.4;
 }
 
 .form-container {
-  max-width: 700px;
+  max-width: 900px;
   width: 100%;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  margin: 40px auto;
+  padding: 0 40px 40px;
 }
 
 .form-header {
-  background: white;
-  padding: 24px 24px 16px;
-  border-top: 10px solid #673ab7;
+  background: transparent;
+  padding: 0 0 32px 0;
+  border-top: none;
 }
 
 .form-title {
-  font-size: 32px;
-  font-weight: 400;
+  font-size: 28px;
+  font-weight: 700;
   margin: 0 0 8px 0;
-  color: #202124;
-  font-family: 'Google Sans', Roboto, Arial, sans-serif;
+  color: #1a202c;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
 }
 
 .form-description {
-  font-size: 14px;
-  color: #5f6368;
+  font-size: 15px;
+  color: #64748b;
   margin: 0;
-  line-height: 20px;
+  line-height: 24px;
 }
 
 .form-content {
-  padding: 12px 24px;
-  min-height: 300px;
+  padding: 0;
+  min-height: 400px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 20px 0;
+  padding-bottom: 8px;
+  border-bottom: 3px solid #ff6f00;
+  display: inline-block;
 }
 
 .question-card {
-  background: #f8f9fa;
-  border-radius: 8px;
-  padding: 24px;
-  margin-bottom: 12px;
-  border: 1px solid #dadce0;
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 20px;
+  border: 1px solid #e0e4e8;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   transition: all 0.2s ease;
 }
 
 .question-card:hover {
-  border-color: #673ab7;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  border-color: #cbd5e0;
 }
 
 .question-card:focus-within {
-  border-color: #673ab7;
-  background: white;
+  border-color: #1565c0;
+  box-shadow: 0 4px 12px rgba(21, 101, 192, 0.15);
 }
 
 .question {
   display: block;
-  font-size: 16px;
-  font-weight: 400;
-  color: #202124;
-  margin-bottom: 12px;
-  font-family: 'Google Sans', Roboto, Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #37474f;
+  margin-bottom: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
 }
 
-.question-card input,
+.question-card p {
+  font-size: 13px;
+  color: #78909c;
+  margin: -8px 0 12px 0;
+}
+
+.question-card input[type="text"],
+.question-card input[type="email"],
+.question-card input[type="tel"],
+.question-card input[type="date"],
+.question-card input[type="url"],
 .answer-input {
   width: 100%;
-  padding: 12px 16px;
-  font-size: 16px;
-  border: none;
-  border-bottom: 1px solid #dadce0;
-  background: transparent;
+  padding: 14px 16px;
+  font-size: 15px;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  background: #f8fafc;
   outline: none;
-  color: #202124;
-  transition: border-color 0.2s ease;
-  font-family: Roboto, Arial, sans-serif;
+  color: #1a202c;
+  transition: all 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
 }
 
 .question-card input:focus,
 .answer-input:focus {
-  border-bottom: 2px solid #673ab7;
-  padding-bottom: 11px;
+  border-color: #1565c0;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.1);
 }
 
 .question-card input::placeholder,
 .answer-input::placeholder {
-  color: #80868b;
+  color: #94a3b8;
+}
+
+.question-card label {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  font-size: 15px;
+  color: #37474f;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.question-card label:hover {
+  color: #1565c0;
+}
+
+.question-card input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  cursor: pointer;
+  accent-color: #1565c0;
 }
 
 .form-navigation {
-  padding: 24px;
+  padding: 32px 0 0 0;
   display: flex;
-  gap: 12px;
+  gap: 16px;
   justify-content: flex-end;
-  border-top: 1px solid #dadce0;
+  border-top: 1px solid #e0e4e8;
+  margin-top: 32px;
+  padding-top: 32px;
 }
 
 .btn-back,
 .btn-next,
 .btn-submit {
-  padding: 10px 24px;
-  font-size: 14px;
-  font-weight: 500;
+  padding: 14px 32px;
+  font-size: 15px;
+  font-weight: 600;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-family: 'Google Sans', Roboto, Arial, sans-serif;
-  letter-spacing: 0.25px;
-  text-transform: uppercase;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+  letter-spacing: 0.3px;
 }
 
 .btn-back {
   background: white;
-  color: #673ab7;
-  border: 1px solid #dadce0;
+  color: #1565c0;
+  border: 2px solid #e0e4e8;
 }
 
 .btn-back:hover {
-  background: #f8f9fa;
-  border-color: #673ab7;
+  background: #f8fafc;
+  border-color: #1565c0;
 }
 
 .btn-next,
 .btn-submit {
-  background: #673ab7;
+  background: #1565c0;
   color: white;
+  box-shadow: 0 2px 4px rgba(21, 101, 192, 0.3);
 }
 
 .btn-next:hover,
 .btn-submit:hover {
-  background: #5e35b1;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  background: #0d47a1;
+  box-shadow: 0 4px 8px rgba(21, 101, 192, 0.4);
+  transform: translateY(-1px);
 }
 
 .btn-next:active,
 .btn-submit:active {
-  background: #512da8;
+  background: #0a3d91;
+  transform: translateY(0);
 }
 
 .form-progress {
-  padding: 16px 24px;
-  background: #f8f9fa;
+  padding: 24px 0 0 0;
+  background: transparent;
 }
 
 .progress-bar {
   width: 100%;
-  height: 8px;
-  background: #e0e0e0;
-  border-radius: 4px;
+  height: 6px;
+  background: #e0e4e8;
+  border-radius: 3px;
   overflow: hidden;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #673ab7 0%, #7e57c2 100%);
+  background: linear-gradient(90deg, #1565c0 0%, #1976d2 100%);
   transition: width 0.3s ease;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 .progress-text {
-  font-size: 12px;
-  color: #5f6368;
+  font-size: 13px;
+  color: #64748b;
   margin: 0;
   text-align: center;
-  font-family: Roboto, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+  font-weight: 500;
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
   .form-wrapper {
-    padding: 20px 10px;
+    padding: 0;
+  }
+
+  .step-guide-container {
+    padding: 0 20px;
+    gap: 10px;
+  }
+
+  .step-item:not(:last-child)::after {
+    display: none;
+  }
+
+  .step-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+
+  .step-title {
+    font-size: 12px;
+  }
+
+  .step-description {
+    font-size: 10px;
   }
 
   .form-container {
-    box-shadow: none;
-  }
-
-  .form-header {
-    padding: 20px 16px 12px;
+    padding: 20px;
+    margin: 20px auto;
   }
 
   .form-title {
-    font-size: 24px;
-  }
-
-  .form-content {
-    padding: 8px 16px;
+    font-size: 22px;
   }
 
   .question-card {
-    padding: 20px 16px;
+    padding: 24px 20px;
   }
 
   .form-navigation {
-    padding: 16px;
+    padding-top: 24px;
+    margin-top: 24px;
+  }
+
+  .btn-back,
+  .btn-next,
+  .btn-submit {
+    padding: 12px 24px;
+    font-size: 14px;
   }
 }
 
