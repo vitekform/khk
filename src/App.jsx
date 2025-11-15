@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import countryList from "react-select-country-list";
 import Select from "react-select";
+import { LEGAL_FORM_OPTIONS, resolveLegalForm } from './legalForms';
 
 
 function App() {
@@ -76,6 +77,12 @@ function App() {
                 invalid = true;
             }
         });
+
+        // Special validation for page 4 (legal form select)
+        if (page === 4 && !legalForm) {
+            alert("Prosím vyberte právní formu!");
+            invalid = true;
+        }
 
         if (!invalid) {
             if (page === 0) {
@@ -307,13 +314,13 @@ function App() {
                     <h2 className="section-title">Právní forma</h2>
                     <div className="question-card">
                         <label className="question">Právní forma</label>
-                        <input
-                            type="text"
-                            onChange={e => {setLegalForm(e.target.value)}}
-                            required
-                            placeholder="Právní forma"
-                            value={legalForm}>
-                        </input>
+                        <Select
+                            options={LEGAL_FORM_OPTIONS}
+                            value={legalForm ? LEGAL_FORM_OPTIONS.find(opt => opt.value === legalForm) : null}
+                            onChange={(selectedOption) => setLegalForm(selectedOption ? selectedOption.value : "")}
+                            placeholder="Vyberte právní formu"
+                            isClearable
+                        />
                     </div>
                 </>
             )
