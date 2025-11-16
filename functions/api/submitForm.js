@@ -20,11 +20,6 @@ function jsonToCSV(data) {
 export async function onRequest(context) {
     const {request, env} = context;
 
-        return new Response(JSON.stringify({ success: true, message: "API Key: " + env.MAILGUN_API_KEY + " Domain: " + env.MAILGUN_DOMAIN + "." }), {
-            headers: { "Content-Type": "application/json" },
-            status: 200
-        });
-
     try {
         const requestData = await request.json();
         
@@ -48,7 +43,7 @@ export async function onRequest(context) {
         formData.append('attachment', csvBlob, 'form-submission.csv');
 
         // Send email via MailGun API
-        const mailgunUrl = `https://api.mailgun.net/v3/${env.MAILGUN_DOMAIN}/messages`;
+        const mailgunUrl = `https://api.eu.mailgun.net/v3/${env.MAILGUN_DOMAIN}/messages`;
         const emailResponse = await fetch(mailgunUrl, {
             method: "POST",
             headers: {
