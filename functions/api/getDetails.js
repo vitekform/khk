@@ -117,6 +117,7 @@ export async function onRequest(context) {
             legal_form: resolveLegalForm(data.pravniForma),
             reg_date: data.datumVzniku,
             znacka: data.dalsiUdaje?.find(u => u.spisovaZnacka)?.spisovaZnacka,
+            czNace: data.czNace || [],
             timestamp: Date.now()
         };
 

@@ -50,11 +50,13 @@ function App() {
     const [importCountries, setImportCountries] = useState([])
     const [czNaceOptions, setCzNaceOptions] = useState([])
     const [czNaceMap, setCzNaceMap] = useState({})
+    const [czNaceAllOptions, setCzNaceAllOptions] = useState([]) // All options from CSV
+    const [czNaceCodes, setCzNaceCodes] = useState([]) // Codes from ARES API
     const countryOptions = countryList().getData();
 
     // Load CZ-NACE data from CSV on component mount
     useEffect(() => {
-        fetch('/obory.csv')
+        fetch('/cz_nace.csv')
             .then(response => response.text())
             .then(csvText => {
                 const lines = csvText.split('\n');
@@ -91,13 +93,27 @@ function App() {
                 // Sort options alphabetically by description
                 options.sort((a, b) => a.label.localeCompare(b.label, 'cs'));
                 
-                setCzNaceOptions(options);
+                setCzNaceAllOptions(options);
                 setCzNaceMap(map);
             })
             .catch(error => {
                 console.error('Error loading CZ-NACE data:', error);
             });
     }, []);
+
+    // Filter CZ-NACE options based on czNaceCodes from ARES
+    useEffect(() => {
+        if (czNaceCodes.length > 0 && czNaceAllOptions.length > 0) {
+            // Filter options to only include those with codes in czNaceCodes
+            const filteredOptions = czNaceAllOptions.filter(option => 
+                czNaceCodes.includes(option.code)
+            );
+            setCzNaceOptions(filteredOptions);
+        } else {
+            // If no czNaceCodes, show all options
+            setCzNaceOptions(czNaceAllOptions);
+        }
+    }, [czNaceCodes, czNaceAllOptions]);
 
     function fetchDetailsFromICO() {
         fetch("/api/getDetails", {body: JSON.stringify({"ico": ico}), method: "POST", headers: {
@@ -115,6 +131,10 @@ function App() {
             setLegalForm(json.legal_form);
             setRegDate(json.reg_date);
             setMark(json.znacka);
+            // Store czNace codes if available
+            if (json.czNace && Array.isArray(json.czNace)) {
+                setCzNaceCodes(json.czNace);
+            }
         })
     }
 
