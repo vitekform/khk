@@ -135,8 +135,9 @@ function App() {
             if (json.czNace && Array.isArray(json.czNace)) {
                 setCzNaceCodes(json.czNace);
             }
-            loadCZNACE();
-            filterCZNACE();
+            loadCZNACE().then(() => {
+                filterCZNACE();
+            });
         })
     }
 
