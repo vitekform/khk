@@ -81,6 +81,9 @@ function App() {
                     }
                 }
                 
+                // Sort options alphabetically by description
+                options.sort((a, b) => a.label.localeCompare(b.label, 'cs'));
+                
                 setCzNaceOptions(options);
                 setCzNaceMap(map);
             })
