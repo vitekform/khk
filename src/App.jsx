@@ -7,14 +7,15 @@ import { LEGAL_FORM_OPTIONS } from './legalForms';
 
 function App() {
 
-    const MAX_PAGES = 12;
+    const MAX_PAGES = 13;
 
     // Map pages to steps (4 main stages)
     function getStepFromPage(page) {
         if (page <= 2) return 1;      // Basic info & Company details
         if (page <= 6) return 2;      // Contact & Registration details
         if (page <= 9) return 3;      // Business information
-        return 4;                     // Export/Import countries
+        if (page <= 12) return 4;     // Export/Import countries
+        return 5;
     }
 
     const [page, setPage] = useState(0)
@@ -48,6 +49,7 @@ function App() {
     const [naceOptions, setNaceOptions] = useState([])
     const [exportCountries, setExportCountries] = useState([])
     const [importCountries, setImportCountries] = useState([])
+    const [emailTo, setEmailTo] = useState("")
     const countryOptions = countryList().getData();
 
     // Scroll to top whenever page changes
@@ -133,6 +135,7 @@ function App() {
     function handleSubmit() {
         // Create JSON with all data
         const data = {
+            "emailTo": emailTo,
             "IČ": ico,
             "Název Firmy": companyName,
             "DIČ": dic,
@@ -581,6 +584,11 @@ function App() {
                         <div className="step-icon">{getStepFromPage(page) > 4 ? '✓' : '4'}</div>
                         <div className="step-title">Zahraniční obchod</div>
                         <div className="step-description">Import a export</div>
+                    </div>
+                    <div className={`step-item ${getStepFromPage(page) >= 5 ? 'active' : ''} ${getStepFromPage(page) > 5 ? 'completed' : ''}`}>
+                        <div className="step-icon">{getStepFromPage(page) > 5 ? '✓' : '5'}</div>
+                        <div className="step-title">Cíl přihlášky</div>
+                    <div className="step-description">Kam vám máme zaslat přihlášku</div>
                     </div>
                 </div>
             </div>
