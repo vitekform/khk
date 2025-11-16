@@ -16,12 +16,13 @@ When a user completes the form, the submitted data is:
 2. Sent via email to `vitekform@gmail.com` with the subject "Somebody filled out form"
 3. Attached as a CSV file (`form-submission.csv`)
 
-The form uses Cloudflare Pages Functions and MailChannels API for email delivery.
+The form uses Cloudflare Pages Functions and MailGun API for email delivery.
 
 ## Environment Variables
 
-The following environment variable can be configured in Cloudflare Pages settings:
-- `SENDER_EMAIL` (optional): Email address to use as the sender. Defaults to `noreply@khkpce.cz`
+The following environment variables must be configured in Cloudflare Pages settings:
+- `MAILGUN_API_KEY` (required): Your MailGun API key
+- `MAILGUN_DOMAIN` (required): Your MailGun domain (e.g., `mg.example.com`)
 
 ## Development
 
@@ -44,4 +45,4 @@ npm run lint
 - React 19
 - Vite (Rolldown)
 - Cloudflare Pages Functions
-- MailChannels API for email delivery
+- MailGun API for email delivery

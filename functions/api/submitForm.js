@@ -26,41 +26,30 @@ export async function onRequest(context) {
         // Convert JSON data to CSV
         const csvContent = jsonToCSV(requestData);
         
-        // Prepare email using MailChannels API (commonly used with Cloudflare)
-        const emailPayload = {
-            personalizations: [
-                {
-                    to: [{ email: "vitekform@gmail.com" }],
-                }
-            ],
-            from: {
-                email: env.SENDER_EMAIL || "noreply@khkpce.cz",
-                name: "KHK Form System"
-            },
-            subject: "Somebody filled out form",
-            content: [
-                {
-                    type: "text/plain",
-                    value: "A new form has been submitted. Please see the attached CSV file for details."
-                }
-            ],
-            attachments: [
-                {
-                    content: btoa(csvContent), // Base64 encode the CSV
-                    filename: "form-submission.csv",
-                    type: "text/csv",
-                    disposition: "attachment"
-                }
-            ]
-        };
+        // Check if MailGun credentials are configured
+        if (!env.MAILGUN_API_KEY || !env.MAILGUN_DOMAIN) {
+            throw new Error("MAILGUN_API_KEY and MAILGUN_DOMAIN environment variables must be configured");
+        }
 
-        // Send email via MailChannels API
-        const emailResponse = await fetch("https://api.mailchannels.net/tx/v1/send", {
+        // Prepare form data for MailGun API
+        const formData = new FormData();
+        formData.append('from', `KHK Form System <noreply@${env.MAILGUN_DOMAIN}>`);
+        formData.append('to', 'vitekform@gmail.com');
+        formData.append('subject', 'Somebody filled out form');
+        formData.append('text', 'A new form has been submitted. Please see the attached CSV file for details.');
+        
+        // Add CSV as attachment
+        const csvBlob = new Blob([csvContent], { type: 'text/csv' });
+        formData.append('attachment', csvBlob, 'form-submission.csv');
+
+        // Send email via MailGun API
+        const mailgunUrl = `https://api.mailgun.net/v3/${env.MAILGUN_DOMAIN}/messages`;
+        const emailResponse = await fetch(mailgunUrl, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Authorization": `Basic ${btoa(`api:${env.MAILGUN_API_KEY}`)}`
             },
-            body: JSON.stringify(emailPayload)
+            body: formData
         });
 
         if (!emailResponse.ok) {
