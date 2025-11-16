@@ -17,10 +17,6 @@ export async function onRequest(context) {
 
         const data = await res.json();
 
-        if (data.ico !== ico) {
-            throw new Error("ICO mismatch (welcome to Czech APIs).");
-        }
-
         const dataResp = {
             nace: data.nace,
             timestamp: Date.now()
