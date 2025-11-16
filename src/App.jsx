@@ -54,6 +54,11 @@ function App() {
     const [czNaceCodes, setCzNaceCodes] = useState([]) // Codes from ARES API
     const countryOptions = countryList().getData();
 
+    // Load data from ARES
+    useEffect(() => {
+        fetchDetailsFromICO();
+    });
+
     // Load CZ-NACE data from CSV on component mount
     useEffect(() => {
         fetch('/cz_nace.csv')
@@ -161,9 +166,6 @@ function App() {
         }
 
         if (!invalid) {
-            if (page === 0) {
-                fetchDetailsFromICO();
-            }
             setPage(page + 1);
         }
         else {
