@@ -103,6 +103,7 @@ function App() {
 
     // Filter CZ-NACE options based on czNaceCodes from ARES
     function filterCZNACE() {
+        console.log("We are using: " + czNaceCodes + " and options: " + czNaceAllOptions);
         if (czNaceCodes.length > 0 && czNaceAllOptions.length > 0) {
             // Filter options to only include those with codes in czNaceCodes
             const filteredOptions = czNaceAllOptions.filter(option => 
