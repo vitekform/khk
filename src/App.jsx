@@ -127,6 +127,7 @@ function App() {
             });
 
             setCzNaceOptions(filteredOptions);
+            console.log('Filtered CZ-NACE options:', filteredOptions);
         } else {
             // If no czNaceCodes, show all options
             setCzNaceOptions(options || []);
