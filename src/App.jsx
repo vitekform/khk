@@ -45,6 +45,7 @@ function App() {
     const [import_, setImport] = useState("Do 1,5 mil")
     const [export_, setExport] = useState("Do 1,5 mil")
     const [industry, setIndustry] = useState("")
+    const [naceOptions, setNaceOptions] = useState([])
     const [exportCountries, setExportCountries] = useState([])
     const [importCountries, setImportCountries] = useState([])
     const countryOptions = countryList().getData();
@@ -71,6 +72,24 @@ function App() {
             setRegDate(json.reg_date);
             setMark(json.znacka);
         })
+        
+        // Fetch NACE data
+        fetch("/api/getCZNACE", {body: JSON.stringify({"ico": ico}), method: "POST", headers: {
+            "Content-Type": "application/json"
+            }}).then(async (res) => {
+            let json = await res.json();
+            if (json.nace && Array.isArray(json.nace)) {
+                // Transform NACE data to react-select format
+                const options = json.nace.map(item => ({
+                    value: `${item.kod} - ${item.text}`,
+                    label: `${item.kod} - ${item.text}`
+                }));
+                setNaceOptions(options);
+            }
+        }).catch(() => {
+            // Silently fail if NACE data cannot be fetched
+            // User can still manually enter industry information if needed
+        })
     }
 
     function handleNext() {
@@ -86,6 +105,12 @@ function App() {
         // Special validation for page 4 (legal form select)
         if (page === 4 && !legalForm) {
             alert("Prosím vyberte právní formu!");
+            invalid = true;
+        }
+
+        // Special validation for page 9 (industry select)
+        if (page === 9 && !industry) {
+            alert("Prosím vyberte převažující obor činnosti!");
             invalid = true;
         }
 
@@ -482,13 +507,13 @@ function App() {
                     <h2 className="section-title">Obor činnosti</h2>
                     <div className="question-card">
                         <label className="question">Převažující obor činnosti dle CZ-NACE</label>
-                        <input
-                            type="text"
-                            onChange={e => {setIndustry(e.target.value)}}
-                            required
-                            placeholder="Převažující obor činnosti dle CZ-NACE"
-                            value={industry}>
-                        </input>
+                        <Select
+                            options={naceOptions}
+                            value={industry ? naceOptions.find(opt => opt.value === industry) : null}
+                            onChange={(selectedOption) => setIndustry(selectedOption ? selectedOption.value : "")}
+                            placeholder="Vyberte převažující obor činnosti"
+                            isClearable
+                        />
                     </div>
                 </>
             )
