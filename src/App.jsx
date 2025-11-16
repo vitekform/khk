@@ -2,7 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import countryList from "react-select-country-list";
 import Select from "react-select";
-import { LEGAL_FORM_OPTIONS, resolveLegalForm } from './legalForms';
+import { LEGAL_FORM_OPTIONS } from './legalForms';
 
 
 function App() {
