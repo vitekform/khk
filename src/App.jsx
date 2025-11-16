@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import './App.css'
 import countryList from "react-select-country-list";
 import Select from "react-select";
-import CreatableSelect from "react-select/creatable";
 import { LEGAL_FORM_OPTIONS } from './legalForms';
 
 
@@ -48,56 +47,7 @@ function App() {
     const [industry, setIndustry] = useState("")
     const [exportCountries, setExportCountries] = useState([])
     const [importCountries, setImportCountries] = useState([])
-    const [czNaceOptions, setCzNaceOptions] = useState([])
-    const [czNaceMap, setCzNaceMap] = useState({})
     const countryOptions = countryList().getData();
-
-    // Load CZ-NACE data from CSV on component mount
-    useEffect(() => {
-        fetch('/obory.csv')
-            .then(response => response.text())
-            .then(csvText => {
-                const lines = csvText.split('\n');
-                const options = [];
-                const map = {};
-                const seenDescriptions = new Set();
-                
-                // Skip header line
-                for (let i = 1; i < lines.length; i++) {
-                    const line = lines[i].trim();
-                    if (!line) continue;
-                    
-                    // Parse CSV line (handle commas in quotes)
-                    const match = line.match(/^([^,]+),(.+)$/);
-                    if (match) {
-                        const code = match[1].trim();
-                        const description = match[2].replace(/^"(.*)"$/, '$1').trim();
-                        
-                        // Only add unique descriptions to options
-                        if (!seenDescriptions.has(description)) {
-                            options.push({
-                                value: description,
-                                label: description,
-                                code: code
-                            });
-                            seenDescriptions.add(description);
-                        }
-                        
-                        // Keep all code-to-description mappings for code conversion
-                        map[code] = description;
-                    }
-                }
-                
-                // Sort options alphabetically by description
-                options.sort((a, b) => a.label.localeCompare(b.label, 'cs'));
-                
-                setCzNaceOptions(options);
-                setCzNaceMap(map);
-            })
-            .catch(error => {
-                console.error('Error loading CZ-NACE data:', error);
-            });
-    }, []);
 
     function fetchDetailsFromICO() {
         fetch("/api/getDetails", {body: JSON.stringify({"ico": ico}), method: "POST", headers: {
@@ -134,12 +84,6 @@ function App() {
             invalid = true;
         }
 
-        // Special validation for page 9 (industry field)
-        if (page === 9 && !industry) {
-            alert("Prosím zadejte převažující obor činnosti!");
-            invalid = true;
-        }
-
         if (!invalid) {
             if (page === 0) {
                 fetchDetailsFromICO();
@@ -154,21 +98,6 @@ function App() {
 
     function handleBack() {
         setPage(page - 1);
-    }
-
-    function handleIndustryChange(newValue, actionMeta) {
-        if (actionMeta.action === 'select-option' || actionMeta.action === 'create-option') {
-            const inputValue = newValue ? newValue.value : '';
-            
-            // Check if the input is a code and convert it to description
-            if (czNaceMap[inputValue]) {
-                setIndustry(czNaceMap[inputValue]);
-            } else {
-                setIndustry(inputValue);
-            }
-        } else if (actionMeta.action === 'clear') {
-            setIndustry('');
-        }
     }
 
     function handleSubmit() {
@@ -509,7 +438,7 @@ function App() {
 
 <div className="question-card">
     <label className="question">Čistý Obrat (Kč)</label>
-    <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="Do 1,5 mil" checked={income === "Do 1,5 mil"} /> Do 1,5 mil</label>
+    <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="do 1,5 mil" checked={income === "do 1,5 mil"} /> do 1,5 mil</label>
     <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="1,5 - 18 miliónů" checked={income === "1,5 - 18 miliónů"} /> 1,5 - 18 miliónů</label>
     <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="18 - 50 miliónů" checked={income === "18 - 50 miliónů"} /> 18 - 50 miliónů</label>
     <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="50 - 100 miliónů" checked={income === "50 - 100 miliónů"} /> 50 - 100 miliónů</label>
@@ -520,7 +449,7 @@ function App() {
 
 <div className="question-card">
     <label className="question">Import (Kč)</label>
-    <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="Do 1,5 mil" checked={import_ === "Do 1,5 mil"} /> Do 1,5 mil</label>
+    <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="do 1,5 mil" checked={import_ === "do 1,5 mil"} /> do 1,5 mil</label>
     <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="1,5 - 18 miliónů" checked={import_ === "1,5 - 18 miliónů"} /> 1,5 - 18 miliónů</label>
     <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="18 - 50 miliónů" checked={import_ === "18 - 50 miliónů"} /> 18 - 50 miliónů</label>
     <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="50 - 100 miliónů" checked={import_ === "50 - 100 miliónů"} /> 50 - 100 miliónů</label>
@@ -531,7 +460,7 @@ function App() {
 
 <div className="question-card">
     <label className="question">Export (Kč)</label>
-    <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="Do 1,5 mil" checked={export_ === "Do 1,5 mil"} /> Do 1,5 mil</label>
+    <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="do 1,5 mil" checked={export_ === "do 1,5 mil"} /> do 1,5 mil</label>
     <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="1,5 - 18 miliónů" checked={export_ === "1,5 - 18 miliónů"} /> 1,5 - 18 miliónů</label>
     <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="18 - 50 miliónů" checked={export_ === "18 - 50 miliónů"} /> 18 - 50 miliónů</label>
     <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="50 - 100 miliónů" checked={export_ === "50 - 100 miliónů"} /> 50 - 100 miliónů</label>
@@ -548,14 +477,13 @@ function App() {
                     <h2 className="section-title">Obor činnosti</h2>
                     <div className="question-card">
                         <label className="question">Převažující obor činnosti dle CZ-NACE</label>
-                        <CreatableSelect
-                            options={czNaceOptions}
-                            value={industry ? { value: industry, label: industry } : null}
-                            onChange={handleIndustryChange}
-                            placeholder="Začněte psát popis nebo kód oboru činnosti..."
-                            isClearable
-                            formatCreateLabel={(inputValue) => `Použít: "${inputValue}"`}
-                        />
+                        <input
+                            type="text"
+                            onChange={e => {setIndustry(e.target.value)}}
+                            required
+                            placeholder="Převažující obor činnosti dle CZ-NACE"
+                            value={industry}>
+                        </input>
                     </div>
                 </>
             )
