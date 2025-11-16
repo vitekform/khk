@@ -350,6 +350,7 @@ function App() {
                             onChange={(selectedOption) => setLegalForm(selectedOption ? selectedOption.value : "")}
                             placeholder="Vyberte právní formu"
                             isClearable
+                            required
                         />
                     </div>
                 </>
@@ -381,6 +382,7 @@ function App() {
                             type={"date"}
                             onChange={e => {setRegDate(e.target.value)}}
                             placeholder="Datum registrace"
+                            required
                             value={regDate}>
                         </input>
                     </div>
@@ -390,6 +392,7 @@ function App() {
                             type={"text"}
                             onChange={e => {setRegPlace(e.target.value)}}
                             placeholder="Místo registrace"
+                            required
                             value={regPlace}>
                         </input>
                     </div>
@@ -399,6 +402,7 @@ function App() {
                             type={"text"}
                             onChange={e => {setMark(e.target.value)}}
                             placeholder="Spisová značka"
+                            required
                             value={mark}>
                         </input>
                     </div>
@@ -468,7 +472,7 @@ function App() {
 
 <div className="question-card">
     <label className="question">Čistý Obrat (Kč)</label>
-    <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="do 1,5 mil" checked={income === "do 1,5 mil"} /> do 1,5 mil</label>
+    <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="Do 1,5 mil" checked={income === "Do 1,5 mil"} /> Do 1,5 mil</label>
     <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="1,5 - 18 miliónů" checked={income === "1,5 - 18 miliónů"} /> 1,5 - 18 miliónů</label>
     <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="18 - 50 miliónů" checked={income === "18 - 50 miliónů"} /> 18 - 50 miliónů</label>
     <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="50 - 100 miliónů" checked={income === "50 - 100 miliónů"} /> 50 - 100 miliónů</label>
@@ -479,7 +483,7 @@ function App() {
 
 <div className="question-card">
     <label className="question">Import (Kč)</label>
-    <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="do 1,5 mil" checked={import_ === "do 1,5 mil"} /> do 1,5 mil</label>
+    <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="Do 1,5 mil" checked={import_ === "Do 1,5 mil"} /> Do 1,5 mil</label>
     <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="1,5 - 18 miliónů" checked={import_ === "1,5 - 18 miliónů"} /> 1,5 - 18 miliónů</label>
     <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="18 - 50 miliónů" checked={import_ === "18 - 50 miliónů"} /> 18 - 50 miliónů</label>
     <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="50 - 100 miliónů" checked={import_ === "50 - 100 miliónů"} /> 50 - 100 miliónů</label>
@@ -490,7 +494,7 @@ function App() {
 
 <div className="question-card">
     <label className="question">Export (Kč)</label>
-    <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="do 1,5 mil" checked={export_ === "do 1,5 mil"} /> do 1,5 mil</label>
+    <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="Do 1,5 mil" checked={export_ === "Do 1,5 mil"} /> Do 1,5 mil</label>
     <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="1,5 - 18 miliónů" checked={export_ === "1,5 - 18 miliónů"} /> 1,5 - 18 miliónů</label>
     <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="18 - 50 miliónů" checked={export_ === "18 - 50 miliónů"} /> 18 - 50 miliónů</label>
     <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="50 - 100 miliónů" checked={export_ === "50 - 100 miliónů"} /> 50 - 100 miliónů</label>
