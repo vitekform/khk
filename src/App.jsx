@@ -559,6 +559,23 @@ function App() {
                 </>
             );
         }
+        else if (page === 12) {
+            return (
+                <>
+                    <h2 className="section-title">Emailová Adresa Příjemce</h2>
+                    <div className="question-card">
+                        <label className="question">Zadejte Emailovou adresu kam vám máme předvyplněnou přihlášku zaslat</label>
+                        <input
+                            type="email"
+                            onChange={e => {setEmailTo(e.target.value)}}
+                            required
+                            placeholder="pepa.novak@gmail.com"
+                            value={emailTo}>
+                        </input>
+                    </div>
+                </>
+            );
+        }
     }
   return (
     <>
