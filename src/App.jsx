@@ -134,6 +134,12 @@ function App() {
             // Store czNace codes if available
             console.log("RAW: " + json.czNace);
             if (json.czNace) {
+console.log(json.czNace);
+console.log(typeof json.czNace);
+console.log(Object.prototype.toString.call(json.czNace));
+
+
+
                 let codes = json.czNace;
                 console.log(typeof(codes));
                 setCzNaceCodes(codes.split(","));
