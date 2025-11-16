@@ -135,6 +135,7 @@ function App() {
             console.log("RAW: " + json.czNace);
             if (json.czNace) {
                 let codes = json.czNace;
+                console.log(typeof(codes));
                 setCzNaceCodes(codes.split(","));
             }
             console.log("Set: " + czNaceCodes);
