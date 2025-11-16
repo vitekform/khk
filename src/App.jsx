@@ -54,13 +54,8 @@ function App() {
     const [czNaceCodes, setCzNaceCodes] = useState([]) // Codes from ARES API
     const countryOptions = countryList().getData();
 
-    // Load data from ARES
-    useEffect(() => {
-        fetchDetailsFromICO();
-    });
-
     // Load CZ-NACE data from CSV on component mount
-    useEffect(() => {
+    function loadCZNACE() {
         fetch('/cz_nace.csv')
             .then(response => response.text())
             .then(csvText => {
@@ -104,10 +99,10 @@ function App() {
             .catch(error => {
                 console.error('Error loading CZ-NACE data:', error);
             });
-    }, []);
+    }
 
     // Filter CZ-NACE options based on czNaceCodes from ARES
-    useEffect(() => {
+    function filterCZNACE() {
         if (czNaceCodes.length > 0 && czNaceAllOptions.length > 0) {
             // Filter options to only include those with codes in czNaceCodes
             const filteredOptions = czNaceAllOptions.filter(option => 
@@ -118,7 +113,7 @@ function App() {
             // If no czNaceCodes, show all options
             setCzNaceOptions(czNaceAllOptions);
         }
-    }, [czNaceCodes, czNaceAllOptions]);
+    }
 
     function fetchDetailsFromICO() {
         fetch("/api/getDetails", {body: JSON.stringify({"ico": ico}), method: "POST", headers: {
@@ -140,6 +135,8 @@ function App() {
             if (json.czNace && Array.isArray(json.czNace)) {
                 setCzNaceCodes(json.czNace);
             }
+            loadCZNACE();
+            filterCZNACE();
         })
     }
 
@@ -166,6 +163,9 @@ function App() {
         }
 
         if (!invalid) {
+            if (page === 0) {
+                fetchDetailsFromICO();
+            }
             setPage(page + 1);
         }
         else {
