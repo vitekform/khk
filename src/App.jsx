@@ -34,7 +34,7 @@ function App() {
     const [income, setIncome] = useState("Do 1,5 mil")
     const [import_, setImport] = useState("Do 1,5 mil")
     const [export_, setExport] = useState("Do 1,5 mil")
-    const [industry, setIndustry] = useState("")
+    const [industry, setIndustry] = useState([])
     const [naceOptions, setNaceOptions] = useState([])
     const [exportCountries, setExportCountries] = useState([])
     const [importCountries, setImportCountries] = useState([])
@@ -96,7 +96,7 @@ function App() {
             !phone || !email || !nameStatuary || !phoneStatutary || !emailStatutary || 
             !functionStatutary || !legalForm || !regDate || !regPlace || !mark ||
             !nameMeeting || !phoneMeeting || !emailMeeting || !functionMeeting || 
-            !industry || !emailTo) {
+            industry.length === 0 || !emailTo) {
             alert("Prosím vyplňte všechna povinná pole!");
             return;
         }
@@ -130,7 +130,7 @@ function App() {
             "Čistý obrat (Kč)": income,
             "Import (Kč)": import_,
             "Export (Kč)": export_,
-            "Převažující obor činnosti dle CZ-NACE": industry,
+            "Převažující obor činnosti dle CZ-NACE": industry.map(i => i.label),
             "Země, kam exportujete/chcete exportovat": exportCountries.map(c => c.label),
             "Země, odkuď importujete/chcete importovat": importCountries.map(c => c.label)
         }
@@ -490,11 +490,11 @@ function App() {
                     <div className="question-card">
                         <label className="question">Převažující obor činnosti dle CZ-NACE</label>
                         <Select
+                            isMulti
                             options={naceOptions}
-                            value={industry ? naceOptions.find(opt => opt.value === industry) : null}
-                            onChange={(selectedOption) => setIndustry(selectedOption ? selectedOption.value : "")}
+                            value={industry}
+                            onChange={setIndustry}
                             placeholder="Vyberte převažující obor činnosti"
-                            isClearable
                         />
                     </div>
 
