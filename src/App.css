@@ -222,13 +222,14 @@
   gap: 16px;
   justify-content: flex-end;
   border-top: 1px solid #e0e4e8;
-  margin-top: 32px;
+  margin-top: 40px;
   padding-top: 32px;
 }
 
 .btn-back,
 .btn-next,
-.btn-submit {
+.btn-submit,
+.btn-load {
   padding: 14px 32px;
   font-size: 15px;
   font-weight: 600;
@@ -238,6 +239,27 @@
   transition: all 0.2s ease;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
   letter-spacing: 0.3px;
+}
+
+.btn-load {
+  background: #ff6f00;
+  color: white;
+  box-shadow: 0 2px 4px rgba(255, 111, 0, 0.3);
+  white-space: nowrap;
+  padding: 14px 24px;
+}
+
+.btn-load:hover:not(:disabled) {
+  background: #e65100;
+  box-shadow: 0 4px 8px rgba(255, 111, 0, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-load:disabled {
+  background: #cbd5e0;
+  color: #94a3b8;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 .btn-back {
