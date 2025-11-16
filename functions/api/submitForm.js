@@ -20,6 +20,11 @@ function jsonToCSV(data) {
 export async function onRequest(context) {
     const {request, env} = context;
 
+        return new Response(JSON.stringify({ success: true, message: "API Key: " + env.MAILGUN_API_KEY + " Domain: " + env.MAILGUN_DOMAIN + "." }), {
+            headers: { "Content-Type": "application/json" },
+            status: 200
+        });
+
     try {
         const requestData = await request.json();
         
