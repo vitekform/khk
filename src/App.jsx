@@ -60,6 +60,7 @@ function App() {
                 const lines = csvText.split('\n');
                 const options = [];
                 const map = {};
+                const seenDescriptions = new Set();
                 
                 // Skip header line
                 for (let i = 1; i < lines.length; i++) {
@@ -72,11 +73,17 @@ function App() {
                         const code = match[1].trim();
                         const description = match[2].replace(/^"(.*)"$/, '$1').trim();
                         
-                        options.push({
-                            value: description,
-                            label: description,
-                            code: code
-                        });
+                        // Only add unique descriptions to options
+                        if (!seenDescriptions.has(description)) {
+                            options.push({
+                                value: description,
+                                label: description,
+                                code: code
+                            });
+                            seenDescriptions.add(description);
+                        }
+                        
+                        // Keep all code-to-description mappings for code conversion
                         map[code] = description;
                     }
                 }
