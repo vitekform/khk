@@ -54,7 +54,7 @@ function App() {
 
     // Load CZ-NACE data from CSV on component mount
     useEffect(() => {
-        fetch('/cz_nace_no_dots.csv')
+        fetch('/obory.csv')
             .then(response => response.text())
             .then(csvText => {
                 const lines = csvText.split('\n');
