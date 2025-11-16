@@ -333,9 +333,9 @@ function App() {
                         <label className="question">Vaše webové stránky</label>
                         <input
                             type={"text"}
-                            pattern="^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                             onChange={e => {setWeb(e.target.value)}}
-                            placeholder="URL vašich webových stránek"
+                            placeholder="Adresa vašich webových stránek"
+                            pattern="^[a-zA-Z0-9.\-]+\\.[a-zA-Z]{2,}$"
                             value={web}>
                         </input>
                     </div>
