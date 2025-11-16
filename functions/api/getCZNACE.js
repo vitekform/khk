@@ -5,7 +5,7 @@ export async function onRequest(context) {
         const requestData = await request.json();
         const ico = requestData.ico;
 
-        const res = await fetch(`https://komora-khk.cz/clenska-prihlaska`, {
+        const res = await fetch(`https://aplikace.komora-khk.cz/clenska-prihlaska`, {
             method: "POST",
             headers: { "Accept": "application/json" },
             body: JSON.stringify({"acc": "getData", "ic": ico})
