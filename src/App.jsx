@@ -335,7 +335,6 @@ function App() {
                             type={"text"}
                             onChange={e => {setWeb(e.target.value)}}
                             placeholder="Adresa vašich webových stránek"
-                            pattern="^[a-zA-Z0-9.\-]+\\.[a-zA-Z]{2,}$"
                             value={web}>
                         </input>
                     </div>
