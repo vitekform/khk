@@ -81,6 +81,9 @@ function App() {
                 }));
                 setNaceOptions(options);
             }
+        }).catch(() => {
+            // Silently fail if NACE data cannot be fetched
+            // User can still manually enter industry information if needed
         })
     }
 
