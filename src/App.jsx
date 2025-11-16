@@ -55,97 +55,117 @@ function App() {
     const countryOptions = countryList().getData();
 
     // Load CZ-NACE data from CSV on component mount
-    function loadCZNACE() {
-        fetch('/cz_nace.csv')
-            .then(response => response.text())
-            .then(csvText => {
-                const lines = csvText.split('\n');
-                const options = [];
-                const map = {};
-                const seenDescriptions = new Set();
-                
-                // Skip header line
-                for (let i = 1; i < lines.length; i++) {
-                    const line = lines[i].trim();
-                    if (!line) continue;
-                    
-                    // Parse CSV line (handle commas in quotes)
-                    const match = line.match(/^([^,]+),(.+)$/);
-                    if (match) {
-                        const code = match[1].trim();
-                        const description = match[2].replace(/^"(.*)"$/, '$1').trim();
-                        
-                        // Only add unique descriptions to options
-                        if (!seenDescriptions.has(description)) {
-                            options.push({
-                                value: description,
-                                label: description,
-                                code: code
-                            });
-                            seenDescriptions.add(description);
-                        }
-                        
-                        // Keep all code-to-description mappings for code conversion
-                        map[code] = description;
+    // Returns a promise resolving to { options, map }
+    async function loadCZNACE() {
+        try {
+            const response = await fetch('/cz_nace.csv');
+            const csvText = await response.text();
+            const lines = csvText.split('\n');
+            const options = [];
+            const map = {};
+            const seenDescriptions = new Set();
+
+            // Skip header line
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+
+                // Parse CSV line (handle commas in quotes)
+                const match = line.match(/^([^,]+),(.+)$/);
+                if (match) {
+                    const code = match[1].trim();
+                    const description = match[2].replace(/^"(.*)"$/, '$1').trim();
+
+                    // Only add unique descriptions to options
+                    if (!seenDescriptions.has(description)) {
+                        options.push({
+                            value: description,
+                            label: description,
+                            code: code
+                        });
+                        seenDescriptions.add(description);
                     }
+
+                    // Keep all code-to-description mappings for code conversion
+                    map[code] = description;
                 }
-                
-                // Sort options alphabetically by description
-                options.sort((a, b) => a.label.localeCompare(b.label, 'cs'));
-                
-                setCzNaceAllOptions(options);
-                setCzNaceMap(map);
-            
-            })
-            .catch(error => {
-                console.error('Error loading CZ-NACE data:', error);
-            });
+            }
+
+            // Sort options alphabetically by description
+            options.sort((a, b) => a.label.localeCompare(b.label, 'cs'));
+
+            setCzNaceAllOptions(options);
+            setCzNaceMap(map);
+
+            return { options, map };
+        } catch (error) {
+            console.error('Error loading CZ-NACE data:', error);
+            return { options: [], map: {} };
+        }
     }
 
     // Filter CZ-NACE options based on czNaceCodes from ARES
-    function filterCZNACE() {
-        console.log("We are using: " + czNaceCodes + " and options: " + czNaceAllOptions);
-        if (czNaceCodes.length > 0 && czNaceAllOptions.length > 0) {
-            // Filter options to only include those with codes in czNaceCodes
-            const filteredOptions = czNaceAllOptions.filter(option => 
-                czNaceCodes.includes(option.code)
-            );
+    // Accept optional preloaded options and codes to avoid relying on state timing
+    function filterCZNACE(preloadedOptions = null, preloadedCodes = null) {
+        const options = preloadedOptions || czNaceAllOptions;
+        const codes = preloadedCodes || czNaceCodes;
+
+        // Debug-friendly logs
+        console.log('Filtering CZ-NACE with codes:', codes, 'options length:', options.length);
+
+        if (codes && codes.length > 0 && options && options.length > 0) {
+            // Normalize codes to digits-only strings
+            const normalizedCodes = codes.map(c => String(c).replace(/\D/g, ''))
+                                         .filter(c => c.length > 0);
+
+            const filteredOptions = options.filter(option => {
+                const optCode = String(option.code || '').replace(/\D/g, '');
+                if (!optCode) return false;
+
+                // Match if either code is a prefix of the other (e.g. '23' matches '231' and vice-versa)
+                return normalizedCodes.some(cz => optCode.startsWith(cz) || cz.startsWith(optCode));
+            });
+
             setCzNaceOptions(filteredOptions);
         } else {
             // If no czNaceCodes, show all options
-            setCzNaceOptions(czNaceAllOptions);
+            setCzNaceOptions(options || []);
         }
     }
 
 
-    function fetchDetailsFromICO() {
-    fetch("/api/getDetails", {
-        body: JSON.stringify({ ico }),
-        method: "POST",
-        headers: { "Content-Type": "application/json" }
-    }).then(async (res) => {
-        let json = await res.json();
+    async function fetchDetailsFromICO() {
+        try {
+            const res = await fetch('/api/getDetails', {
+                body: JSON.stringify({ ico }),
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
 
-        setCompanyName(json.name);
-        setDic(json.dic);
-        setStreet_and_number(`${json.street} ${json.address_num}`);
-        setState(json.state);
-        setCity(json.city);
-        setZip(json.psc);
-        setLegalForm(json.legal_form);
-        setRegDate(json.reg_date);
-        setMark(json.znacka);
+            const json = await res.json();
 
-        console.log("RAW:", json.czNace);
+            setCompanyName(json.name);
+            setDic(json.dic);
+            setStreet_and_number(`${json.street} ${json.address_num}`);
+            setState(json.state);
+            setCity(json.city);
+            setZip(json.psc);
+            setLegalForm(json.legal_form);
+            setRegDate(json.reg_date);
+            setMark(json.znacka);
 
-        if (json.czNace) {
-            setCzNaceCodes(json.czNace);
+            console.log('RAW:', json.czNace);
+
+            const codes = json.czNace || [];
+            setCzNaceCodes(codes);
+
+            // Wait for CSV to be loaded, then filter using the fetched codes
+            const { options } = await loadCZNACE();
+            filterCZNACE(options, codes);
+        } catch (err) {
+            console.error('Error fetching details from ICO:', err);
         }
-
-        loadCZNACE();
-        filterCZNACE();
-    });
-}
+    }
 
     function handleNext() {
         // check if all fields are filled (marked as required in the input)
