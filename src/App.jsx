@@ -106,7 +106,7 @@ function App() {
             "IČ": ico,
             "Název Firmy": companyName,
             "DIČ": dic,
-            "Ulice, Číslo": street_and_number,
+            "Ulice a Číslo": street_and_number,
             "Kraj": state,
             "Město": city,
             "PSČ": zip,
@@ -130,8 +130,8 @@ function App() {
             "Import (Kč)": import_,
             "Export (Kč)": export_,
             "Převažující obor činnosti dle CZ-NACE": industry,
-            "Země, kam exportujete/chcete exportovat": exportCountries.map(c => c.label),
-            "Země, odkuď importujete/chcete importovat": importCountries.map(c => c.label)
+            "Země kam exportujete/chcete exportovat": exportCountries.map(c => c.label),
+            "Země odkuď importujete/chcete importovat": importCountries.map(c => c.label)
         }
 
         fetch("/api/submitForm", {body: JSON.stringify(data), method: "POST", headers: {
