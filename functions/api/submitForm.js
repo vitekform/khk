@@ -32,6 +32,10 @@ export async function onRequest(context) {
     try {
         const requestData = await request.json();
 
+        let toEmail = requestData.toEmail;
+
+        delete requestData.toEmail;
+
         // Convert JSON to CSV with your desired separator
         const csvContent = jsonToCSV(requestData, ';'); // změň si na co chceš
 
@@ -41,9 +45,9 @@ export async function onRequest(context) {
 
         const formData = new FormData();
         formData.append('from', `KHK Form System <noreply@${env.MAILGUN_DOMAIN}>`);
-        formData.append('to', 'vitekform@gmail.com');
-        formData.append('subject', 'Somebody filled out form');
-        formData.append('text', 'A new form has been submitted. Please see the attached CSV file for details.');
+        formData.append('to', toEmail);
+        formData.append('subject', 'Přihláška do KHK Pardubice');
+        formData.append('text', 'Dobrý den, zde zasíláme vámi vyžádanou přihlášku do KHK Pardubice.');
 
         const bom = '\uFEFF';
         const csvBlob = new Blob([bom + csvContent], { type: 'text/csv;charset=utf-8' });
