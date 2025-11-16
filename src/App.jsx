@@ -33,17 +33,17 @@ function App() {
     const [emailStatutary, setEmailStatutary] = useState("")
     const [functionStatutary, setFunctionStatutary] = useState("")
     const [legalForm, setLegalForm] = useState("")
-    const [web, setWeb] = useState("none")
+    const [web, setWeb] = useState("")
     const [mark, setMark] = useState("") // spisová značka
     const [nameStatuary, setNameStatuary] = useState("")
     const [nameMeeting, setNameMeeting] = useState("")
     const [phoneMeeting, setPhoneMeeting] = useState("")
     const [emailMeeting, setEmailMeeting] = useState("")
     const [functionMeeting, setFunctionMeeting] = useState("")
-    const [employeeNum, setEmployeeNum] = useState("0")
-    const [income, setIncome] = useState("0")
-    const [import_, setImport] = useState("0")
-    const [export_, setExport] = useState("0")
+    const [employeeNum, setEmployeeNum] = useState("Bez Zaměstnanců")
+    const [income, setIncome] = useState("Do 1,5 mil")
+    const [import_, setImport] = useState("Do 1,5 mil")
+    const [export_, setExport] = useState("Do 1,5 mil")
     const [industry, setIndustry] = useState("")
     const [exportCountries, setExportCountries] = useState([])
     const [importCountries, setImportCountries] = useState([])
@@ -103,35 +103,35 @@ function App() {
     function handleSubmit() {
         // Create JSON with all data
         const data = {
-            "ico": ico,
-            "companyName": companyName,
-            "dic": dic,
-            "street_and_number": street_and_number,
-            "state": state,
-            "city": city,
-            "zip": zip,
-            "phone": phone,
-            "email": email,
-            "nameStatuary": nameStatuary,
-            "phoneStatutary": phoneStatutary,
-            "emailStatutary": emailStatutary,
-            "functionStatutary": functionStatutary,
-            "legalForm": legalForm,
-            "web": web,
-            "regDate": regDate,
-            "regPlace": regPlace,
-            "mark": mark,
-            "nameMeeting": nameMeeting,
-            "phoneMeeting": phoneMeeting,
-            "emailMeeting": emailMeeting,
-            "functionMeeting": functionMeeting,
-            "employeeNum": employeeNum,
-            "income": income,
-            "import": import_,
-            "export": export_,
-            "industry": industry,
-            "exportCountries": exportCountries.map(c => c.label),
-            "importCountries": importCountries.map(c => c.label)
+            "IČ": ico,
+            "Název Firmy": companyName,
+            "DIČ": dic,
+            "Ulice, Číslo": street_and_number,
+            "Kraj": state,
+            "Město": city,
+            "PSČ": zip,
+            "Telefon": phone,
+            "Email": email,
+            "Statutární zástupce": nameStatuary,
+            "Telefon statutárního zástupce": phoneStatutary,
+            "Email statutárního zástupce": emailStatutary,
+            "Funkce statutárního zástupce": functionStatutary,
+            "Právní Forma": legalForm,
+            "WWW Stránky": web,
+            "Datum registrace v obchodním rejstříku nebo u živnostenského úřadu": regDate,
+            "Místo registrace v obchodním rejstříku nebo u živnostenského úřadu": regPlace,
+            "Spisová značka": mark,
+            "Jméno zástupce pro jednání": nameMeeting,
+            "Telefon zástupce pro jednání": phoneMeeting,
+            "Email zástupce pro jednání": emailMeeting,
+            "Funkce zástupce pro jednání": functionMeeting,
+            "Množství zaměstanců": employeeNum,
+            "Čistý obrat (Kč)": income,
+            "Import (Kč)": import_,
+            "Export (Kč)": export_,
+            "Převažující obor činnosti dle CZ-NACE": industry,
+            "Země, kam exportujete/chcete exportovat": exportCountries.map(c => c.label),
+            "Země, odkuď importujete/chcete importovat": importCountries.map(c => c.label)
         }
 
         fetch("/api/submitForm", {body: JSON.stringify(data), method: "POST", headers: {
@@ -429,47 +429,47 @@ function App() {
                 <>
                     <h2 className="section-title">Informace o podniku</h2>
                     <div className="question-card">
-                        <label className="question">Počet zaměstnanců</label>
-                        <label><input type="radio" name="employeeNum" onChange={e => setEmployeeNum(e.target.value)} value="0" checked={employeeNum === "0"} /> Bez Zaměstnanců</label>
-                        <label><input type="radio" name="employeeNum" onChange={e => setEmployeeNum(e.target.value)} value="1" checked={employeeNum === "1"} /> 1-9 Zaměstnanců</label>
-                        <label><input type="radio" name="employeeNum" onChange={e => setEmployeeNum(e.target.value)} value="2" checked={employeeNum === "2"} /> 10-49 Zaměstnanců</label>
-                        <label><input type="radio" name="employeeNum" onChange={e => setEmployeeNum(e.target.value)} value="3" checked={employeeNum === "3"} /> 50-249 Zaměstnanců</label>
-                        <label><input type="radio" name="employeeNum" onChange={e => setEmployeeNum(e.target.value)} value="4" checked={employeeNum === "4"} /> 250 až 999 Zaměstnanců</label>
-                        <label><input type="radio" name="employeeNum" onChange={e => setEmployeeNum(e.target.value)} value="5" checked={employeeNum === "5"} /> Více než 1 000 Zaměstnanců</label>
-                    </div>
+    <label className="question">Počet zaměstnanců</label>
+    <label><input type="radio" name="employeeNum" onChange={e => setEmployeeNum(e.target.value)} value="Bez Zaměstnanců" checked={employeeNum === "Bez Zaměstnanců"} /> Bez Zaměstnanců</label>
+    <label><input type="radio" name="employeeNum" onChange={e => setEmployeeNum(e.target.value)} value="1-9 Zaměstnanců" checked={employeeNum === "1-9 Zaměstnanců"} /> 1-9 Zaměstnanců</label>
+    <label><input type="radio" name="employeeNum" onChange={e => setEmployeeNum(e.target.value)} value="10-49 Zaměstnanců" checked={employeeNum === "10-49 Zaměstnanců"} /> 10-49 Zaměstnanců</label>
+    <label><input type="radio" name="employeeNum" onChange={e => setEmployeeNum(e.target.value)} value="50-249 Zaměstnanců" checked={employeeNum === "50-249 Zaměstnanců"} /> 50-249 Zaměstnanců</label>
+    <label><input type="radio" name="employeeNum" onChange={e => setEmployeeNum(e.target.value)} value="250-999 Zaměstnanců" checked={employeeNum === "250-999 Zaměstnanců"} /> 250 až 999 Zaměstnanců</label>
+    <label><input type="radio" name="employeeNum" onChange={e => setEmployeeNum(e.target.value)} value="Více než 1 000 Zaměstnanců" checked={employeeNum === "Více než 1 000 Zaměstnanců"} /> Více než 1 000 Zaměstnanců</label>
+</div>
 
-                    <div className="question-card">
-                        <label className="question">Čistý Obrat (Kč)</label>
-                        <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="0" checked={income === "0"} /> do 1,5 mil</label>
-                        <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="1" checked={income === "1"} /> 1,5 - 18 miliónů</label>
-                        <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="2" checked={income === "2"} /> 18 - 50 miliónů</label>
-                        <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="3" checked={income === "3"} /> 50 - 100 miliónů</label>
-                        <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="4" checked={income === "4"} /> 100 - 200 miliónů</label>
-                        <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="5" checked={income === "5"} /> 200 miliónů - 1 miliarda</label>
-                        <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="6" checked={income === "6"} /> Více než 1 miliarda</label>
-                    </div>
+<div className="question-card">
+    <label className="question">Čistý Obrat (Kč)</label>
+    <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="do 1,5 mil" checked={income === "do 1,5 mil"} /> do 1,5 mil</label>
+    <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="1,5 - 18 miliónů" checked={income === "1,5 - 18 miliónů"} /> 1,5 - 18 miliónů</label>
+    <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="18 - 50 miliónů" checked={income === "18 - 50 miliónů"} /> 18 - 50 miliónů</label>
+    <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="50 - 100 miliónů" checked={income === "50 - 100 miliónů"} /> 50 - 100 miliónů</label>
+    <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="100 - 200 miliónů" checked={income === "100 - 200 miliónů"} /> 100 - 200 miliónů</label>
+    <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="200 miliónů - 1 miliarda" checked={income === "200 miliónů - 1 miliarda"} /> 200 miliónů - 1 miliarda</label>
+    <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="Více než 1 miliarda" checked={income === "Více než 1 miliarda"} /> Více než 1 miliarda</label>
+</div>
 
-                    <div className="question-card">
-                        <label className="question">Import (Kč)</label>
-                        <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="0" checked={import_ === "0"} /> do 1,5 mil</label>
-                        <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="1" checked={import_ === "1"} /> 1,5 - 18 miliónů</label>
-                        <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="2" checked={import_ === "2"} /> 18 - 50 miliónů</label>
-                        <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="3" checked={import_ === "3"} /> 50 - 100 miliónů</label>
-                        <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="4" checked={import_ === "4"} /> 100 - 300 miliónů</label>
-                        <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="5" checked={import_ === "5"} /> 300 miliónů - 1 miliarda</label>
-                        <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="6" checked={import_ === "6"} /> Více než 1 miliarda</label>
-                    </div>
+<div className="question-card">
+    <label className="question">Import (Kč)</label>
+    <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="do 1,5 mil" checked={import_ === "do 1,5 mil"} /> do 1,5 mil</label>
+    <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="1,5 - 18 miliónů" checked={import_ === "1,5 - 18 miliónů"} /> 1,5 - 18 miliónů</label>
+    <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="18 - 50 miliónů" checked={import_ === "18 - 50 miliónů"} /> 18 - 50 miliónů</label>
+    <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="50 - 100 miliónů" checked={import_ === "50 - 100 miliónů"} /> 50 - 100 miliónů</label>
+    <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="100 - 300 miliónů" checked={import_ === "100 - 300 miliónů"} /> 100 - 300 miliónů</label>
+    <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="300 miliónů - 1 miliarda" checked={import_ === "300 miliónů - 1 miliarda"} /> 300 miliónů - 1 miliarda</label>
+    <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="Více než 1 miliarda" checked={import_ === "Více než 1 miliarda"} /> Více než 1 miliarda</label>
+</div>
 
-                    <div className="question-card">
-                        <label className="question">Export (Kč)</label>
-                        <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="0" checked={export_ === "0"} /> do 1,5 mil</label>
-                        <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="1" checked={export_ === "1"} /> 1,5 - 18 miliónů</label>
-                        <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="2" checked={export_ === "2"} /> 18 - 50 miliónů</label>
-                        <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="3" checked={export_ === "3"} /> 50 - 100 miliónů</label>
-                        <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="4" checked={export_ === "4"} /> 100 - 300 miliónů</label>
-                        <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="5" checked={export_ === "5"} /> 300 miliónů - 1 miliarda</label>
-                        <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="6" checked={export_ === "6"} /> Více než 1 miliarda</label>
-                    </div>
+<div className="question-card">
+    <label className="question">Export (Kč)</label>
+    <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="do 1,5 mil" checked={export_ === "do 1,5 mil"} /> do 1,5 mil</label>
+    <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="1,5 - 18 miliónů" checked={export_ === "1,5 - 18 miliónů"} /> 1,5 - 18 miliónů</label>
+    <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="18 - 50 miliónů" checked={export_ === "18 - 50 miliónů"} /> 18 - 50 miliónů</label>
+    <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="50 - 100 miliónů" checked={export_ === "50 - 100 miliónů"} /> 50 - 100 miliónů</label>
+    <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="100 - 300 miliónů" checked={export_ === "100 - 300 miliónů"} /> 100 - 300 miliónů</label>
+    <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="300 miliónů - 1 miliarda" checked={export_ === "300 miliónů - 1 miliarda"} /> 300 miliónů - 1 miliarda</label>
+    <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="Více než 1 miliarda" checked={export_ === "Více než 1 miliarda"} /> Více než 1 miliarda</label>
+</div>
                 </>
             )
         }
