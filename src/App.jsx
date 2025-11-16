@@ -134,7 +134,8 @@ function App() {
             // Store czNace codes if available
             console.log("RAW: " + json.czNace);
             if (json.czNace) {
-                setCzNaceCodes(json.czNace.split(","));
+                let codes = json.czNace;
+                setCzNaceCodes(codes.split(","));
             }
             console.log("Set: " + czNaceCodes);
             loadCZNACE().then(() => {
