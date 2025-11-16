@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import countryList from "react-select-country-list";
 import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
 import { LEGAL_FORM_OPTIONS } from './legalForms';
 
 
@@ -47,7 +48,46 @@ function App() {
     const [industry, setIndustry] = useState("")
     const [exportCountries, setExportCountries] = useState([])
     const [importCountries, setImportCountries] = useState([])
+    const [czNaceOptions, setCzNaceOptions] = useState([])
+    const [czNaceMap, setCzNaceMap] = useState({})
     const countryOptions = countryList().getData();
+
+    // Load CZ-NACE data from CSV on component mount
+    useEffect(() => {
+        fetch('/cz_nace_no_dots.csv')
+            .then(response => response.text())
+            .then(csvText => {
+                const lines = csvText.split('\n');
+                const options = [];
+                const map = {};
+                
+                // Skip header line
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+                    
+                    // Parse CSV line (handle commas in quotes)
+                    const match = line.match(/^([^,]+),(.+)$/);
+                    if (match) {
+                        const code = match[1].trim();
+                        const description = match[2].replace(/^"(.*)"$/, '$1').trim();
+                        
+                        options.push({
+                            value: description,
+                            label: description,
+                            code: code
+                        });
+                        map[code] = description;
+                    }
+                }
+                
+                setCzNaceOptions(options);
+                setCzNaceMap(map);
+            })
+            .catch(error => {
+                console.error('Error loading CZ-NACE data:', error);
+            });
+    }, []);
 
     function fetchDetailsFromICO() {
         fetch("/api/getDetails", {body: JSON.stringify({"ico": ico}), method: "POST", headers: {
@@ -84,6 +124,12 @@ function App() {
             invalid = true;
         }
 
+        // Special validation for page 9 (industry field)
+        if (page === 9 && !industry) {
+            alert("Prosím zadejte převažující obor činnosti!");
+            invalid = true;
+        }
+
         if (!invalid) {
             if (page === 0) {
                 fetchDetailsFromICO();
@@ -98,6 +144,21 @@ function App() {
 
     function handleBack() {
         setPage(page - 1);
+    }
+
+    function handleIndustryChange(newValue, actionMeta) {
+        if (actionMeta.action === 'select-option' || actionMeta.action === 'create-option') {
+            const inputValue = newValue ? newValue.value : '';
+            
+            // Check if the input is a code and convert it to description
+            if (czNaceMap[inputValue]) {
+                setIndustry(czNaceMap[inputValue]);
+            } else {
+                setIndustry(inputValue);
+            }
+        } else if (actionMeta.action === 'clear') {
+            setIndustry('');
+        }
     }
 
     function handleSubmit() {
@@ -477,13 +538,14 @@ function App() {
                     <h2 className="section-title">Obor činnosti</h2>
                     <div className="question-card">
                         <label className="question">Převažující obor činnosti dle CZ-NACE</label>
-                        <input
-                            type="text"
-                            onChange={e => {setIndustry(e.target.value)}}
-                            required
-                            placeholder="Převažující obor činnosti dle CZ-NACE"
-                            value={industry}>
-                        </input>
+                        <CreatableSelect
+                            options={czNaceOptions}
+                            value={industry ? { value: industry, label: industry } : null}
+                            onChange={handleIndustryChange}
+                            placeholder="Začněte psát popis nebo kód oboru činnosti..."
+                            isClearable
+                            formatCreateLabel={(inputValue) => `Použít: "${inputValue}"`}
+                        />
                     </div>
                 </>
             )
