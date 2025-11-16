@@ -348,7 +348,6 @@ function App() {
                     <h2 className="section-title">Registrační údaje</h2>
                     <div className="question-card">
                         <label className="question">Datum registrace v obchodním rejstříku nebo u živnostenského úřadu</label>
-                        <p>Ve formátu mm/dd/yyyy</p>
                         <input
                             type={"date"}
                             onChange={e => {setRegDate(e.target.value)}}
