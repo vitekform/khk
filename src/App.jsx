@@ -18,7 +18,7 @@ function App() {
     }
 
     const [page, setPage] = useState(0)
-    const [ico, setIco] = useState("00000000")
+    const [ico, setIco] = useState("")
     const [companyName, setCompanyName] = useState("")
     const [dic, setDic] = useState("")
     const [street_and_number, setStreet_and_number] = useState("")
@@ -130,8 +130,8 @@ function App() {
             "Import (Kč)": import_,
             "Export (Kč)": export_,
             "Převažující obor činnosti dle CZ-NACE": industry,
-            "Země kam exportujete/chcete exportovat": exportCountries.map(c => c.label),
-            "Země odkuď importujete/chcete importovat": importCountries.map(c => c.label)
+            "Země, kam exportujete/chcete exportovat": exportCountries.map(c => c.label),
+            "Země, odkuď importujete/chcete importovat": importCountries.map(c => c.label)
         }
 
         fetch("/api/submitForm", {body: JSON.stringify(data), method: "POST", headers: {
@@ -151,7 +151,7 @@ function App() {
                 <>
                     <h2 className="section-title">Identifikační číslo</h2>
                     <div className="question-card">
-                        <label className="question">Prosím zadejte vaše IČO</label>
+                        <label className="question">Prosím, zadejte vaše IČO</label>
                         <input
                             type="text"
                             onChange={e => {setIco(e.target.value)}}
