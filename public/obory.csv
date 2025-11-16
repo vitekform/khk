@@ -140,8 +140,6 @@ code,description
 1106,Vše
 1107,Vše
 1200,Vše
-1310,"Agregace Nace Rev. 1.1 tříd 17.11, 17.12, 17.13, 17.14, 17.15,"
-1310,"Agregace NACE Rev. 1.1 tříd 17.11, 17.12, 17.13, 17.14, 17.15,"
 1320,Vše
 1330,Vše
 1392,"Vše, kromě:"
@@ -211,8 +209,6 @@ code,description
 1812,Tiskařské služby kromě pro noviny
 5819,"Známky, šeky, kolky, bankovky, obchodní propagační materiály,"
 1814,Vše
-1813,Agregace NACE Rev. 1.1 tříd 22.24 a 22.25
-1820,"Agregace NACE Rev. 1.1 tříd 22.31, 22.32, 22.33"
 1910,Vše
 1920,Vše
 2013,Obohacení uranu
@@ -246,7 +242,6 @@ code,description
 2059,"Vše, kromě rozpracovaných čipů nebo plátků čipů, polovodiče"
 2611,"Výroba rozpracovaných čipů nebo plátků čipů, polovodiče"
 2060,Vše
-2211,Agregace NACE Rev. 1.1 tříd 25.11 a 25.12
 2219,"Vše, kromě:"
 3250,Výroba pryžových chirurgických rukavic
 3299,Výroba záchranných vest
@@ -281,7 +276,6 @@ code,description
 3319,"Opravy a údržba keramických trubek, rour, trubního vedení"
 3320,"Instalace a montáž keramických trubek, rour, trubního vedení"
 2351,Vše
-2352,Agregace NACE Rev. 1.1 tříd 26.52 a 26.53
 2361,Vše
 2362,Vše
 2363,Vše
@@ -294,7 +288,6 @@ code,description
 3320,"Instalace a montáž mlýnských kamenů, brusných kamenů,"
 2399,Vše
 2410,Vše
-2451,Agregace NACE Rev. 1.1 tříd 27.21 a 27.51
 2420,Vše
 2431,Vše
 2432,Vše
@@ -407,8 +400,6 @@ code,description
 2790,Výroba svodičů přepětí
 3314,Opravy a údržba rozvodných a kontrolních zařízení pro
 2611,Montáž spřahadel (izolované dráty a svorky) pro využití
-2731,Nový rozpad NACE rev. 1.1 třída 31.30
-2732,Nový rozpad NACE rev. 1.1 třída 31.30
 2790,"Výroba přístrojových kabelů, prodlužovacích kabelů a ostatních"
 2720,Vše
 2740,Vše
@@ -445,8 +436,8 @@ code,description
 3299,Plynové masky
 3313,Opravy:
 3314,Opravy a údržba ostatních elektrických zdravotnických zařízení
-2651,"-Letové záznamníky (černé skříňky), sledovací, zaměřovací,"
-2670,"- Optické měřicí a kontrolní přístroje a nástroje, např."
+2651,"Letové záznamníky (černé skříňky), sledovací, zaměřovací,"
+2670,"Optické měřicí a kontrolní přístroje a nástroje, např."
 2829,"Vodováhy, měřicí pravítka a podobné ruční nástroje, strojní"
 2899,Zařízení pro nastavení a vyvažování pneumatik (kromě
 3250,Zdravotnické teploměry
@@ -813,7 +804,6 @@ code,description
 6312,Webové vyhledávací portály
 3312,"Opravy a údržba kancelářských strojů a zařízení, včetně"
 9511,Opravy a údržba počítačů kromě kopírek a strojů k počítání
-6209,(NACE 1.1 třída 72.60 byla „prázdná třída“)
 7211,Výzkum a vývoj v oblasti biotechnologie
 7219,Systematické studium a tvůrčí úsilí ve třech druzích výzkumu
 7220,Multidisciplinární výzkum a vývoj s převahou společenských
