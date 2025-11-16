@@ -1,48 +1,53 @@
-﻿// Function to convert JSON object to CSV format
-function jsonToCSV(data) {
+// Function to convert JSON object to CSV format with custom separator
+function jsonToCSV(data, separator = '|') {
     const headers = Object.keys(data);
+
     const values = Object.values(data).map(value => {
-        // Handle arrays (like exportCountries, importCountries)
+        // Handle arrays
         if (Array.isArray(value)) {
-            return `"${value.join(', ')}"`;
+            const joined = value.join(', ');
+            return `"${joined.replace(/"/g, '""')}"`;
         }
-        // Escape quotes and wrap in quotes if contains comma, newline, or quote
+
         const stringValue = String(value);
-        if (stringValue.includes(',') || stringValue.includes('\n') || stringValue.includes('"')) {
+
+        // Escape quotes and wrap in quotes if it contains separator or special chars
+        if (
+            stringValue.includes(separator) ||
+            stringValue.includes('\n') ||
+            stringValue.includes('"')
+        ) {
             return `"${stringValue.replace(/"/g, '""')}"`;
         }
+
         return stringValue;
     });
-    
-    return headers.join(',') + '\n' + values.join(',');
+
+    return headers.join(separator) + '\n' + values.join(separator);
 }
 
 export async function onRequest(context) {
-    const {request, env} = context;
+    const { request, env } = context;
 
     try {
         const requestData = await request.json();
-        
-        // Convert JSON data to CSV
-        const csvContent = jsonToCSV(requestData);
-        
-        // Check if MailGun credentials are configured
+
+        // Convert JSON to CSV with your desired separator
+        const csvContent = jsonToCSV(requestData, ';'); // změň si na co chceš
+
         if (!env.MAILGUN_API_KEY || !env.MAILGUN_DOMAIN) {
             throw new Error("MAILGUN_API_KEY and MAILGUN_DOMAIN environment variables must be configured");
         }
 
-        // Prepare form data for MailGun API
         const formData = new FormData();
         formData.append('from', `KHK Form System <noreply@${env.MAILGUN_DOMAIN}>`);
         formData.append('to', 'vitekform@gmail.com');
         formData.append('subject', 'Somebody filled out form');
         formData.append('text', 'A new form has been submitted. Please see the attached CSV file for details.');
-        
-        // Add CSV as attachment
-        const csvBlob = new Blob([csvContent], { type: 'text/csv' });
+
+        const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
         formData.append('attachment', csvBlob, 'form-submission.csv');
 
-        // Send email via MailGun API
         const mailgunUrl = `https://api.eu.mailgun.net/v3/${env.MAILGUN_DOMAIN}/messages`;
         const emailResponse = await fetch(mailgunUrl, {
             method: "POST",
@@ -58,19 +63,16 @@ export async function onRequest(context) {
             throw new Error(`Failed to send email: ${emailResponse.status} ${errorText}`);
         }
 
-        return new Response(JSON.stringify({ success: true, message: "Form submitted successfully" }), {
-            headers: { "Content-Type": "application/json" },
-            status: 200
-        });
+        return new Response(
+            JSON.stringify({ success: true, message: "Form submitted successfully" }),
+            { headers: { "Content-Type": "application/json" }, status: 200 }
+        );
 
     } catch (error) {
         console.error("Error in submitForm:", error);
-        return new Response(JSON.stringify({ 
-            success: false, 
-            error: error.message 
-        }), {
-            headers: { "Content-Type": "application/json" },
-            status: 500
-        });
+        return new Response(
+            JSON.stringify({ success: false, error: error.message }),
+            { headers: { "Content-Type": "application/json" }, status: 500 }
+        );
     }
 }
