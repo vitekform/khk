@@ -115,33 +115,39 @@ function App() {
         }
     }
 
+    useEffect(() => {
+    filterCZNACE();
+}, [czNaceCodes, czNaceAllOptions]);
+
+
     function fetchDetailsFromICO() {
-        fetch("/api/getDetails", {body: JSON.stringify({"ico": ico}), method: "POST", headers: {
-            "Content-Type": "application/json"
-            }}).then(async (res) => {
-            let json = await res.json();
-            setCompanyName(json.name);
-            setDic(json.dic);
-            let ulice = json.street;
-            let cislo = json.address_num;
-            setStreet_and_number(ulice + " " + cislo);
-            setState(json.state);
-            setCity(json.city);
-            setZip(json.psc);
-            setLegalForm(json.legal_form);
-            setRegDate(json.reg_date);
-            setMark(json.znacka);
-            // Store czNace codes if available
-            console.log("RAW: " + json.czNace);
-            if (json.czNace) {
-                setCzNaceCodes(json.czNace);
-            }
-            console.log("Set: " + czNaceCodes);
-            loadCZNACE().then(() => {
-                filterCZNACE();
-            });
-        })
-    }
+    fetch("/api/getDetails", {
+        body: JSON.stringify({ ico }),
+        method: "POST",
+        headers: { "Content-Type": "application/json" }
+    }).then(async (res) => {
+        let json = await res.json();
+
+        setCompanyName(json.name);
+        setDic(json.dic);
+        setStreet_and_number(`${json.street} ${json.address_num}`);
+        setState(json.state);
+        setCity(json.city);
+        setZip(json.psc);
+        setLegalForm(json.legal_form);
+        setRegDate(json.reg_date);
+        setMark(json.znacka);
+
+        console.log("RAW:", json.czNace);
+
+        if (json.czNace) {
+            setCzNaceCodes(json.czNace);
+        }
+
+        // nečekej na nic, jen načti CSV
+        loadCZNACE();
+    });
+}
 
     function handleNext() {
         // check if all fields are filled (marked as required in the input)
