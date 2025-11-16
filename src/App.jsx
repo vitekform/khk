@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import countryList from "react-select-country-list";
 import Select from "react-select";
@@ -48,6 +48,11 @@ function App() {
     const [exportCountries, setExportCountries] = useState([])
     const [importCountries, setImportCountries] = useState([])
     const countryOptions = countryList().getData();
+
+    // Scroll to top whenever page changes
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [page]);
 
     function fetchDetailsFromICO() {
         fetch("/api/getDetails", {body: JSON.stringify({"ico": ico}), method: "POST", headers: {
