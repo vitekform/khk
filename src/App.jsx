@@ -95,12 +95,7 @@ function App() {
                 
                 setCzNaceAllOptions(options);
                 setCzNaceMap(map);
-
-                let retJSON = {
-                    "options": options,
-                    "map": map
-                }
-                return retJSON;
+            
             })
             .catch(error => {
                 console.error('Error loading CZ-NACE data:', error);
@@ -108,17 +103,17 @@ function App() {
     }
 
     // Filter CZ-NACE options based on czNaceCodes from ARES
-    function filterCZNACE(options) {
-        console.log("We are using: " + czNaceOptions + " and options: " + options);
-        if (czNaceCodes.length > 0 && options.length > 0) {
+    function filterCZNACE() {
+        console.log("We are using: " + czNaceCodes + " and options: " + czNaceAllOptions);
+        if (czNaceCodes.length > 0 && czNaceAllOptions.length > 0) {
             // Filter options to only include those with codes in czNaceCodes
-            const filteredOptions = options.filter(option => 
+            const filteredOptions = czNaceAllOptions.filter(option => 
                 czNaceCodes.includes(option.code)
             );
             setCzNaceOptions(filteredOptions);
         } else {
             // If no czNaceCodes, show all options
-            setCzNaceOptions(options);
+            setCzNaceOptions(czNaceAllOptions);
         }
     }
 
@@ -147,9 +142,8 @@ function App() {
             setCzNaceCodes(json.czNace);
         }
 
-        let json__ = loadCZNACE();
-
-        filterCZNACE(json__.options);
+        loadCZNACE();
+        filterCZNACE();
     });
 }
 
