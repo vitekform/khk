@@ -1,16 +1,47 @@
-# React + Vite
+# KHK Registration Form
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A multi-step registration form built with React and Vite for collecting company information.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Multi-step form with progress tracking
+- Automatic company data fetching from Czech ARES API
+- Form submission with CSV export and email delivery
+- Responsive design with modern UI
 
-## React Compiler
+## Form Submission
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+When a user completes the form, the submitted data is:
+1. Converted to CSV format with proper escaping
+2. Sent via email to `vitekform@gmail.com` with the subject "Somebody filled out form"
+3. Attached as a CSV file (`form-submission.csv`)
 
-## Expanding the ESLint configuration
+The form uses Cloudflare Pages Functions and MailChannels API for email delivery.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Environment Variables
+
+The following environment variable can be configured in Cloudflare Pages settings:
+- `SENDER_EMAIL` (optional): Email address to use as the sender. Defaults to `noreply@khkpce.cz`
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Run linter
+npm run lint
+```
+
+## Tech Stack
+
+- React 19
+- Vite (Rolldown)
+- Cloudflare Pages Functions
+- MailChannels API for email delivery
