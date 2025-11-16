@@ -45,7 +45,8 @@ export async function onRequest(context) {
         formData.append('subject', 'Somebody filled out form');
         formData.append('text', 'A new form has been submitted. Please see the attached CSV file for details.');
 
-        const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+        const bom = '\uFEFF';
+        const csvBlob = new Blob([bom + csvContent], { type: 'text/csv;charset=utf-8' });
         formData.append('attachment', csvBlob, 'form-submission.csv');
 
         const mailgunUrl = `https://api.eu.mailgun.net/v3/${env.MAILGUN_DOMAIN}/messages`;
