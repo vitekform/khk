@@ -123,7 +123,7 @@ function App() {
                 if (!optCode) return false;
 
                 // Match if either code is a prefix of the other (e.g. '23' matches '231' and vice-versa)
-                return normalizedCodes.some(cz => optCode.startsWith(cz) || cz.startsWith(optCode));
+                return normalizedCodes.includes(optCode);
             });
 
             setCzNaceOptions(filteredOptions);
