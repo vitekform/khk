@@ -132,9 +132,11 @@ function App() {
             setRegDate(json.reg_date);
             setMark(json.znacka);
             // Store czNace codes if available
+            console.log("RAW: " + json.czNace);
             if (json.czNace && Array.isArray(json.czNace)) {
                 setCzNaceCodes(json.czNace);
             }
+            console.log("Set: " + czNaceCodes);
             loadCZNACE().then(() => {
                 filterCZNACE();
             });
