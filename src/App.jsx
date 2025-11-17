@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import countryList from "react-select-country-list";
 import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
 import { LEGAL_FORM_OPTIONS } from './legalForms';
 
 
@@ -95,7 +96,7 @@ function App() {
             !phone || !email || !nameStatuary || !phoneStatutary || !emailStatutary || 
             !functionStatutary || !legalForm || !regDate || !regPlace || !mark ||
             !nameMeeting || !phoneMeeting || !emailMeeting || !functionMeeting || 
-            industry.length === 0 || !emailTo) {
+            industry.length === 0) {
             alert("Prosím vyplňte všechna povinná pole!");
             return;
         }
@@ -462,7 +463,7 @@ function App() {
                     <h2 className="section-title">Obor činnosti</h2>
                     <div className="question-card">
                         <label className="question">Převažující obor činnosti dle CZ-NACE</label>
-                        <Select
+                        <CreatableSelect
                             isMulti
                             options={naceOptions}
                             value={industry}
