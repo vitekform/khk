@@ -149,31 +149,6 @@ function App() {
   return (
     <>
         <div className="form-wrapper">
-            <div className="step-guide">
-                <div className="step-guide-container">
-                    <div className="step-item active">
-                        <div className="step-icon">1</div>
-                        <div className="step-title">Základní údaje</div>
-                        <div className="step-description">IČO a adresa subjektu</div>
-                    </div>
-                    <div className="step-item">
-                        <div className="step-icon">2</div>
-                        <div className="step-title">Kontaktní údaje</div>
-                        <div className="step-description">Zástupci a registrace</div>
-                    </div>
-                    <div className="step-item">
-                        <div className="step-icon">3</div>
-                        <div className="step-title">Podnikání</div>
-                        <div className="step-description">Zaměstnanci a obrat</div>
-                    </div>
-                    <div className="step-item">
-                        <div className="step-icon">4</div>
-                        <div className="step-title">Zahraniční obchod</div>
-                        <div className="step-description">Import a export</div>
-                    </div>
-                </div>
-            </div>
-
             <div className="form-container">
                 <div className="form-header">
                     <h1 className="form-title">Registrační formulář</h1>
