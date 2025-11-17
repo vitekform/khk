@@ -12,81 +12,6 @@
   flex-direction: column;
 }
 
-.step-guide {
-  background: white;
-  border-bottom: 1px solid #e0e4e8;
-  padding: 32px 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.step-guide-container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
-}
-
-.step-item {
-  flex: 1;
-  text-align: center;
-  position: relative;
-}
-
-.step-item:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  top: 20px;
-  right: -10px;
-  width: 20px;
-  height: 2px;
-  background: #e0e4e8;
-  z-index: 0;
-}
-
-.step-icon {
-  width: 40px;
-  height: 40px;
-  margin: 0 auto 12px;
-  border-radius: 50%;
-  background: #e8f0fe;
-  color: #1565c0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 18px;
-  border: 2px solid #1565c0;
-  position: relative;
-  z-index: 1;
-}
-
-.step-item.active .step-icon {
-  background: #1565c0;
-  color: white;
-}
-
-.step-item.completed .step-icon {
-  background: #4caf50;
-  border-color: #4caf50;
-  color: white;
-}
-
-.step-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: #37474f;
-  margin-bottom: 4px;
-}
-
-.step-description {
-  font-size: 12px;
-  color: #78909c;
-  line-height: 1.4;
-}
-
 .form-container {
   max-width: 900px;
   width: 100%;
@@ -293,63 +218,10 @@
   transform: translateY(0);
 }
 
-.form-progress {
-  padding: 24px 0 0 0;
-  background: transparent;
-}
-
-.progress-bar {
-  width: 100%;
-  height: 6px;
-  background: #e0e4e8;
-  border-radius: 3px;
-  overflow: hidden;
-  margin-bottom: 12px;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #1565c0 0%, #1976d2 100%);
-  transition: width 0.3s ease;
-  border-radius: 3px;
-}
-
-.progress-text {
-  font-size: 13px;
-  color: #64748b;
-  margin: 0;
-  text-align: center;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-  font-weight: 500;
-}
-
 /* Responsive design */
 @media (max-width: 768px) {
   .form-wrapper {
     padding: 0;
-  }
-
-  .step-guide-container {
-    padding: 0 20px;
-    gap: 10px;
-  }
-
-  .step-item:not(:last-child)::after {
-    display: none;
-  }
-
-  .step-icon {
-    width: 32px;
-    height: 32px;
-    font-size: 14px;
-  }
-
-  .step-title {
-    font-size: 12px;
-  }
-
-  .step-description {
-    font-size: 10px;
   }
 
   .form-container {
