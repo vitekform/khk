@@ -38,7 +38,6 @@ function App() {
     const [naceOptions, setNaceOptions] = useState([])
     const [exportCountries, setExportCountries] = useState([])
     const [importCountries, setImportCountries] = useState([])
-    const [emailTo, setEmailTo] = useState("")
     const countryOptions = countryList().getData();
 
     function fetchDetailsFromICO() {
@@ -103,7 +102,6 @@ function App() {
         
         // Create JSON with all data
         const data = {
-            "emailTo": emailTo,
             "IČ": ico,
             "Název Firmy": companyName,
             "DIČ": dic,
@@ -496,19 +494,6 @@ function App() {
                             value={importCountries}
                             onChange={setImportCountries}
                             placeholder="Začněte psát název země..."
-                        />
-                    </div>
-
-                    {/* Section 13: Email Recipient */}
-                    <h2 className="section-title">Emailová Adresa Příjemce</h2>
-                    <div className="question-card">
-                        <label className="question">Zadejte Emailovou adresu kam vám máme předvyplněnou přihlášku zaslat</label>
-                        <input
-                            type="email"
-                            onChange={e => {setEmailTo(e.target.value)}}
-                            required
-                            placeholder="pepa.novak@gmail.com"
-                            value={emailTo}
                         />
                     </div>
 
