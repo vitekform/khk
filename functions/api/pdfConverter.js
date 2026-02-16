@@ -16,10 +16,11 @@ export async function convertDocxToPDF(data, request) {
     const url = new URL(request.url);
     const baseUrl = `${url.protocol}//${url.host}`;
     
-    const [fontRegularResponse, fontBoldResponse, logoResponse] = await Promise.all([
+    const [fontRegularResponse, fontBoldResponse, logoResponse, logo2Response] = await Promise.all([
         fetch(`${baseUrl}/fonts/DejaVuSans.ttf`),
         fetch(`${baseUrl}/fonts/DejaVuSans-Bold.ttf`),
-        fetch(`${baseUrl}/khk_logo.png`)
+        fetch(`${baseUrl}/khk_logo.png`),
+        fetch(`${baseUrl}/khk_logo2.png`)
     ]);
     
     if (!fontRegularResponse.ok || !fontBoldResponse.ok) {
@@ -35,6 +36,12 @@ export async function convertDocxToPDF(data, request) {
     if (logoResponse.ok) {
         const logoBytes = await logoResponse.arrayBuffer();
         logoImage = await pdfDoc.embedPng(logoBytes);
+    }
+    
+    let logo2Image = null;
+    if (logo2Response.ok) {
+        const logo2Bytes = await logo2Response.arrayBuffer();
+        logo2Image = await pdfDoc.embedPng(logo2Bytes);
     }
     
     let page = pdfDoc.addPage([595, 842]); // A4 size
@@ -63,9 +70,9 @@ export async function convertDocxToPDF(data, request) {
         });
     };
 
-    // Draw Logo
+    // Draw Logos
     if (logoImage) {
-        const logoDims = logoImage.scale(0.4);
+        const logoDims = logoImage.scale(0.35);
         page.drawImage(logoImage, {
             x: width - logoDims.width - 50,
             y: height - logoDims.height - 30,
@@ -73,6 +80,18 @@ export async function convertDocxToPDF(data, request) {
             height: logoDims.height,
         });
     }
+
+    if (logo2Image) {
+        const logo2Dims = logo2Image.scale(0.35);
+        page.drawImage(logo2Image, {
+            x: 50,
+            y: height - logo2Dims.height - 30,
+            width: logo2Dims.width,
+            height: logo2Dims.height,
+        });
+    }
+
+    yPosition = height - 100;
 
     // Title
     addText('PŘIHLÁŠKA ZA ČLENA KRAJSKÉ HOSPODÁŘSKÉ KOMORY', 50, yPosition, fontBold, titleFontSize);
@@ -88,6 +107,36 @@ export async function convertDocxToPDF(data, request) {
     const colWidth = 120;
     
     let currentColumn = 0; // 0 or 1 (for logical columns, each having label and value)
+
+    const addWideField = (label, value) => {
+        endRow();
+        const valueStr = value ? String(value) : '';
+        const words = valueStr.split(' ');
+        let lines = [];
+        let currentLine = '';
+        const maxWidth = width - col2X - 50;
+
+        for (const word of words) {
+            const testLine = currentLine + (currentLine ? ' ' : '') + word;
+            const testWidth = font.widthOfTextAtSize(testLine, fontSize);
+            if (testWidth > maxWidth && currentLine) {
+                lines.push(currentLine);
+                currentLine = word;
+            } else {
+                currentLine = testLine;
+            }
+        }
+        if (currentLine) lines.push(currentLine);
+
+        if (yPosition - (lines.length * lineHeight) < 40) addNewPage();
+
+        addText(label + ':', col1X, yPosition, fontBold, labelFontSize);
+        for (const line of lines) {
+            addText(line, col2X, yPosition, font, fontSize);
+            yPosition -= lineHeight;
+        }
+        yPosition -= 8;
+    };
 
     const addSection = (title) => {
         if (yPosition < 60) addNewPage();
@@ -155,7 +204,7 @@ export async function convertDocxToPDF(data, request) {
     // Section I: Identifikační a kontaktní údaje
     addSection('I. IDENTIFIKAČNÍ A KONTAKTNÍ ÚDAJE');
     
-    addField('Název firmy', data['Název Firmy']);
+    addWideField('Název firmy', data['Název Firmy']);
     addField('IČ', data['IČ']);
     addField('DIČ', data['DIČ']);
     addField('Ulice, číslo', data['Ulice a Číslo']);
@@ -194,37 +243,6 @@ export async function convertDocxToPDF(data, request) {
     // Section III: Popis činnosti firmy
     addSection('III. POPIS ČINNOSTI FIRMY');
     
-    currentColumn = 0; // Force single column for long fields
-    const addWideField = (label, value) => {
-        endRow();
-        const valueStr = value ? String(value) : '';
-        const words = valueStr.split(' ');
-        let lines = [];
-        let currentLine = '';
-        const maxWidth = width - col2X - 50;
-
-        for (const word of words) {
-            const testLine = currentLine + (currentLine ? ' ' : '') + word;
-            const testWidth = font.widthOfTextAtSize(testLine, fontSize);
-            if (testWidth > maxWidth && currentLine) {
-                lines.push(currentLine);
-                currentLine = word;
-            } else {
-                currentLine = testLine;
-            }
-        }
-        if (currentLine) lines.push(currentLine);
-
-        if (yPosition - (lines.length * lineHeight) < 40) addNewPage();
-
-        addText(label + ':', col1X, yPosition, fontBold, labelFontSize);
-        for (const line of lines) {
-            addText(line, col2X, yPosition, font, fontSize);
-            yPosition -= lineHeight;
-        }
-        yPosition -= 8;
-    };
-
     addWideField('CZ-NACE', data['Převažující obor činnosti dle CZ-NACE']);
     addWideField('Země exportu', data['Země, kam exportujete/chcete exportovat']);
     addWideField('Země importu', data['Země, odkud importujete/chcete exportovat']);
