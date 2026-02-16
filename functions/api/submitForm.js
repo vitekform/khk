@@ -33,7 +33,7 @@ export async function onRequest(context) {
         const requestData = await request.json();
 
         let toEmail = 'khkpce@khkpce.cz';
-        let ccEmail = requestData['Email zástupce pro komunikaci'] || requestData.Email;
+        let ccEmail = requestData['Email zástupce pro komunikaci'] || requestData['Email'];
 
         // Convert JSON to CSV with your desired separator
         const csvContent = jsonToCSV(requestData, ';'); // změň si na co chceš
