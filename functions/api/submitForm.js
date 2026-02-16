@@ -14,8 +14,11 @@ async function createFormPDF(data, request) {
     const fontRegularResponse = await fetch(`${baseUrl}/fonts/DejaVuSans.ttf`);
     const fontBoldResponse = await fetch(`${baseUrl}/fonts/DejaVuSans-Bold.ttf`);
     
-    if (!fontRegularResponse.ok || !fontBoldResponse.ok) {
-        throw new Error('Failed to load font files');
+    if (!fontRegularResponse.ok) {
+        throw new Error(`Failed to load regular font: ${fontRegularResponse.status} ${fontRegularResponse.statusText}`);
+    }
+    if (!fontBoldResponse.ok) {
+        throw new Error(`Failed to load bold font: ${fontBoldResponse.status} ${fontBoldResponse.statusText}`);
     }
     
     const fontBytes = await fontRegularResponse.arrayBuffer();
