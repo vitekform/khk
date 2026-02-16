@@ -1,95 +1,74 @@
-import { PDFDocument, rgb } from 'pdf-lib';
-import fontkit from '@pdf-lib/fontkit';
+import { fillDocxTemplate } from './docxHelper.js';
+import CloudConvert from 'cloudconvert';
 
-// Function to create a PDF document with form data
-async function createFormPDF(data, request) {
-    const pdfDoc = await PDFDocument.create();
-    pdfDoc.registerFontkit(fontkit);
-    
-    // Fetch DejaVu fonts from public assets
-    // Construct the base URL from the request
+// Function to create a PDF from DOCX template
+async function createFormPDFFromTemplate(data, request, env) {
+    // Fetch the template file
     const url = new URL(request.url);
     const baseUrl = `${url.protocol}//${url.host}`;
     
-    const fontRegularResponse = await fetch(`${baseUrl}/fonts/DejaVuSans.ttf`);
-    const fontBoldResponse = await fetch(`${baseUrl}/fonts/DejaVuSans-Bold.ttf`);
-    
-    if (!fontRegularResponse.ok) {
-        throw new Error(`Failed to load regular font: ${fontRegularResponse.status} ${fontRegularResponse.statusText}`);
-    }
-    if (!fontBoldResponse.ok) {
-        throw new Error(`Failed to load bold font: ${fontBoldResponse.status} ${fontBoldResponse.statusText}`);
+    const templateResponse = await fetch(`${baseUrl}/prihlaska_template.docx`);
+    if (!templateResponse.ok) {
+        throw new Error(`Failed to load template: ${templateResponse.status} ${templateResponse.statusText}`);
     }
     
-    const fontBytes = await fontRegularResponse.arrayBuffer();
-    const fontBoldBytes = await fontBoldResponse.arrayBuffer();
-    const font = await pdfDoc.embedFont(fontBytes);
-    const fontBold = await pdfDoc.embedFont(fontBoldBytes);
+    const templateBuffer = await templateResponse.arrayBuffer();
     
-    let page = pdfDoc.addPage([595, 842]); // A4 size
-    const { width, height } = page.getSize();
-    const fontSize = 10;
-    const boldFontSize = 11;
-    const lineHeight = 14;
-    let yPosition = height - 50;
+    // Fill the template with form data
+    const filledDocxBuffer = await fillDocxTemplate(templateBuffer, data);
     
-    // Helper function to add text
-    const addText = (text, x, y, currentFont = font, size = fontSize) => {
-        page.drawText(text, {
-            x,
-            y,
-            size,
-            font: currentFont,
-            color: rgb(0, 0, 0),
-        });
-    };
+    // Convert DOCX to PDF using CloudConvert
+    if (!env.CLOUDCONVERT_API_KEY) {
+        throw new Error("CLOUDCONVERT_API_KEY environment variable must be configured");
+    }
     
-    // Helper function to add a field with label and value
-    const addField = (label, value) => {
-        if (yPosition < 50) {
-            page = pdfDoc.addPage([595, 842]);
-            yPosition = height - 50;
-        }
-        
-        addText(label + ':', 50, yPosition, fontBold, boldFontSize);
-        yPosition -= lineHeight;
-        
-        const valueStr = value ? String(value) : '';
-        const maxWidth = width - 100;
-        const words = valueStr.split(' ');
-        let line = '';
-        
-        for (const word of words) {
-            const testLine = line + (line ? ' ' : '') + word;
-            const testWidth = font.widthOfTextAtSize(testLine, fontSize);
-            
-            if (testWidth > maxWidth && line) {
-                addText(line, 70, yPosition);
-                yPosition -= lineHeight;
-                line = word;
-            } else {
-                line = testLine;
+    const cloudConvert = new CloudConvert(env.CLOUDCONVERT_API_KEY);
+    
+    try {
+        // Create a job to convert DOCX to PDF
+        const job = await cloudConvert.jobs.create({
+            tasks: {
+                'import-docx': {
+                    operation: 'import/upload'
+                },
+                'convert-to-pdf': {
+                    operation: 'convert',
+                    input: 'import-docx',
+                    output_format: 'pdf',
+                    engine: 'office',
+                    filename: 'prihlaska-KHK.pdf'
+                },
+                'export-pdf': {
+                    operation: 'export/url',
+                    input: 'convert-to-pdf'
+                }
             }
+        });
+        
+        // Upload the filled DOCX
+        const uploadTask = job.tasks.filter(task => task.operation === 'import/upload')[0];
+        await cloudConvert.tasks.upload(uploadTask, filledDocxBuffer, 'prihlaska.docx');
+        
+        // Wait for the job to complete
+        const completedJob = await cloudConvert.jobs.wait(job.id);
+        
+        // Get the PDF from export task
+        const exportTask = completedJob.tasks.filter(task => task.operation === 'export/url')[0];
+        const pdfUrl = exportTask.result.files[0].url;
+        
+        // Download the PDF
+        const pdfResponse = await fetch(pdfUrl);
+        if (!pdfResponse.ok) {
+            throw new Error(`Failed to download converted PDF: ${pdfResponse.status}`);
         }
         
-        if (line) {
-            addText(line, 70, yPosition);
-            yPosition -= lineHeight;
-        }
+        const pdfBytes = await pdfResponse.arrayBuffer();
+        return pdfBytes;
         
-        yPosition -= 5; // Extra spacing between fields
-    };
-    
-    // Title
-    addText('PŘIHLÁŠKA DO HOSPODÁŘSKÉ KOMORY ČESKÉ REPUBLIKY', 50, yPosition, fontBold, 14);
-    yPosition -= 25;
-    
-    // Add all fields
-    Object.entries(data).forEach(([key, value]) => {
-        addField(key, value);
-    });
-    
-    return await pdfDoc.save();
+    } catch (error) {
+        console.error('CloudConvert error:', error);
+        throw new Error(`PDF conversion failed: ${error.message}`);
+    }
 }
 
 export async function onRequest(context) {
@@ -101,8 +80,8 @@ export async function onRequest(context) {
         let toEmail = 'vitekform@gmail.com';
         let ccEmail = requestData['Email zástupce pro komunikaci'] || requestData['Email'];
 
-        // Create PDF with form data
-        const pdfBytes = await createFormPDF(requestData, request);
+        // Create PDF with form data using template
+        const pdfBytes = await createFormPDFFromTemplate(requestData, request, env);
 
         if (!env.MAILGUN_API_KEY || !env.MAILGUN_DOMAIN) {
             throw new Error("MAILGUN_API_KEY and MAILGUN_DOMAIN environment variables must be configured");
