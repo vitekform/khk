@@ -219,7 +219,7 @@ export async function convertDocxToPDF(data, request) {
     addField('Tel. stat. zást.', data['Telefon statutárního zástupce']);
     addField('Právní forma', data['Právní Forma']);
     addField('WWW stránky', data['WWW Stránky']);
-    addField('Datum zápisu', data['Datum registrace v obchodním rejstříku nebo u živnostenského úřadu']);
+    addField('Datum zápisu', data['Datum založení']);
     addField('Spisová značka', data['Spisová značka']);
     addField('ID dat. schránky', data['ID datové schránky']);
     endRow();

@@ -131,7 +131,7 @@ function App() {
             "Funkce statutárního zástupce": functionStatutary,
             "Právní Forma": legalForm,
             "WWW Stránky": web,
-            "Datum registrace v obchodním rejstříku nebo u živnostenského úřadu": regDate,
+            "Datum založení": regDate,
             "Spisová značka": mark,
             "Zástupce pro komunikaci s KHK PK": nameMeeting,
             "Telefon zástupce pro komunikaci": phoneMeeting,
