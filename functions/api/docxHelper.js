@@ -193,17 +193,3 @@ function applyCheckboxes(docXml, checkboxMappings) {
     
     return docXml;
 }
-
-/**
- * Extract text content from DOCX for debugging
- * @param {ArrayBuffer} docxBuffer
- * @returns {string}
- */
-export function extractDocxText(docxBuffer) {
-    const zip = new PizZip(docxBuffer);
-    const docXml = zip.file('word/document.xml').asText();
-    
-    // Remove XML tags to get plain text
-    const text = docXml.replace(/<[^>]+>/g, '');
-    return text;
-}
