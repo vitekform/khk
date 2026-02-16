@@ -145,7 +145,7 @@ function App() {
             "Převažující obor činnosti dle CZ-NACE": industry.map(i => i.label).join(', '),
             "Specifikace produktů a služeb": industryDescription,
             "Země, kam exportujete/chcete exportovat": exportCountries.map(c => c.label).join(', '),
-            "Země, odkuď importujete/chcete importovat": importCountries.map(c => c.label).join(', '),
+            "Země, odkud importujete/chcete importovat": importCountries.map(c => c.label).join(', '),
             "Korespondenční adresa - Ulice": corrStreet,
             "Korespondenční adresa - Město": corrCity,
             "Korespondenční adresa - PSČ": corrZip,
@@ -598,7 +598,7 @@ function App() {
                     {/* Section 12: Import Countries */}
                     <h2 className="section-title">Importní země</h2>
                     <div className="question-card">
-                        <label className="question">Uveďte země, odkuď importujete/chcete importovat</label>
+                        <label className="question">Uveďte země, odkud importujete/chcete importovat</label>
                         <Select
                             isMulti
                             options={countryOptions}
