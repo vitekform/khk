@@ -53,6 +53,14 @@ export async function convertDocxToPDF(data, request) {
     const lineHeight = 12;
     let yPosition = height - 50;
     
+    // Helper function to format date to Czech format (D. M. YYYY)
+    const formatDate = (dateStr) => {
+        if (!dateStr) return '';
+        const date = new Date(dateStr);
+        if (isNaN(date.getTime())) return dateStr;
+        return `${date.getDate()}. ${date.getMonth() + 1}. ${date.getFullYear()}`;
+    };
+
     // Helper function to add a new page
     const addNewPage = () => {
         page = pdfDoc.addPage([595, 842]);
@@ -146,6 +154,8 @@ export async function convertDocxToPDF(data, request) {
         currentColumn = 0;
     };
 
+    let currentRowMaxLines = 1;
+
     const addField = (label, value) => {
         const xLabel = currentColumn === 0 ? col1X : col3X;
         const xValue = currentColumn === 0 ? col2X : col4X;
@@ -171,7 +181,7 @@ export async function convertDocxToPDF(data, request) {
         if (currentLine) lines.push(currentLine);
         if (lines.length === 0) lines = [''];
 
-        const fieldHeight = Math.max(1, lines.length) * lineHeight;
+        const fieldHeight = lines.length * lineHeight;
 
         if (yPosition - fieldHeight < 40) {
             addNewPage();
@@ -185,19 +195,22 @@ export async function convertDocxToPDF(data, request) {
             localY -= lineHeight;
         }
 
+        currentRowMaxLines = Math.max(currentRowMaxLines, lines.length);
+
         if (currentColumn === 0) {
             currentColumn = 1;
-            // Don't decrease yPosition yet, wait for second column or end of row
         } else {
             currentColumn = 0;
-            yPosition -= Math.max(1, lines.length) * lineHeight + 8;
+            yPosition -= (currentRowMaxLines * lineHeight) + 8;
+            currentRowMaxLines = 1;
         }
     };
 
     const endRow = () => {
         if (currentColumn === 1) {
             currentColumn = 0;
-            yPosition -= lineHeight + 8;
+            yPosition -= (currentRowMaxLines * lineHeight) + 8;
+            currentRowMaxLines = 1;
         }
     };
     
@@ -219,7 +232,7 @@ export async function convertDocxToPDF(data, request) {
     addField('Tel. stat. zást.', data['Telefon statutárního zástupce']);
     addField('Právní forma', data['Právní Forma']);
     addField('WWW stránky', data['WWW Stránky']);
-    addField('Datum zápisu', data['Datum založení']);
+    addField('Datum zápisu', formatDate(data['Datum založení']));
     addField('Spisová značka', data['Spisová značka']);
     addField('ID dat. schránky', data['ID datové schránky']);
     endRow();
@@ -257,7 +270,7 @@ export async function convertDocxToPDF(data, request) {
     addField('Monitor - denně', data['Monitor - denně']);
     addField('Monitor - týdně', data['Monitor - týdně']);
     addField('Monitor - měsíčně', data['Monitor - měsíčně']);
-    addField('Datum podání', data['Datum podání']);
+    addField('Datum podání', formatDate(data['Datum podání']));
     endRow();
     
     return await pdfDoc.save();
