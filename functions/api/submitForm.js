@@ -1,29 +1,90 @@
-// Function to convert JSON object to CSV format with custom separator
-function jsonToCSV(data, separator = '|') {
-    const headers = Object.keys(data);
+import { PDFDocument, rgb } from 'pdf-lib';
+import fontkit from '@pdf-lib/fontkit';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 
-    const values = Object.values(data).map(value => {
-        // Handle arrays
-        if (Array.isArray(value)) {
-            const joined = value.join(', ');
-            return `"${joined.replace(/"/g, '""')}"`;
+// Get current directory for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Function to create a PDF document with form data
+async function createFormPDF(data) {
+    const pdfDoc = await PDFDocument.create();
+    pdfDoc.registerFontkit(fontkit);
+    
+    // Load DejaVu fonts from the functions/fonts directory
+    const fontPath = join(__dirname, '..', 'fonts', 'DejaVuSans.ttf');
+    const fontBoldPath = join(__dirname, '..', 'fonts', 'DejaVuSans-Bold.ttf');
+    const fontBytes = readFileSync(fontPath);
+    const fontBoldBytes = readFileSync(fontBoldPath);
+    const font = await pdfDoc.embedFont(fontBytes);
+    const fontBold = await pdfDoc.embedFont(fontBoldBytes);
+    
+    let page = pdfDoc.addPage([595, 842]); // A4 size
+    const { width, height } = page.getSize();
+    const fontSize = 10;
+    const boldFontSize = 11;
+    const lineHeight = 14;
+    let yPosition = height - 50;
+    
+    // Helper function to add text
+    const addText = (text, x, y, currentFont = font, size = fontSize) => {
+        page.drawText(text, {
+            x,
+            y,
+            size,
+            font: currentFont,
+            color: rgb(0, 0, 0),
+        });
+    };
+    
+    // Helper function to add a field with label and value
+    const addField = (label, value) => {
+        if (yPosition < 50) {
+            page = pdfDoc.addPage([595, 842]);
+            yPosition = height - 50;
         }
-
-        const stringValue = String(value);
-
-        // Escape quotes and wrap in quotes if it contains separator or special chars
-        if (
-            stringValue.includes(separator) ||
-            stringValue.includes('\n') ||
-            stringValue.includes('"')
-        ) {
-            return `"${stringValue.replace(/"/g, '""')}"`;
+        
+        addText(label + ':', 50, yPosition, fontBold, boldFontSize);
+        yPosition -= lineHeight;
+        
+        const valueStr = value ? String(value) : '';
+        const maxWidth = width - 100;
+        const words = valueStr.split(' ');
+        let line = '';
+        
+        for (const word of words) {
+            const testLine = line + (line ? ' ' : '') + word;
+            const testWidth = font.widthOfTextAtSize(testLine, fontSize);
+            
+            if (testWidth > maxWidth && line) {
+                addText(line, 70, yPosition);
+                yPosition -= lineHeight;
+                line = word;
+            } else {
+                line = testLine;
+            }
         }
-
-        return stringValue;
+        
+        if (line) {
+            addText(line, 70, yPosition);
+            yPosition -= lineHeight;
+        }
+        
+        yPosition -= 5; // Extra spacing between fields
+    };
+    
+    // Title
+    addText('PŘIHLÁŠKA DO HOSPODÁŘSKÉ KOMORY ČESKÉ REPUBLIKY', 50, yPosition, fontBold, 14);
+    yPosition -= 25;
+    
+    // Add all fields
+    Object.entries(data).forEach(([key, value]) => {
+        addField(key, value);
     });
-
-    return headers.join(separator) + '\n' + values.join(separator);
+    
+    return await pdfDoc.save();
 }
 
 export async function onRequest(context) {
@@ -35,8 +96,8 @@ export async function onRequest(context) {
         let toEmail = 'vitekform@gmail.com';
         let ccEmail = requestData['Email zástupce pro komunikaci'] || requestData['Email'];
 
-        // Convert JSON to CSV with your desired separator
-        const csvContent = jsonToCSV(requestData, ';'); // změň si na co chceš
+        // Create PDF with form data
+        const pdfBytes = await createFormPDF(requestData);
 
         if (!env.MAILGUN_API_KEY || !env.MAILGUN_DOMAIN) {
             throw new Error("MAILGUN_API_KEY and MAILGUN_DOMAIN environment variables must be configured");
@@ -51,9 +112,8 @@ export async function onRequest(context) {
         formData.append('subject', 'Přihláška do KHK Pardubice');
         formData.append('text', 'Dobrý den, zde zasíláme vámi vyžádanou přihlášku do KHK Pardubice.');
 
-        const bom = '\uFEFF';
-        const csvBlob = new Blob([bom + csvContent], { type: 'text/csv;charset=utf-8' });
-        formData.append('attachment', csvBlob, 'form-submission.csv');
+        const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+        formData.append('attachment', pdfBlob, 'prihlaska-KHK.pdf');
 
         const mailgunUrl = `https://api.eu.mailgun.net/v3/${env.MAILGUN_DOMAIN}/messages`;
         const emailResponse = await fetch(mailgunUrl, {

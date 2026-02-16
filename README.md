@@ -12,9 +12,9 @@ A multi-step registration form built with React and Vite for collecting company 
 ## Form Submission
 
 When a user completes the form, the submitted data is:
-1. Converted to CSV format with proper escaping
-2. Sent via email to `vitekform@gmail.com` with the subject "Somebody filled out form"
-3. Attached as a CSV file (`form-submission.csv`)
+1. Converted to a PDF document with proper formatting and Czech character support
+2. Sent via email to `vitekform@gmail.com` with the subject "Přihláška do KHK Pardubice"
+3. Attached as a PDF file (`prihlaska-KHK.pdf`)
 
 The form uses Cloudflare Pages Functions and MailGun API for email delivery.
 
