@@ -244,8 +244,8 @@ export async function convertDocxToPDF(data, request) {
     addSection('III. POPIS ČINNOSTI FIRMY');
     
     addWideField('CZ-NACE', data['Převažující obor činnosti dle CZ-NACE']);
-    addWideField('Země exportu', data['Země, kam exportujete/chcete exportovat']);
-    addWideField('Země importu', data['Země, odkud importujete/chcete exportovat']);
+    addWideField('Země exportu', data['Země, kam exportujete/chcete exportovat'] || 'Žádné');
+    addWideField('Země importu', data['Země, odkud importujete/chcete exportovat'] || 'Žádné');
     addWideField('Specifikace', data['Specifikace produktů a služeb']);
     
     // Additional information
