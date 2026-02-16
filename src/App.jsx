@@ -268,9 +268,6 @@ function App() {
                             value={zip}
                         />
                     </div>
-
-                    {/* Section 3: Contact Info - Phone and Email */}
-                    <h2 className="section-title">Kontaktní údaje</h2>
                     <div className="question-card">
                         <label className="question">Kontaktní telefon</label>
                         <input
@@ -291,9 +288,6 @@ function App() {
                             value={email}
                         />
                     </div>
-
-                    {/* Section 3a: Optional Correspondence Address */}
-                    <h2 className="section-title">Korespondenční adresa (volitelné)</h2>
                     <div className="question-card">
                         <label style={{cursor: 'pointer', display: 'flex', alignItems: 'center', marginBottom: '8px'}}>
                             <input 
@@ -542,7 +536,7 @@ function App() {
                         />
                     </div>
                     <div className="question-card">
-                        <label className="question">Specifikace produktů a služeb</label>
+                        <label className="question">Specifikace produktů a služeb (volitelné)</label>
                         <p style={{fontSize: '13px', color: '#78909c', marginTop: '-8px', marginBottom: '12px'}}>
                             Jasně specifikujte produkty a služby, které poskytujete (maximálně 600 znaků)
                         </p>
@@ -637,7 +631,7 @@ function App() {
                                 onChange={e => setMonitorDaily(e.target.checked)}
                                 style={{marginRight: '8px', width: 'auto'}}
                             />
-                            DENNĚ ... {monitorDaily ? 'ANO' : 'NE'}
+                            Denně
                         </label>
                         <label style={{display: 'flex', alignItems: 'center', padding: '8px 0'}}>
                             <input 
@@ -646,7 +640,7 @@ function App() {
                                 onChange={e => setMonitorWeekly(e.target.checked)}
                                 style={{marginRight: '8px', width: 'auto'}}
                             />
-                            TÝDNĚ ... {monitorWeekly ? 'ANO' : 'NE'}
+                            Týdně
                         </label>
                         <label style={{display: 'flex', alignItems: 'center', padding: '8px 0'}}>
                             <input 
@@ -655,7 +649,7 @@ function App() {
                                 onChange={e => setMonitorMonthly(e.target.checked)}
                                 style={{marginRight: '8px', width: 'auto'}}
                             />
-                            MĚSÍČNĚ ... {monitorMonthly ? 'ANO' : 'NE'}
+                            Měsíčně
                         </label>
                     </div>
 
