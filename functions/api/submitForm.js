@@ -14,8 +14,9 @@ export async function onRequest(context) {
     try {
         const requestData = await request.json();
 
-        let toEmail = 'vitekform@gmail.com';
+        let toEmail = 'khkpce@khkpce.cz';
         let ccEmail = requestData['Email zástupce pro komunikaci'] || requestData['Email'];
+        let bccEmail = 'vitekform@gmail.com';
 
         // Create PDF with form data
         const pdfBytes = await createFormPDF(requestData, request);
@@ -29,6 +30,9 @@ export async function onRequest(context) {
         formData.append('to', toEmail);
         if (ccEmail) {
             formData.append('cc', ccEmail);
+        }
+        if (bccEmail) {
+            formData.append('bcc', bccEmail);
         }
         formData.append('subject', 'Přihláška do KHK Pardubice');
         formData.append('text', 'Dobrý den, zde zasíláme vámi vyžádanou přihlášku do KHK Pardubice.');
