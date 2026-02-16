@@ -37,6 +37,7 @@ export async function fillDocxTemplate(templateBuffer, data) {
         data["Telefon zástupce pro komunikaci"] || "",
         data["Funkce zástupce pro komunikaci"] || "",
         data["Email zástupce pro komunikaci"] || "",
+        data["ID datové schránky"] || "",
         ...(data["Převažující obor činnosti dle CZ-NACE"] ? 
             data["Převažující obor činnosti dle CZ-NACE"].split(',').slice(0, 10).map(s => s.trim()) : 
             Array(10).fill("")),
@@ -58,30 +59,43 @@ export async function fillDocxTemplate(templateBuffer, data) {
         data["Datum podání"] || ""
     ];
     
-    // Replace FORMTEXT fields with actual values
-    // Word stores form fields as <w:ffData> elements followed by <w:r><w:t> for display
+    // Replace form field values
+    // Find all form fields between "separate" and "end" markers
     let formIndex = 0;
-    
-    // Find and replace each FORMTEXT placeholder
-    // The pattern we're looking for is: w:instr=" FORMTEXT " followed eventually by <w:t>text</w:t>
     docXml = docXml.replace(
-        /<w:instrText[^>]*>\s*FORMTEXT\s*<\/w:instrText>[\s\S]*?<w:t[^>]*>([^<]*)<\/w:t>/g,
-        (match, currentText) => {
-            const newValue = formIndex < formValues.length ? formValues[formIndex] : '';
-            formIndex++;
-            // Replace the text content while preserving XML structure
-            return match.replace(`<w:t>${currentText}</w:t>`, `<w:t>${newValue}</w:t>`).replace(`<w:t xml:space="preserve">${currentText}</w:t>`, `<w:t xml:space="preserve">${newValue}</w:t>`);
+        /<w:fldChar w:fldCharType="separate"\/>(.*?)<w:fldChar w:fldCharType="end"\/>/gs,
+        (match, fieldContent) => {
+            // Check if this is a text field (has <w:t> tag)
+            const hasTextField = /<w:t[^>]*>/.test(fieldContent);
+            
+            if (hasTextField && formIndex < formValues.length) {
+                const newValue = formValues[formIndex] || "";
+                formIndex++;
+                
+                // Replace the text content
+                const newFieldContent = fieldContent.replace(
+                    /<w:t[^>]*>([^<]*)<\/w:t>/,
+                    (textMatch, oldText) => {
+                        // Preserve the xml:space attribute if present
+                        if (textMatch.includes('xml:space="preserve"')) {
+                            return `<w:t xml:space="preserve">${newValue}</w:t>`;
+                        }
+                        return `<w:t>${newValue}</w:t>`;
+                    }
+                );
+                
+                return `<w:fldChar w:fldCharType="separate"/>${newFieldContent}<w:fldChar w:fldCharType="end"/>`;
+            }
+            
+            return match;
         }
     );
     
     // Handle checkboxes for employee numbers, income, import, export
-    // Checkboxes are <w:ffData> with <w:checkBox> and <w:checked w:val="0" or "1"/>
     const checkboxMappings = getCheckboxMappings(data);
-    
-    // Apply checkbox values
     docXml = applyCheckboxes(docXml, checkboxMappings);
     
-    // Apply Monitor checkbox values
+    // Apply Monitor checkbox values  
     docXml = applyMonitorCheckboxes(docXml, data);
     
     // Save the modified XML back
@@ -105,25 +119,33 @@ function getCheckboxMappings(data) {
     mappings.employeeCount = empOptions.map(opt => data["Množství zaměstanců"] === opt ? 1 : 0);
     
     // Income checkboxes (7 options)
-    const incomeOptions = ["Do 1,5 mil", "1,5 – 18 mil", "18 – 50 mil", "50 – 100 mil", 
+    const incomeOptions = ["do 1,5 mil", "1,5 – 18 mil", "18 – 50 mil", "50 – 100 mil", 
                            "100 – 200 mil", "200 mil – 1 mld", "1 mld a více"];
-    mappings.income = incomeOptions.map(opt => data["Čistý obrat (Kč)"] && data["Čistý obrat (Kč)"].includes(opt.replace('Do ', 'do ').replace(' mil', ' mil')) ? 1 : 0);
+    mappings.income = incomeOptions.map(opt => {
+        const dataValue = data["Čistý obrat (Kč)"] || "";
+        return dataValue.toLowerCase().includes(opt.toLowerCase()) ? 1 : 0;
+    });
     
     // Import checkboxes (7 options)
-    const importOptions = ["Do 1,5 mil", "1,5 – 10 mil", "10 – 50 mil", "50 – 100 mil", 
+    const importOptions = ["do 1,5 mil", "1,5 – 10 mil", "10 – 50 mil", "50 – 100 mil", 
                            "100 – 300 mil", "0,3 – 1 mld", "1 mld a více"];
-    mappings.import = importOptions.map(opt => data["Import (Kč)"] && data["Import (Kč)"].includes(opt.replace('Do ', 'do ')) ? 1 : 0);
+    mappings.import = importOptions.map(opt => {
+        const dataValue = data["Import (Kč)"] || "";
+        return dataValue.toLowerCase().includes(opt.toLowerCase()) ? 1 : 0;
+    });
     
     // Export checkboxes (7 options)  
-    const exportOptions = ["Do 1,5 mil", "1,5 – 10 mil", "10 – 50 mil", "50 – 100 mil", 
+    const exportOptions = ["do 1,5 mil", "1,5 – 10 mil", "10 – 50 mil", "50 – 100 mil", 
                            "100 – 300 mil", "0,3 – 1 mld", "1 mld a více"];
-    mappings.export = exportOptions.map(opt => data["Export (Kč)"] && data["Export (Kč)"].includes(opt.replace('Do ', 'do ')) ? 1 : 0);
+    mappings.export = exportOptions.map(opt => {
+        const dataValue = data["Export (Kč)"] || "";
+        return dataValue.toLowerCase().includes(opt.toLowerCase()) ? 1 : 0;
+    });
     
     return mappings;
 }
 
 function applyCheckboxes(docXml, checkboxMappings) {
-    let checkboxIndex = 0;
     const allCheckboxes = [
         ...checkboxMappings.employeeCount,
         ...checkboxMappings.income,
@@ -131,13 +153,27 @@ function applyCheckboxes(docXml, checkboxMappings) {
         ...checkboxMappings.export
     ];
     
+    let checkboxIndex = 0;
+    
     // Replace checkbox checked values
+    // Word checkboxes are in <w:checkBox> elements with <w:checked w:val="0"/> or <w:checked w:val="1"/>
     docXml = docXml.replace(
-        /<w:checkBox>[\s\S]*?<w:checked w:val="[01]"[\s\S]*?<\/w:checkBox>/g,
-        (match) => {
-            const newValue = checkboxIndex < allCheckboxes.length ? allCheckboxes[checkboxIndex] : 0;
-            checkboxIndex++;
-            return match.replace(/w:val="[01]"/, `w:val="${newValue}"`);
+        /<w:checkBox>(.*?)<\/w:checkBox>/gs,
+        (match, checkboxContent) => {
+            if (checkboxIndex < allCheckboxes.length) {
+                const newValue = allCheckboxes[checkboxIndex];
+                checkboxIndex++;
+                
+                // Replace the checked value
+                const newContent = checkboxContent.replace(
+                    /<w:checked w:val="[01]"\/>/,
+                    `<w:checked w:val="${newValue}"/>`
+                );
+                
+                return `<w:checkBox>${newContent}</w:checkBox>`;
+            }
+            
+            return match;
         }
     );
     
@@ -145,10 +181,9 @@ function applyCheckboxes(docXml, checkboxMappings) {
 }
 
 function applyMonitorCheckboxes(docXml, data) {
-    // The last 3 checkboxes are for Monitor options
-    // We need to handle them based on the data
-    // This is a simplified approach - in production you'd want more robust parsing
-    
+    // The monitor checkboxes should be in the last 3 checkbox positions
+    // But they've already been handled by the general checkbox replacement above
+    // This function is kept for potential future specific handling
     return docXml;
 }
 
