@@ -32,7 +32,8 @@ export async function onRequest(context) {
     try {
         const requestData = await request.json();
 
-        let toEmail = requestData.Email;
+        let toEmail = 'khkpce@khkpce.cz';
+        let ccEmail = requestData['Email zástupce pro komunikaci'] || requestData.Email;
 
         // Convert JSON to CSV with your desired separator
         const csvContent = jsonToCSV(requestData, ';'); // změň si na co chceš
@@ -44,6 +45,9 @@ export async function onRequest(context) {
         const formData = new FormData();
         formData.append('from', `KHK Form System <noreply@${env.MAILGUN_DOMAIN}>`);
         formData.append('to', toEmail);
+        if (ccEmail) {
+            formData.append('cc', ccEmail);
+        }
         formData.append('subject', 'Přihláška do KHK Pardubice');
         formData.append('text', 'Dobrý den, zde zasíláme vámi vyžádanou přihlášku do KHK Pardubice.');
 

@@ -17,7 +17,6 @@ function App() {
     const [city, setCity] = useState("")
     const [zip, setZip] = useState("")
     const [regDate, setRegDate] = useState("")
-    const [regPlace, setRegPlace] = useState("")
     const [phone, setPhone] = useState("")
     const [email, setEmail] = useState("")
     const [phoneStatutary, setPhoneStatutary] = useState("")
@@ -39,6 +38,18 @@ function App() {
     const [naceOptions, setNaceOptions] = useState([])
     const [exportCountries, setExportCountries] = useState([])
     const [importCountries, setImportCountries] = useState([])
+    const [showCorrespondenceAddress, setShowCorrespondenceAddress] = useState(false)
+    const [corrStreet, setCorrStreet] = useState("")
+    const [corrCity, setCorrCity] = useState("")
+    const [corrZip, setCorrZip] = useState("")
+    const [corrState, setCorrState] = useState("")
+    const [industryDescription, setIndustryDescription] = useState("")
+    const [newsletterEmail, setNewsletterEmail] = useState("")
+    const [invoiceEmail, setInvoiceEmail] = useState("")
+    const [monitorDaily, setMonitorDaily] = useState(false)
+    const [monitorWeekly, setMonitorWeekly] = useState(false)
+    const [monitorMonthly, setMonitorMonthly] = useState(false)
+    const [dataBoxId, setDataBoxId] = useState("")
     const countryOptions = countryList().getData();
 
     function fetchDetailsFromICO() {
@@ -94,7 +105,7 @@ function App() {
         // Validate required fields
         if (!ico || !companyName || !dic || !street_and_number || !state || !city || !zip ||
             !phone || !email || !nameStatuary || !phoneStatutary || !emailStatutary || 
-            !functionStatutary || !legalForm || !regDate || !regPlace || !mark ||
+            !functionStatutary || !legalForm || !regDate || !mark ||
             !nameMeeting || !phoneMeeting || !emailMeeting || !functionMeeting || 
             industry.length === 0) {
             alert("Prosím vyplňte všechna povinná pole!");
@@ -102,7 +113,9 @@ function App() {
         }
         
         // Create JSON with all data
+        const submissionDate = new Date().toISOString().split('T')[0];
         const data = {
+            "Datum podání": submissionDate,
             "IČ": ico,
             "Název Firmy": companyName,
             "DIČ": dic,
@@ -119,19 +132,29 @@ function App() {
             "Právní Forma": legalForm,
             "WWW Stránky": web,
             "Datum registrace v obchodním rejstříku nebo u živnostenského úřadu": regDate,
-            "Místo registrace v obchodním rejstříku nebo u živnostenského úřadu": regPlace,
             "Spisová značka": mark,
-            "Jméno zástupce pro jednání": nameMeeting,
-            "Telefon zástupce pro jednání": phoneMeeting,
-            "Email zástupce pro jednání": emailMeeting,
-            "Funkce zástupce pro jednání": functionMeeting,
+            "Zástupce pro komunikaci s KHK PK": nameMeeting,
+            "Telefon zástupce pro komunikaci": phoneMeeting,
+            "Email zástupce pro komunikaci": emailMeeting,
+            "Funkce zástupce pro komunikaci": functionMeeting,
+            "ID datové schránky": dataBoxId,
             "Množství zaměstanců": employeeNum,
             "Čistý obrat (Kč)": income,
             "Import (Kč)": import_,
             "Export (Kč)": export_,
-            "Převažující obor činnosti dle CZ-NACE": industry.map(i => i.label),
-            "Země, kam exportujete/chcete exportovat": exportCountries.map(c => c.label),
-            "Země, odkuď importujete/chcete importovat": importCountries.map(c => c.label)
+            "Převažující obor činnosti dle CZ-NACE": industry.map(i => i.label).join(', '),
+            "Specifikace produktů a služeb": industryDescription,
+            "Země, kam exportujete/chcete exportovat": exportCountries.map(c => c.label).join(', '),
+            "Země, odkuď importujete/chcete importovat": importCountries.map(c => c.label).join(', '),
+            "Korespondenční adresa - Ulice": corrStreet,
+            "Korespondenční adresa - Město": corrCity,
+            "Korespondenční adresa - PSČ": corrZip,
+            "Korespondenční adresa - Kraj": corrState,
+            "Email pro newsletter": newsletterEmail,
+            "Email pro faktury": invoiceEmail,
+            "Monitor - denně": monitorDaily ? "ANO" : "NE",
+            "Monitor - týdně": monitorWeekly ? "ANO" : "NE",
+            "Monitor - měsíčně": monitorMonthly ? "ANO" : "NE"
         }
 
         fetch("/api/submitForm", {body: JSON.stringify(data), method: "POST", headers: {
@@ -246,8 +269,8 @@ function App() {
                         />
                     </div>
 
-                    {/* Section 3: Contact Info */}
-                    <h2 className="section-title">Korespondenční adresa</h2>
+                    {/* Section 3: Contact Info - Phone and Email */}
+                    <h2 className="section-title">Kontaktní údaje</h2>
                     <div className="question-card">
                         <label className="question">Kontaktní telefon</label>
                         <input
@@ -267,6 +290,63 @@ function App() {
                             placeholder="pepa.novak@gmail.com"
                             value={email}
                         />
+                    </div>
+
+                    {/* Section 3a: Optional Correspondence Address */}
+                    <h2 className="section-title">Korespondenční adresa (volitelné)</h2>
+                    <div className="question-card">
+                        <label style={{cursor: 'pointer', display: 'flex', alignItems: 'center', marginBottom: '8px'}}>
+                            <input 
+                                type="checkbox" 
+                                checked={showCorrespondenceAddress}
+                                onChange={e => setShowCorrespondenceAddress(e.target.checked)}
+                                style={{marginRight: '8px', width: 'auto'}}
+                            />
+                            Vyplnit korespondenční adresu
+                        </label>
+                        <p style={{fontSize: '13px', color: '#78909c', marginTop: '4px'}}>
+                            Pokud se liší od sídla společnosti.
+                        </p>
+                        {showCorrespondenceAddress && (
+                            <div style={{marginTop: '16px'}}>
+                                <div style={{marginBottom: '12px'}}>
+                                    <label className="question" style={{fontSize: '14px', marginBottom: '8px'}}>Ulice a číslo</label>
+                                    <input
+                                        type="text"
+                                        onChange={e => {setCorrStreet(e.target.value)}}
+                                        placeholder="Ulice a číslo"
+                                        value={corrStreet}
+                                    />
+                                </div>
+                                <div style={{marginBottom: '12px'}}>
+                                    <label className="question" style={{fontSize: '14px', marginBottom: '8px'}}>Obec</label>
+                                    <input
+                                        type="text"
+                                        onChange={e => {setCorrCity(e.target.value)}}
+                                        placeholder="Obec"
+                                        value={corrCity}
+                                    />
+                                </div>
+                                <div style={{marginBottom: '12px'}}>
+                                    <label className="question" style={{fontSize: '14px', marginBottom: '8px'}}>PSČ</label>
+                                    <input
+                                        type="text"
+                                        onChange={e => {setCorrZip(e.target.value)}}
+                                        placeholder="PSČ"
+                                        value={corrZip}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="question" style={{fontSize: '14px', marginBottom: '8px'}}>Kraj</label>
+                                    <input
+                                        type="text"
+                                        onChange={e => {setCorrState(e.target.value)}}
+                                        placeholder="Kraj"
+                                        value={corrState}
+                                    />
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* Section 4: Statutory Representative */}
@@ -341,23 +421,13 @@ function App() {
                     {/* Section 7: Registration Details */}
                     <h2 className="section-title">Registrační údaje</h2>
                     <div className="question-card">
-                        <label className="question">Datum registrace v obchodním rejstříku nebo u živnostenského úřadu</label>
+                        <label className="question">Datum založení</label>
                         <input
                             type="date"
                             onChange={e => {setRegDate(e.target.value)}}
-                            placeholder="Datum registrace"
+                            placeholder="Datum založení"
                             required
                             value={regDate}
-                        />
-                    </div>
-                    <div className="question-card">
-                        <label className="question">Místo registrace v obchodním rejstříku nebo u živnostenského úřadu</label>
-                        <input
-                            type="text"
-                            onChange={e => {setRegPlace(e.target.value)}}
-                            placeholder="Místo registrace"
-                            required
-                            value={regPlace}
                         />
                     </div>
                     <div className="question-card">
@@ -372,9 +442,9 @@ function App() {
                     </div>
 
                     {/* Section 8: Meeting Representative */}
-                    <h2 className="section-title">Zástupce pro jednání</h2>
+                    <h2 className="section-title">Zástupce pro komunikaci s KHK PK</h2>
                     <div className="question-card">
-                        <label className="question">Jméno zástupce pro jednání</label>
+                        <label className="question">Jméno zástupce pro komunikaci s KHK PK</label>
                         <input
                             type="text"
                             onChange={e => {setNameMeeting(e.target.value)}}
@@ -384,7 +454,7 @@ function App() {
                         />
                     </div>
                     <div className="question-card">
-                        <label className="question">Kontaktní telefon zástupce pro jednání</label>
+                        <label className="question">Kontaktní telefon zástupce</label>
                         <input
                             type="tel"
                             onChange={e => {setPhoneMeeting(e.target.value)}}
@@ -394,7 +464,7 @@ function App() {
                         />
                     </div>
                     <div className="question-card">
-                        <label className="question">Kontaktní email zástupce pro jednání</label>
+                        <label className="question">Kontaktní email zástupce</label>
                         <input
                             type="email"
                             onChange={e => {setEmailMeeting(e.target.value)}}
@@ -404,12 +474,12 @@ function App() {
                         />
                     </div>
                     <div className="question-card">
-                        <label className="question">Funkce zástupce pro jednání</label>
+                        <label className="question">Funkce zástupce</label>
                         <input
                             type="text"
                             onChange={e => {setFunctionMeeting(e.target.value)}}
                             required
-                            placeholder="Funkce zástupce pro jednání"
+                            placeholder="Funkce zástupce"
                             value={functionMeeting}
                         />
                     </div>
@@ -471,6 +541,46 @@ function App() {
                             placeholder="Vyberte převažující obor činnosti"
                         />
                     </div>
+                    <div className="question-card">
+                        <label className="question">Specifikace produktů a služeb</label>
+                        <p style={{fontSize: '13px', color: '#78909c', marginTop: '-8px', marginBottom: '12px'}}>
+                            Jasně specifikujte produkty a služby, které poskytujete (maximálně 600 znaků)
+                        </p>
+                        <textarea
+                            onChange={e => {setIndustryDescription(e.target.value)}}
+                            placeholder="Popište vaše produkty a služby..."
+                            value={industryDescription}
+                            maxLength="600"
+                            rows="4"
+                            style={{
+                                width: '100%',
+                                padding: '14px 16px',
+                                fontSize: '15px',
+                                border: '1px solid #cbd5e0',
+                                borderRadius: '6px',
+                                background: '#f8fafc',
+                                outline: 'none',
+                                color: '#1a202c',
+                                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
+                                resize: 'vertical'
+                            }}
+                        />
+                        <div style={{fontSize: '12px', color: '#94a3b8', marginTop: '4px', textAlign: 'right'}}>
+                            {industryDescription.length}/600 znaků
+                        </div>
+                    </div>
+
+                    {/* Section 10a: Data Box ID */}
+                    <h2 className="section-title">Datová schránka</h2>
+                    <div className="question-card">
+                        <label className="question">ID datové schránky (volitelné)</label>
+                        <input
+                            type="text"
+                            onChange={e => {setDataBoxId(e.target.value)}}
+                            placeholder="ID datové schránky"
+                            value={dataBoxId}
+                        />
+                    </div>
 
                     {/* Section 11: Export Countries */}
                     <h2 className="section-title">Exportní země</h2>
@@ -496,6 +606,69 @@ function App() {
                             onChange={setImportCountries}
                             placeholder="Začněte psát název země..."
                         />
+                    </div>
+
+                    {/* Section 13: Additional Information */}
+                    <h2 className="section-title">Dodatečné informace</h2>
+                    <div className="question-card">
+                        <label className="question">Email pro zasílání informací (newsletter, týdenní/měsíční bulletin)</label>
+                        <input
+                            type="email"
+                            onChange={e => {setNewsletterEmail(e.target.value)}}
+                            placeholder="email@example.com"
+                            value={newsletterEmail}
+                        />
+                    </div>
+                    <div className="question-card">
+                        <label className="question">Email pro zasílání faktur za členský příspěvek</label>
+                        <input
+                            type="email"
+                            onChange={e => {setInvoiceEmail(e.target.value)}}
+                            placeholder="email@example.com"
+                            value={invoiceEmail}
+                        />
+                    </div>
+                    <div className="question-card">
+                        <label className="question">Požadavek na zasílání monitoru</label>
+                        <label style={{display: 'flex', alignItems: 'center', padding: '8px 0'}}>
+                            <input 
+                                type="checkbox" 
+                                checked={monitorDaily}
+                                onChange={e => setMonitorDaily(e.target.checked)}
+                                style={{marginRight: '8px', width: 'auto'}}
+                            />
+                            DENNĚ ... {monitorDaily ? 'ANO' : 'NE'}
+                        </label>
+                        <label style={{display: 'flex', alignItems: 'center', padding: '8px 0'}}>
+                            <input 
+                                type="checkbox" 
+                                checked={monitorWeekly}
+                                onChange={e => setMonitorWeekly(e.target.checked)}
+                                style={{marginRight: '8px', width: 'auto'}}
+                            />
+                            TÝDNĚ ... {monitorWeekly ? 'ANO' : 'NE'}
+                        </label>
+                        <label style={{display: 'flex', alignItems: 'center', padding: '8px 0'}}>
+                            <input 
+                                type="checkbox" 
+                                checked={monitorMonthly}
+                                onChange={e => setMonitorMonthly(e.target.checked)}
+                                style={{marginRight: '8px', width: 'auto'}}
+                            />
+                            MĚSÍČNĚ ... {monitorMonthly ? 'ANO' : 'NE'}
+                        </label>
+                    </div>
+
+                    {/* Section 14: Consent Texts */}
+                    <h2 className="section-title">Souhlas a prohlášení</h2>
+                    <div className="question-card">
+                        <p style={{fontSize: '15px', lineHeight: '1.6', color: '#37474f', marginBottom: '16px'}}>
+                            Žadatel souhlasí se zpracováním osobních údajů.
+                        </p>
+                        <p style={{fontSize: '15px', lineHeight: '1.6', color: '#37474f', margin: '0'}}>
+                            Žadatel prohlašuje, že je členem Hospodářské komory České republiky a zavazuje se plnit členské povinnosti, 
+                            hradit členské příspěvky a dodržovat obchodní etiku a integritu.
+                        </p>
                     </div>
 
                     <div className="form-navigation">
