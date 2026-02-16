@@ -1,95 +1,26 @@
-import { PDFDocument, rgb } from 'pdf-lib';
-import fontkit from '@pdf-lib/fontkit';
+import { fillDocxTemplate } from './docxHelper.js';
+import { convertDocxToPDF } from './pdfConverter.js';
 
-// Function to create a PDF document with form data
-async function createFormPDF(data, request) {
-    const pdfDoc = await PDFDocument.create();
-    pdfDoc.registerFontkit(fontkit);
-    
-    // Fetch DejaVu fonts from public assets
-    // Construct the base URL from the request
+// Function to create a PDF from DOCX template
+async function createFormPDFFromTemplate(data, request) {
+    // Fetch the template file
     const url = new URL(request.url);
     const baseUrl = `${url.protocol}//${url.host}`;
     
-    const fontRegularResponse = await fetch(`${baseUrl}/fonts/DejaVuSans.ttf`);
-    const fontBoldResponse = await fetch(`${baseUrl}/fonts/DejaVuSans-Bold.ttf`);
-    
-    if (!fontRegularResponse.ok) {
-        throw new Error(`Failed to load regular font: ${fontRegularResponse.status} ${fontRegularResponse.statusText}`);
-    }
-    if (!fontBoldResponse.ok) {
-        throw new Error(`Failed to load bold font: ${fontBoldResponse.status} ${fontBoldResponse.statusText}`);
+    const templateResponse = await fetch(`${baseUrl}/prihlaska_template.docx`);
+    if (!templateResponse.ok) {
+        throw new Error(`Failed to load template: ${templateResponse.status} ${templateResponse.statusText}`);
     }
     
-    const fontBytes = await fontRegularResponse.arrayBuffer();
-    const fontBoldBytes = await fontBoldResponse.arrayBuffer();
-    const font = await pdfDoc.embedFont(fontBytes);
-    const fontBold = await pdfDoc.embedFont(fontBoldBytes);
+    const templateBuffer = await templateResponse.arrayBuffer();
     
-    let page = pdfDoc.addPage([595, 842]); // A4 size
-    const { width, height } = page.getSize();
-    const fontSize = 10;
-    const boldFontSize = 11;
-    const lineHeight = 14;
-    let yPosition = height - 50;
+    // Fill the template with form data
+    const filledDocxBuffer = await fillDocxTemplate(templateBuffer, data);
     
-    // Helper function to add text
-    const addText = (text, x, y, currentFont = font, size = fontSize) => {
-        page.drawText(text, {
-            x,
-            y,
-            size,
-            font: currentFont,
-            color: rgb(0, 0, 0),
-        });
-    };
+    // Convert form data to PDF using pdf-lib  
+    const pdfBytes = await convertDocxToPDF(data, request);
     
-    // Helper function to add a field with label and value
-    const addField = (label, value) => {
-        if (yPosition < 50) {
-            page = pdfDoc.addPage([595, 842]);
-            yPosition = height - 50;
-        }
-        
-        addText(label + ':', 50, yPosition, fontBold, boldFontSize);
-        yPosition -= lineHeight;
-        
-        const valueStr = value ? String(value) : '';
-        const maxWidth = width - 100;
-        const words = valueStr.split(' ');
-        let line = '';
-        
-        for (const word of words) {
-            const testLine = line + (line ? ' ' : '') + word;
-            const testWidth = font.widthOfTextAtSize(testLine, fontSize);
-            
-            if (testWidth > maxWidth && line) {
-                addText(line, 70, yPosition);
-                yPosition -= lineHeight;
-                line = word;
-            } else {
-                line = testLine;
-            }
-        }
-        
-        if (line) {
-            addText(line, 70, yPosition);
-            yPosition -= lineHeight;
-        }
-        
-        yPosition -= 5; // Extra spacing between fields
-    };
-    
-    // Title
-    addText('PŘIHLÁŠKA DO HOSPODÁŘSKÉ KOMORY ČESKÉ REPUBLIKY', 50, yPosition, fontBold, 14);
-    yPosition -= 25;
-    
-    // Add all fields
-    Object.entries(data).forEach(([key, value]) => {
-        addField(key, value);
-    });
-    
-    return await pdfDoc.save();
+    return { pdfBytes, docxBytes: filledDocxBuffer };
 }
 
 export async function onRequest(context) {
@@ -101,8 +32,8 @@ export async function onRequest(context) {
         let toEmail = 'vitekform@gmail.com';
         let ccEmail = requestData['Email zástupce pro komunikaci'] || requestData['Email'];
 
-        // Create PDF with form data
-        const pdfBytes = await createFormPDF(requestData, request);
+        // Create PDF and filled DOCX with form data using template
+        const { pdfBytes, docxBytes } = await createFormPDFFromTemplate(requestData, request);
 
         if (!env.MAILGUN_API_KEY || !env.MAILGUN_DOMAIN) {
             throw new Error("MAILGUN_API_KEY and MAILGUN_DOMAIN environment variables must be configured");
@@ -117,8 +48,12 @@ export async function onRequest(context) {
         formData.append('subject', 'Přihláška do KHK Pardubice');
         formData.append('text', 'Dobrý den, zde zasíláme vámi vyžádanou přihlášku do KHK Pardubice.');
 
+        // Attach both PDF and filled DOCX
         const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
         formData.append('attachment', pdfBlob, 'prihlaska-KHK.pdf');
+        
+        const docxBlob = new Blob([docxBytes], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+        formData.append('attachment', docxBlob, 'prihlaska-KHK.docx');
 
         const mailgunUrl = `https://api.eu.mailgun.net/v3/${env.MAILGUN_DOMAIN}/messages`;
         const emailResponse = await fetch(mailgunUrl, {

@@ -12,11 +12,12 @@ A multi-step registration form built with React and Vite for collecting company 
 ## Form Submission
 
 When a user completes the form, the submitted data is:
-1. Converted to a PDF document with proper formatting and Czech character support
-2. Sent via email to `vitekform@gmail.com` with the subject "Přihláška do KHK Pardubice"
-3. Attached as a PDF file (`prihlaska-KHK.pdf`)
+1. Filled into the `prihlaska_template.docx` Word template
+2. Converted to PDF using pdf-lib (preserves formatting and Czech character support)
+3. Sent via email to `vitekform@gmail.com` with the subject "Přihláška do KHK Pardubice"
+4. Attached as both a PDF file (`prihlaska-KHK.pdf`) and the filled DOCX file (`prihlaska-KHK.docx`)
 
-The form uses Cloudflare Pages Functions and MailGun API for email delivery.
+The form uses Cloudflare Pages Functions, pdf-lib for PDF generation, and MailGun API for email delivery.
 
 ## Environment Variables
 
