@@ -13,18 +13,17 @@ A multi-step registration form built with React and Vite for collecting company 
 
 When a user completes the form, the submitted data is:
 1. Filled into the `prihlaska_template.docx` Word template
-2. Converted to PDF using CloudConvert API
+2. Converted to PDF using pdf-lib (preserves formatting and Czech character support)
 3. Sent via email to `vitekform@gmail.com` with the subject "Přihláška do KHK Pardubice"
 4. Attached as a PDF file (`prihlaska-KHK.pdf`)
 
-The form uses Cloudflare Pages Functions, CloudConvert API for PDF conversion, and MailGun API for email delivery.
+The form uses Cloudflare Pages Functions, pdf-lib for PDF generation, and MailGun API for email delivery.
 
 ## Environment Variables
 
 The following environment variables must be configured in Cloudflare Pages settings:
 - `MAILGUN_API_KEY` (required): Your MailGun API key
 - `MAILGUN_DOMAIN` (required): Your MailGun domain (e.g., `mg.example.com`)
-- `CLOUDCONVERT_API_KEY` (required): Your CloudConvert API key for DOCX to PDF conversion
 
 ## Development
 

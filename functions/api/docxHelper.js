@@ -155,22 +155,36 @@ function applyCheckboxes(docXml, checkboxMappings) {
     
     let checkboxIndex = 0;
     
-    // Replace checkbox checked values
-    // Word checkboxes are in <w:checkBox> elements with <w:checked w:val="0"/> or <w:checked w:val="1"/>
+    // Replace checkbox structures
+    // Word checkboxes are in <w:checkBox> elements
+    // If checked, they should have <w:checked w:val="1"/> 
+    // If unchecked, they may not have the element at all or have w:val="0"
     docXml = docXml.replace(
         /<w:checkBox>(.*?)<\/w:checkBox>/gs,
         (match, checkboxContent) => {
             if (checkboxIndex < allCheckboxes.length) {
-                const newValue = allCheckboxes[checkboxIndex];
+                const shouldBeChecked = allCheckboxes[checkboxIndex] === 1;
                 checkboxIndex++;
                 
-                // Replace the checked value
-                const newContent = checkboxContent.replace(
-                    /<w:checked w:val="[01]"\/>/,
-                    `<w:checked w:val="${newValue}"/>`
-                );
-                
-                return `<w:checkBox>${newContent}</w:checkBox>`;
+                // Check if there's already a checked element
+                if (/<w:checked/.test(checkboxContent)) {
+                    // Update existing checked element
+                    const newContent = checkboxContent.replace(
+                        /<w:checked w:val="[01]"\/>/,
+                        `<w:checked w:val="${shouldBeChecked ? '1' : '0'}"/>`
+                    );
+                    return `<w:checkBox>${newContent}</w:checkBox>`;
+                } else {
+                    // Add checked element if checkbox should be checked
+                    if (shouldBeChecked) {
+                        // Insert <w:checked w:val="1"/> after <w:sizeAuto>
+                        const newContent = checkboxContent.replace(
+                            /(<w:sizeAuto><\/w:sizeAuto>)/,
+                            '$1<w:checked w:val="1"/>'
+                        );
+                        return `<w:checkBox>${newContent}</w:checkBox>`;
+                    }
+                }
             }
             
             return match;

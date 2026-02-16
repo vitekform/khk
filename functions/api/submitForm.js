@@ -1,8 +1,8 @@
 import { fillDocxTemplate } from './docxHelper.js';
-import CloudConvert from 'cloudconvert';
+import { convertDocxToPDF } from './pdfConverter.js';
 
 // Function to create a PDF from DOCX template
-async function createFormPDFFromTemplate(data, request, env) {
+async function createFormPDFFromTemplate(data, request) {
     // Fetch the template file
     const url = new URL(request.url);
     const baseUrl = `${url.protocol}//${url.host}`;
@@ -17,58 +17,10 @@ async function createFormPDFFromTemplate(data, request, env) {
     // Fill the template with form data
     const filledDocxBuffer = await fillDocxTemplate(templateBuffer, data);
     
-    // Convert DOCX to PDF using CloudConvert
-    if (!env.CLOUDCONVERT_API_KEY) {
-        throw new Error("CLOUDCONVERT_API_KEY environment variable must be configured");
-    }
+    // Convert DOCX to PDF using pdf-lib
+    const pdfBytes = await convertDocxToPDF(filledDocxBuffer, data, request);
     
-    const cloudConvert = new CloudConvert(env.CLOUDCONVERT_API_KEY);
-    
-    try {
-        // Create a job to convert DOCX to PDF
-        const job = await cloudConvert.jobs.create({
-            tasks: {
-                'import-docx': {
-                    operation: 'import/upload'
-                },
-                'convert-to-pdf': {
-                    operation: 'convert',
-                    input: 'import-docx',
-                    output_format: 'pdf',
-                    engine: 'office',
-                    filename: 'prihlaska-KHK.pdf'
-                },
-                'export-pdf': {
-                    operation: 'export/url',
-                    input: 'convert-to-pdf'
-                }
-            }
-        });
-        
-        // Upload the filled DOCX
-        const uploadTask = job.tasks.filter(task => task.operation === 'import/upload')[0];
-        await cloudConvert.tasks.upload(uploadTask, filledDocxBuffer, 'prihlaska.docx');
-        
-        // Wait for the job to complete
-        const completedJob = await cloudConvert.jobs.wait(job.id);
-        
-        // Get the PDF from export task
-        const exportTask = completedJob.tasks.filter(task => task.operation === 'export/url')[0];
-        const pdfUrl = exportTask.result.files[0].url;
-        
-        // Download the PDF
-        const pdfResponse = await fetch(pdfUrl);
-        if (!pdfResponse.ok) {
-            throw new Error(`Failed to download converted PDF: ${pdfResponse.status}`);
-        }
-        
-        const pdfBytes = await pdfResponse.arrayBuffer();
-        return pdfBytes;
-        
-    } catch (error) {
-        console.error('CloudConvert error:', error);
-        throw new Error(`PDF conversion failed: ${error.message}`);
-    }
+    return pdfBytes;
 }
 
 export async function onRequest(context) {
@@ -81,7 +33,7 @@ export async function onRequest(context) {
         let ccEmail = requestData['Email zástupce pro komunikaci'] || requestData['Email'];
 
         // Create PDF with form data using template
-        const pdfBytes = await createFormPDFFromTemplate(requestData, request, env);
+        const pdfBytes = await createFormPDFFromTemplate(requestData, request);
 
         if (!env.MAILGUN_API_KEY || !env.MAILGUN_DOMAIN) {
             throw new Error("MAILGUN_API_KEY and MAILGUN_DOMAIN environment variables must be configured");
