@@ -75,7 +75,7 @@ export async function fillDocxTemplate(templateBuffer, data) {
                 // Replace the text content
                 const newFieldContent = fieldContent.replace(
                     /<w:t[^>]*>([^<]*)<\/w:t>/,
-                    (textMatch, oldText) => {
+                    (textMatch) => {
                         // Preserve the xml:space attribute if present
                         if (textMatch.includes('xml:space="preserve"')) {
                             return `<w:t xml:space="preserve">${newValue}</w:t>`;
@@ -96,7 +96,7 @@ export async function fillDocxTemplate(templateBuffer, data) {
     docXml = applyCheckboxes(docXml, checkboxMappings);
     
     // Apply Monitor checkbox values  
-    docXml = applyMonitorCheckboxes(docXml, data);
+    docXml = applyMonitorCheckboxes(docXml);
     
     // Save the modified XML back
     zip.file('word/document.xml', docXml);
@@ -194,7 +194,7 @@ function applyCheckboxes(docXml, checkboxMappings) {
     return docXml;
 }
 
-function applyMonitorCheckboxes(docXml, data) {
+function applyMonitorCheckboxes(docXml) {
     // The monitor checkboxes should be in the last 3 checkbox positions
     // But they've already been handled by the general checkbox replacement above
     // This function is kept for potential future specific handling
