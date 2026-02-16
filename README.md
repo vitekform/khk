@@ -15,7 +15,7 @@ When a user completes the form, the submitted data is:
 1. Filled into the `prihlaska_template.docx` Word template
 2. Converted to PDF using pdf-lib (preserves formatting and Czech character support)
 3. Sent via email to `vitekform@gmail.com` with the subject "Přihláška do KHK Pardubice"
-4. Attached as a PDF file (`prihlaska-KHK.pdf`)
+4. Attached as both a PDF file (`prihlaska-KHK.pdf`) and the filled DOCX file (`prihlaska-KHK.docx`)
 
 The form uses Cloudflare Pages Functions, pdf-lib for PDF generation, and MailGun API for email delivery.
 

@@ -17,10 +17,10 @@ async function createFormPDFFromTemplate(data, request) {
     // Fill the template with form data
     const filledDocxBuffer = await fillDocxTemplate(templateBuffer, data);
     
-    // Convert DOCX to PDF using pdf-lib
-    const pdfBytes = await convertDocxToPDF(filledDocxBuffer, data, request);
+    // Convert form data to PDF using pdf-lib  
+    const pdfBytes = await convertDocxToPDF(data, request);
     
-    return pdfBytes;
+    return { pdfBytes, docxBytes: filledDocxBuffer };
 }
 
 export async function onRequest(context) {
@@ -32,8 +32,8 @@ export async function onRequest(context) {
         let toEmail = 'vitekform@gmail.com';
         let ccEmail = requestData['Email zástupce pro komunikaci'] || requestData['Email'];
 
-        // Create PDF with form data using template
-        const pdfBytes = await createFormPDFFromTemplate(requestData, request);
+        // Create PDF and filled DOCX with form data using template
+        const { pdfBytes, docxBytes } = await createFormPDFFromTemplate(requestData, request);
 
         if (!env.MAILGUN_API_KEY || !env.MAILGUN_DOMAIN) {
             throw new Error("MAILGUN_API_KEY and MAILGUN_DOMAIN environment variables must be configured");
@@ -48,8 +48,12 @@ export async function onRequest(context) {
         formData.append('subject', 'Přihláška do KHK Pardubice');
         formData.append('text', 'Dobrý den, zde zasíláme vámi vyžádanou přihlášku do KHK Pardubice.');
 
+        // Attach both PDF and filled DOCX
         const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
         formData.append('attachment', pdfBlob, 'prihlaska-KHK.pdf');
+        
+        const docxBlob = new Blob([docxBytes], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+        formData.append('attachment', docxBlob, 'prihlaska-KHK.docx');
 
         const mailgunUrl = `https://api.eu.mailgun.net/v3/${env.MAILGUN_DOMAIN}/messages`;
         const emailResponse = await fetch(mailgunUrl, {

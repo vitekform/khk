@@ -3,14 +3,13 @@ import fontkit from '@pdf-lib/fontkit';
 import PizZip from 'pizzip';
 
 /**
- * Convert filled DOCX to PDF using pdf-lib
- * This extracts text from the filled DOCX and creates a formatted PDF
- * @param {ArrayBuffer} docxBuffer - The filled DOCX as ArrayBuffer
- * @param {Object} data - Original form data for reference
+ * Convert form data to PDF using pdf-lib
+ * This creates a formatted PDF from the form data
+ * @param {Object} data - Form data to include in the PDF
  * @param {Request} request - Request object to fetch fonts
  * @returns {Uint8Array} - The PDF as byte array
  */
-export async function convertDocxToPDF(docxBuffer, data, request) {
+export async function convertDocxToPDF(data, request) {
     const pdfDoc = await PDFDocument.create();
     pdfDoc.registerFontkit(fontkit);
     
