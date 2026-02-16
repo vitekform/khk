@@ -1,23 +1,25 @@
 import { PDFDocument, rgb } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
-
-// Get current directory for ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 // Function to create a PDF document with form data
-async function createFormPDF(data) {
+async function createFormPDF(data, request) {
     const pdfDoc = await PDFDocument.create();
     pdfDoc.registerFontkit(fontkit);
     
-    // Load DejaVu fonts from the functions/fonts directory
-    const fontPath = join(__dirname, '..', 'fonts', 'DejaVuSans.ttf');
-    const fontBoldPath = join(__dirname, '..', 'fonts', 'DejaVuSans-Bold.ttf');
-    const fontBytes = readFileSync(fontPath);
-    const fontBoldBytes = readFileSync(fontBoldPath);
+    // Fetch DejaVu fonts from public assets
+    // Construct the base URL from the request
+    const url = new URL(request.url);
+    const baseUrl = `${url.protocol}//${url.host}`;
+    
+    const fontRegularResponse = await fetch(`${baseUrl}/fonts/DejaVuSans.ttf`);
+    const fontBoldResponse = await fetch(`${baseUrl}/fonts/DejaVuSans-Bold.ttf`);
+    
+    if (!fontRegularResponse.ok || !fontBoldResponse.ok) {
+        throw new Error('Failed to load font files');
+    }
+    
+    const fontBytes = await fontRegularResponse.arrayBuffer();
+    const fontBoldBytes = await fontBoldResponse.arrayBuffer();
     const font = await pdfDoc.embedFont(fontBytes);
     const fontBold = await pdfDoc.embedFont(fontBoldBytes);
     
@@ -97,7 +99,7 @@ export async function onRequest(context) {
         let ccEmail = requestData['Email zástupce pro komunikaci'] || requestData['Email'];
 
         // Create PDF with form data
-        const pdfBytes = await createFormPDF(requestData);
+        const pdfBytes = await createFormPDF(requestData, request);
 
         if (!env.MAILGUN_API_KEY || !env.MAILGUN_DOMAIN) {
             throw new Error("MAILGUN_API_KEY and MAILGUN_DOMAIN environment variables must be configured");
