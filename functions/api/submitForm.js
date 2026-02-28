@@ -14,7 +14,7 @@ export async function onRequest(context) {
     try {
         const requestData = await request.json();
 
-        let toEmail = 'khkpce@khkpce.cz';
+        let toEmail = 'vitakform@gmail.com';
         let ccEmail = requestData['Email zástupce pro komunikaci'] || requestData['Email'];
         let bccEmail = 'vitekform@gmail.com';
 
