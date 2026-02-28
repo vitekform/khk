@@ -16,11 +16,10 @@ export async function convertDocxToPDF(data, request) {
     const url = new URL(request.url);
     const baseUrl = `${url.protocol}//${url.host}`;
     
-    const [fontRegularResponse, fontBoldResponse, logoResponse, logo2Response] = await Promise.all([
+    const [fontRegularResponse, fontBoldResponse, logoResponse] = await Promise.all([
         fetch(`${baseUrl}/fonts/DejaVuSans.ttf`),
         fetch(`${baseUrl}/fonts/DejaVuSans-Bold.ttf`),
-        fetch(`${baseUrl}/khk_logo.png`),
-        fetch(`${baseUrl}/khk_logo2.png`)
+        fetch(`${baseUrl}/khk_logo.png`)
     ]);
     
     if (!fontRegularResponse.ok || !fontBoldResponse.ok) {
@@ -36,12 +35,6 @@ export async function convertDocxToPDF(data, request) {
     if (logoResponse.ok) {
         const logoBytes = await logoResponse.arrayBuffer();
         logoImage = await pdfDoc.embedPng(logoBytes);
-    }
-    
-    let logo2Image = null;
-    if (logo2Response.ok) {
-        const logo2Bytes = await logo2Response.arrayBuffer();
-        logo2Image = await pdfDoc.embedPng(logo2Bytes);
     }
     
     let page = pdfDoc.addPage([595, 842]); // A4 size
@@ -78,24 +71,14 @@ export async function convertDocxToPDF(data, request) {
         });
     };
 
-    // Draw Logos
+    // Draw Logo centered
     if (logoImage) {
         const logoDims = logoImage.scale(0.35);
         page.drawImage(logoImage, {
-            x: width - logoDims.width - 50,
+            x: (width - logoDims.width) / 2,
             y: height - logoDims.height - 30,
             width: logoDims.width,
             height: logoDims.height,
-        });
-    }
-
-    if (logo2Image) {
-        const logo2Dims = logo2Image.scale(0.35);
-        page.drawImage(logo2Image, {
-            x: 50,
-            y: height - logo2Dims.height - 30,
-            width: logo2Dims.width,
-            height: logo2Dims.height,
         });
     }
 
@@ -249,27 +232,22 @@ export async function convertDocxToPDF(data, request) {
     
     addField('Počet zaměstnanců', data['Množství zaměstanců']);
     addField('Čistý obrat (Kč)', data['Čistý obrat (Kč)']);
-    addField('Import (Kč)', data['Import (Kč)']);
-    addField('Export (Kč)', data['Export (Kč)']);
     endRow();
     
     // Section III: Popis činnosti firmy
     addSection('III. POPIS ČINNOSTI FIRMY');
     
     addWideField('CZ-NACE', data['Převažující obor činnosti dle CZ-NACE']);
-    addWideField('Země exportu', data['Země, kam exportujete/chcete exportovat'] || 'Žádné');
-    addWideField('Země importu', data['Země, odkud importujete/chcete exportovat'] || 'Žádné');
-    addWideField('Specifikace', data['Specifikace produktů a služeb']);
+    addWideField('Specifikace produktů a služeb', data['Specifikace produktů a služeb']);
+    addWideField('Země exportu / Zájem o export', data['Země, kam exportujete/chcete exportovat'] || 'Žádné');
     
     // Additional information
     addSection('DOPLŇUJÍCÍ INFORMACE');
     currentColumn = 0;
     
-    addField('E-mail newsletter', data['Email pro newsletter']);
     addField('E-mail faktury', data['Email pro faktury']);
-    addField('Monitor - denně', data['Monitor - denně']);
-    addField('Monitor - týdně', data['Monitor - týdně']);
-    addField('Monitor - měsíčně', data['Monitor - měsíčně']);
+    addField('E-mail newsletter', data['Email pro newsletter']);
+    addField('Zájem o monitor', data['Zájem o zasílání monitoru']);
     addField('Datum podání', formatDate(data['Datum podání']));
     endRow();
     

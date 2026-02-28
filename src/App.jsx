@@ -32,12 +32,9 @@ function App() {
     const [functionMeeting, setFunctionMeeting] = useState("")
     const [employeeNum, setEmployeeNum] = useState("Bez Zaměstnanců")
     const [income, setIncome] = useState("Do 1,5 mil")
-    const [import_, setImport] = useState("Do 1,5 mil")
-    const [export_, setExport] = useState("Do 1,5 mil")
     const [industry, setIndustry] = useState([])
     const [naceOptions, setNaceOptions] = useState([])
     const [exportCountries, setExportCountries] = useState([])
-    const [importCountries, setImportCountries] = useState([])
     const [showCorrespondenceAddress, setShowCorrespondenceAddress] = useState(false)
     const [corrStreet, setCorrStreet] = useState("")
     const [corrCity, setCorrCity] = useState("")
@@ -46,9 +43,7 @@ function App() {
     const [industryDescription, setIndustryDescription] = useState("")
     const [newsletterEmail, setNewsletterEmail] = useState("")
     const [invoiceEmail, setInvoiceEmail] = useState("")
-    const [monitorDaily, setMonitorDaily] = useState(false)
-    const [monitorWeekly, setMonitorWeekly] = useState(false)
-    const [monitorMonthly, setMonitorMonthly] = useState(false)
+    const [monitorFrequency, setMonitorFrequency] = useState("")
     const [dataBoxId, setDataBoxId] = useState("")
     const countryOptions = countryList().getData();
 
@@ -140,21 +135,16 @@ function App() {
             "ID datové schránky": dataBoxId,
             "Množství zaměstanců": employeeNum,
             "Čistý obrat (Kč)": income,
-            "Import (Kč)": import_,
-            "Export (Kč)": export_,
             "Převažující obor činnosti dle CZ-NACE": industry.map(i => i.label).join(', '),
             "Specifikace produktů a služeb": industryDescription,
             "Země, kam exportujete/chcete exportovat": exportCountries.map(c => c.label).join(', '),
-            "Země, odkud importujete/chcete importovat": importCountries.map(c => c.label).join(', '),
             "Korespondenční adresa - Ulice": corrStreet,
             "Korespondenční adresa - Město": corrCity,
             "Korespondenční adresa - PSČ": corrZip,
             "Korespondenční adresa - Kraj": corrState,
-            "Email pro newsletter": newsletterEmail,
             "Email pro faktury": invoiceEmail,
-            "Monitor - denně": monitorDaily ? "ANO" : "NE",
-            "Monitor - týdně": monitorWeekly ? "ANO" : "NE",
-            "Monitor - měsíčně": monitorMonthly ? "ANO" : "NE"
+            "Email pro newsletter": newsletterEmail,
+            "Zájem o zasílání monitoru": monitorFrequency
         }
 
         fetch("/api/submitForm", {body: JSON.stringify(data), method: "POST", headers: {
@@ -501,28 +491,6 @@ function App() {
                         <label><input type="radio" name="income" onChange={e => setIncome(e.target.value)} value="Více než 1 miliarda" checked={income === "Více než 1 miliarda"} /> Více než 1 miliarda</label>
                     </div>
 
-                    <div className="question-card">
-                        <label className="question">Import (Kč)</label>
-                        <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="Do 1,5 mil" checked={import_ === "Do 1,5 mil"} /> Do 1,5 mil</label>
-                        <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="1,5 - 18 miliónů" checked={import_ === "1,5 - 18 miliónů"} /> 1,5 - 18 miliónů</label>
-                        <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="18 - 50 miliónů" checked={import_ === "18 - 50 miliónů"} /> 18 - 50 miliónů</label>
-                        <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="50 - 100 miliónů" checked={import_ === "50 - 100 miliónů"} /> 50 - 100 miliónů</label>
-                        <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="100 - 300 miliónů" checked={import_ === "100 - 300 miliónů"} /> 100 - 300 miliónů</label>
-                        <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="300 miliónů - 1 miliarda" checked={import_ === "300 miliónů - 1 miliarda"} /> 300 miliónů - 1 miliarda</label>
-                        <label><input type="radio" name="import" onChange={e => setImport(e.target.value)} value="Více než 1 miliarda" checked={import_ === "Více než 1 miliarda"} /> Více než 1 miliarda</label>
-                    </div>
-
-                    <div className="question-card">
-                        <label className="question">Export (Kč)</label>
-                        <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="Do 1,5 mil" checked={export_ === "Do 1,5 mil"} /> Do 1,5 mil</label>
-                        <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="1,5 - 18 miliónů" checked={export_ === "1,5 - 18 miliónů"} /> 1,5 - 18 miliónů</label>
-                        <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="18 - 50 miliónů" checked={export_ === "18 - 50 miliónů"} /> 18 - 50 miliónů</label>
-                        <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="50 - 100 miliónů" checked={export_ === "50 - 100 miliónů"} /> 50 - 100 miliónů</label>
-                        <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="100 - 300 miliónů" checked={export_ === "100 - 300 miliónů"} /> 100 - 300 miliónů</label>
-                        <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="300 miliónů - 1 miliarda" checked={export_ === "300 miliónů - 1 miliarda"} /> 300 miliónů - 1 miliarda</label>
-                        <label><input type="radio" name="export" onChange={e => setExport(e.target.value)} value="Více než 1 miliarda" checked={export_ === "Více než 1 miliarda"} /> Více než 1 miliarda</label>
-                    </div>
-
                     {/* Section 10: Industry */}
                     <h2 className="section-title">Obor činnosti</h2>
                     <div className="question-card">
@@ -538,14 +506,13 @@ function App() {
                     <div className="question-card">
                         <label className="question">Specifikace produktů a služeb (volitelné)</label>
                         <p style={{fontSize: '13px', color: '#78909c', marginTop: '-8px', marginBottom: '12px'}}>
-                            Jasně specifikujte produkty a služby, které poskytujete (maximálně 600 znaků)
+                            Jasně specifikujte produkty a služby, které poskytujete
                         </p>
                         <textarea
                             onChange={e => {setIndustryDescription(e.target.value)}}
                             placeholder="Popište vaše produkty a služby..."
                             value={industryDescription}
-                            maxLength="600"
-                            rows="4"
+                            rows="6"
                             style={{
                                 width: '100%',
                                 padding: '14px 16px',
@@ -559,9 +526,6 @@ function App() {
                                 resize: 'vertical'
                             }}
                         />
-                        <div style={{fontSize: '12px', color: '#94a3b8', marginTop: '4px', textAlign: 'right'}}>
-                            {industryDescription.length}/600 znaků
-                        </div>
                     </div>
 
                     {/* Section 10a: Data Box ID */}
@@ -577,7 +541,7 @@ function App() {
                     </div>
 
                     {/* Section 11: Export Countries */}
-                    <h2 className="section-title">Exportní země</h2>
+                    <h2 className="section-title">Země exportu / Zájem o export</h2>
                     <div className="question-card">
                         <label className="question">Uveďte země, kam exportujete/chcete exportovat</label>
                         <Select
@@ -589,32 +553,10 @@ function App() {
                         />
                     </div>
 
-                    {/* Section 12: Import Countries */}
-                    <h2 className="section-title">Importní země</h2>
-                    <div className="question-card">
-                        <label className="question">Uveďte země, odkud importujete/chcete importovat</label>
-                        <Select
-                            isMulti
-                            options={countryOptions}
-                            value={importCountries}
-                            onChange={setImportCountries}
-                            placeholder="Začněte psát název země..."
-                        />
-                    </div>
-
                     {/* Section 13: Additional Information */}
                     <h2 className="section-title">Dodatečné informace</h2>
                     <div className="question-card">
-                        <label className="question">Email pro zasílání informací (newsletter, týdenní/měsíční bulletin)</label>
-                        <input
-                            type="email"
-                            onChange={e => {setNewsletterEmail(e.target.value)}}
-                            placeholder="email@example.com"
-                            value={newsletterEmail}
-                        />
-                    </div>
-                    <div className="question-card">
-                        <label className="question">Email pro zasílání faktur za členský příspěvek</label>
+                        <label className="question">E-mail pro zasílání faktur</label>
                         <input
                             type="email"
                             onChange={e => {setInvoiceEmail(e.target.value)}}
@@ -623,34 +565,19 @@ function App() {
                         />
                     </div>
                     <div className="question-card">
-                        <label className="question">Požadavek na zasílání monitoru</label>
-                        <label style={{display: 'flex', alignItems: 'center', padding: '8px 0'}}>
-                            <input 
-                                type="checkbox" 
-                                checked={monitorDaily}
-                                onChange={e => setMonitorDaily(e.target.checked)}
-                                style={{marginRight: '8px', width: 'auto'}}
-                            />
-                            Denně
-                        </label>
-                        <label style={{display: 'flex', alignItems: 'center', padding: '8px 0'}}>
-                            <input 
-                                type="checkbox" 
-                                checked={monitorWeekly}
-                                onChange={e => setMonitorWeekly(e.target.checked)}
-                                style={{marginRight: '8px', width: 'auto'}}
-                            />
-                            Týdně
-                        </label>
-                        <label style={{display: 'flex', alignItems: 'center', padding: '8px 0'}}>
-                            <input 
-                                type="checkbox" 
-                                checked={monitorMonthly}
-                                onChange={e => setMonitorMonthly(e.target.checked)}
-                                style={{marginRight: '8px', width: 'auto'}}
-                            />
-                            Měsíčně
-                        </label>
+                        <label className="question">E-mail pro zasílání newsletteru</label>
+                        <input
+                            type="email"
+                            onChange={e => {setNewsletterEmail(e.target.value)}}
+                            placeholder="email@example.com"
+                            value={newsletterEmail}
+                        />
+                    </div>
+                    <div className="question-card">
+                        <label className="question">Zájem o zasílání monitoru</label>
+                        <label><input type="radio" name="monitorFrequency" onChange={e => setMonitorFrequency(e.target.value)} value="Denně" checked={monitorFrequency === "Denně"} /> Denně</label>
+                        <label><input type="radio" name="monitorFrequency" onChange={e => setMonitorFrequency(e.target.value)} value="Týdně" checked={monitorFrequency === "Týdně"} /> Týdně</label>
+                        <label><input type="radio" name="monitorFrequency" onChange={e => setMonitorFrequency(e.target.value)} value="Měsíčně" checked={monitorFrequency === "Měsíčně"} /> Měsíčně</label>
                     </div>
 
                     {/* Section 14: Consent Texts */}
