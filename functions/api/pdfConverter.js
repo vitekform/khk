@@ -101,29 +101,40 @@ export async function convertDocxToPDF(data, request) {
 
     const addWideField = (label, value) => {
         endRow();
+        const labelText = label + ': ';
+        const labelWidth = fontBold.widthOfTextAtSize(labelText, labelFontSize);
         const valueStr = value ? String(value) : '';
+        const fullMaxWidth = width - col1X - 50;
+        const firstLineMaxWidth = fullMaxWidth - labelWidth;
+
         const words = valueStr.split(' ');
-        let lines = [];
+        const lines = [];
         let currentLine = '';
-        const maxWidth = width - col2X - 50;
+        let currentMaxWidth = firstLineMaxWidth;
 
         for (const word of words) {
             const testLine = currentLine + (currentLine ? ' ' : '') + word;
             const testWidth = font.widthOfTextAtSize(testLine, fontSize);
-            if (testWidth > maxWidth && currentLine) {
+            if (testWidth > currentMaxWidth && currentLine) {
                 lines.push(currentLine);
                 currentLine = word;
+                currentMaxWidth = fullMaxWidth;
             } else {
                 currentLine = testLine;
             }
         }
         if (currentLine) lines.push(currentLine);
+        if (lines.length === 0) lines.push('');
 
-        if (yPosition - (lines.length * lineHeight) < 40) addNewPage();
+        // Draw label
+        if (yPosition < 40) addNewPage();
+        addText(labelText, col1X, yPosition, fontBold, labelFontSize);
 
-        addText(label + ':', col1X, yPosition, fontBold, labelFontSize);
-        for (const line of lines) {
-            addText(line, col2X, yPosition, font, fontSize);
+        // Draw value lines with dynamic page overflow checks
+        for (let i = 0; i < lines.length; i++) {
+            if (yPosition < 40) addNewPage();
+            const x = i === 0 ? col1X + labelWidth : col1X;
+            addText(lines[i], x, yPosition, font, fontSize);
             yPosition -= lineHeight;
         }
         yPosition -= 8;
