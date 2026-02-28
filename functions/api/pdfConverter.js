@@ -239,7 +239,7 @@ export async function convertDocxToPDF(data, request) {
     
     addWideField('CZ-NACE', data['Převažující obor činnosti dle CZ-NACE']);
     addWideField('Specifikace produktů a služeb', data['Specifikace produktů a služeb']);
-    doc.moveDown(0.5);
+    yPosition -= lineHeight * 0.5;
     addWideField('Země exportu / Zájem o export', data['Země, kam exportujete/chcete exportovat'] || 'Žádné');
     
     // Additional information
