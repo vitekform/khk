@@ -4,6 +4,7 @@ import countryList from "react-select-country-list";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 import { LEGAL_FORM_OPTIONS } from './legalForms';
+import { INDUSTRY_OPTIONS } from './industryOptions';
 
 
 function App() {
@@ -16,6 +17,8 @@ function App() {
     const [state, setState] = useState("")
     const [city, setCity] = useState("")
     const [zip, setZip] = useState("")
+    const [lat, setLat] = useState("")
+    const [lon, setLon] = useState("")
     const [regDate, setRegDate] = useState("")
     const [phone, setPhone] = useState("")
     const [email, setEmail] = useState("")
@@ -32,6 +35,7 @@ function App() {
     const [functionMeeting, setFunctionMeeting] = useState("")
     const [employeeNum, setEmployeeNum] = useState("Bez Zaměstnanců")
     const [income, setIncome] = useState("Do 1,5 mil")
+    const [businessSector, setBusinessSector] = useState(null)
     const [industry, setIndustry] = useState([])
     const [naceOptions, setNaceOptions] = useState([])
     const [exportCountries, setExportCountries] = useState([])
@@ -94,6 +98,40 @@ function App() {
         })
     }
 
+    async function geocodeAddress() {
+        if (!street_and_number || !city || !zip) {
+            alert("Prosím vyplňte adresu (ulice, město, PSČ) před vyhledáním souřadnic");
+            return;
+        }
+
+        const addressQuery = `${street_and_number}, ${city}, ${zip}, Česká republika`;
+        
+        try {
+            const response = await fetch(
+                `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressQuery)}&countrycodes=cz&limit=1`,
+                {
+                    headers: {
+                        'User-Agent': 'KHK-Application-Form'
+                    }
+                }
+            );
+            
+            const data = await response.json();
+            
+            if (data && data.length > 0) {
+                setLat(data[0].lat);
+                setLon(data[0].lon);
+                alert(`Souřadnice byly úspěšně doplněny:\nLAT: ${data[0].lat}\nLON: ${data[0].lon}`);
+            } else {
+                alert("Nepodařilo se najít souřadnice pro zadanou adresu. Zkuste souřadnice zadat ručně.");
+            }
+        } catch (error) {
+            console.error("Geocoding error:", error);
+            alert("Chyba při vyhledávání souřadnic. Zkuste souřadnice zadat ručně.");
+        }
+    }
+
+
     function handleSubmit(e) {
         e.preventDefault();
         
@@ -118,6 +156,8 @@ function App() {
             "Kraj": state,
             "Město": city,
             "PSČ": zip,
+            "LAT": lat,
+            "LON": lon,
             "Telefon": phone,
             "Email": email,
             "Statutární zástupce": nameStatuary,
@@ -135,6 +175,7 @@ function App() {
             "ID datové schránky": dataBoxId,
             "Množství zaměstanců": employeeNum,
             "Čistý obrat (Kč)": income,
+            "Obor činnosti": businessSector ? businessSector.label : '',
             "Převažující obor činnosti dle CZ-NACE": industry.map(i => i.label).join(', '),
             "Specifikace produktů a služeb": industryDescription,
             "Země, kam exportujete/chcete exportovat": exportCountries.map(c => c.label).join(', '),
@@ -257,6 +298,50 @@ function App() {
                             placeholder="PSČ"
                             value={zip}
                         />
+                    </div>
+                    <div className="question-card">
+                        <label className="question">Místo podnikání - LAT (zeměpisná šířka)</label>
+                        <div style={{display: 'flex', gap: '8px', alignItems: 'flex-start'}}>
+                            <input
+                                type="text"
+                                onChange={e => {setLat(e.target.value)}}
+                                placeholder="např. 50.0375"
+                                value={lat}
+                                style={{flex: 1}}
+                            />
+                        </div>
+                    </div>
+                    <div className="question-card">
+                        <label className="question">Místo podnikání - LON (zeměpisná délka)</label>
+                        <div style={{display: 'flex', gap: '8px', alignItems: 'flex-start'}}>
+                            <input
+                                type="text"
+                                onChange={e => {setLon(e.target.value)}}
+                                placeholder="např. 15.7763"
+                                value={lon}
+                                style={{flex: 1}}
+                            />
+                            <button
+                                type="button"
+                                onClick={geocodeAddress}
+                                style={{
+                                    padding: '10px 16px',
+                                    background: '#2563eb',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    fontWeight: '500',
+                                    whiteSpace: 'nowrap'
+                                }}
+                            >
+                                Doplnit automaticky
+                            </button>
+                        </div>
+                        <p style={{fontSize: '12px', color: '#78909c', marginTop: '6px', marginBottom: '0'}}>
+                            Souřadnice lze zadat ručně nebo kliknutím na tlačítko "Doplnit automaticky" se doplní ze zadané adresy
+                        </p>
                     </div>
                     <div className="question-card">
                         <label className="question">Kontaktní telefon</label>
@@ -493,6 +578,15 @@ function App() {
 
                     {/* Section 10: Industry */}
                     <h2 className="section-title">Obor činnosti</h2>
+                    <div className="question-card">
+                        <label className="question">Obor činnosti</label>
+                        <Select
+                            options={INDUSTRY_OPTIONS}
+                            value={businessSector}
+                            onChange={setBusinessSector}
+                            placeholder="Vyberte obor činnosti"
+                        />
+                    </div>
                     <div className="question-card">
                         <label className="question">Převažující obor činnosti dle CZ-NACE</label>
                         <CreatableSelect

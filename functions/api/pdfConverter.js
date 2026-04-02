@@ -218,6 +218,8 @@ export async function convertDocxToPDF(data, request) {
     addField('Kraj', data['Kraj']);
     addField('Město', data['Město']);
     addField('PSČ', data['PSČ']);
+    addField('LAT', data['LAT']);
+    addField('LON', data['LON']);
     addField('Telefon', data['Telefon']);
     addField('E-mail', data['Email']);
     addField('Statutární zástupce', data['Statutární zástupce']);
@@ -248,6 +250,7 @@ export async function convertDocxToPDF(data, request) {
     // Section III: Popis činnosti firmy
     addSection('III. POPIS ČINNOSTI FIRMY');
     
+    addWideField('Obor činnosti', data['Obor činnosti']);
     addWideField('CZ-NACE', data['Převažující obor činnosti dle CZ-NACE']);
     addWideField('Specifikace produktů a služeb', data['Specifikace produktů a služeb']);
     yPosition -= lineHeight * 0.5;
@@ -262,6 +265,37 @@ export async function convertDocxToPDF(data, request) {
     addField('Zájem o monitor', data['Zájem o zasílání monitoru']);
     addField('Datum podání', formatDate(data['Datum podání']));
     endRow();
+    
+    // Consent and Declaration section
+    addSection('SOUHLAS A PROHLÁŠENÍ');
+    yPosition -= 5;
+    
+    const consentText1 = 'Žadatel souhlasí se zpracováním osobních údajů.';
+    const consentText2 = 'Žadatel prohlašuje, že je členem Hospodářské komory České republiky a zavazuje se plnit členské povinnosti, hradit členské příspěvky a dodržovat obchodní etiku a integritu.';
+    
+    addText(consentText1, col1X, yPosition, font, fontSize);
+    yPosition -= lineHeight * 2;
+    
+    const maxWidth = width - col1X - 50;
+    const words = consentText2.split(' ');
+    let line = '';
+    
+    for (const word of words) {
+        const testLine = line + (line ? ' ' : '') + word;
+        const textWidth = font.widthOfTextAtSize(testLine, fontSize);
+        
+        if (textWidth > maxWidth && line) {
+            addText(line, col1X, yPosition, font, fontSize);
+            yPosition -= lineHeight;
+            line = word;
+        } else {
+            line = testLine;
+        }
+    }
+    
+    if (line) {
+        addText(line, col1X, yPosition, font, fontSize);
+    }
     
     return await pdfDoc.save();
 }

@@ -1,0 +1,22 @@
+export const INDUSTRY_OPTIONS = [
+    { value: 'Bankovnictví, pojišťovnictví a finanční zprostředkování', label: 'Bankovnictví, pojišťovnictví a finanční zprostředkování' },
+    { value: 'Činnosti pro domácnost', label: 'Činnosti pro domácnost' },
+    { value: 'Činnosti v oblasti nemovitostí a pronájmu', label: 'Činnosti v oblasti nemovitostí a pronájmu' },
+    { value: 'Doprava, logistika a skladování', label: 'Doprava, logistika a skladování' },
+    { value: 'Ekonomické a právní poradenství', label: 'Ekonomické a právní poradenství' },
+    { value: 'Obchod', label: 'Obchod' },
+    { value: 'Potravinářský průmysl', label: 'Potravinářský průmysl' },
+    { value: 'Služby (kadeřnictví, kosmetika, manikůra atd.)', label: 'Služby (kadeřnictví, kosmetika, manikůra atd.)' },
+    { value: 'Stavebnictví, stavební materiály', label: 'Stavebnictví, stavební materiály' },
+    { value: 'Strojírenství a elektrotechnika', label: 'Strojírenství a elektrotechnika' },
+    { value: 'Školství, kultura a vzdělávání', label: 'Školství, kultura a vzdělávání' },
+    { value: 'Telekomunikační a informační technologie', label: 'Telekomunikační a informační technologie' },
+    { value: 'Textilní, oděvní a obuvní průmysl', label: 'Textilní, oděvní a obuvní průmysl' },
+    { value: 'Těžba, dobývání a zpracování nerostných surovin', label: 'Těžba, dobývání a zpracování nerostných surovin' },
+    { value: 'Ubytování, stravování a pohostinství, cestovní ruch', label: 'Ubytování, stravování a pohostinství, cestovní ruch' },
+    { value: 'Výroba a rozvod elektřiny, plynu, vody a tepla', label: 'Výroba a rozvod elektřiny, plynu, vody a tepla' },
+    { value: 'Zbrojní průmysl', label: 'Zbrojní průmysl' },
+    { value: 'Zdravotnictví a sociální péče, veterinární činnosti a farmaceutika', label: 'Zdravotnictví a sociální péče, veterinární činnosti a farmaceutika' },
+    { value: 'Zemědělství, myslivost, lesnictví, rybolov a chov ryb', label: 'Zemědělství, myslivost, lesnictví, rybolov a chov ryb' },
+    { value: 'Zpracovatelský průmysl (chemie, nábytek, dřevo, tabák, useň, plast, sklo, papír)', label: 'Zpracovatelský průmysl (chemie, nábytek, dřevo, tabák, useň, plast, sklo, papír)' }
+];
