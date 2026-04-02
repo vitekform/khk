@@ -9,7 +9,7 @@ export async function onRequest(context) {
             method: "POST",
             headers: { "Accept": "application/json" },
             body: JSON.stringify({"acc": "getData", "ic": ico})
-        });
+        }); // ano taháme to z KHK HK protože jsme nikde jinde nenašli funkční implementaci
 
         if (!res.ok) {
             throw new Error(`HTTP error! Status: ${res.status}`);
