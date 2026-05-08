@@ -58,7 +58,7 @@ function App() {
         }
         
         setIsLoading(true);
-        fetch("/api/getDetails", {body: JSON.stringify({"ico": ico}), method: "POST", headers: {
+        fetch("/api/khk/ares", {body: JSON.stringify({"ico": ico}), method: "POST", headers: {
             "Content-Type": "application/json"
             }}).then(async (res) => {
             let json = await res.json();
@@ -80,7 +80,7 @@ function App() {
         });
         
         // Fetch NACE data
-        fetch("/api/getCZNACE", {body: JSON.stringify({"ico": ico}), method: "POST", headers: {
+        fetch("/api/khk/nace", {body: JSON.stringify({"ico": ico}), method: "POST", headers: {
             "Content-Type": "application/json"
             }}).then(async (res) => {
             let json = await res.json();
@@ -188,7 +188,7 @@ function App() {
             "Zájem o zasílání monitoru": monitorFrequency
         }
 
-        fetch("/api/submitForm", {body: JSON.stringify(data), method: "POST", headers: {
+        fetch("/api/khk/submit-form", {body: JSON.stringify(data), method: "POST", headers: {
             "Content-Type": "application/json"
         }}).then(async (res) => {
             if (res.ok) {
