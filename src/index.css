@@ -1,10 +1,30 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
-/* Base styles for the application */
+@layer components {
+  .admin-alert {
+    @apply p-5 bg-amber-50 border border-amber-200 text-amber-900 text-sm rounded-xl space-y-2 leading-relaxed;
+  }
+  .admin-card {
+    @apply bg-white py-10 px-8 shadow-sm border border-slate-200 rounded-2xl;
+  }
+  .admin-input {
+    @apply w-full px-5 py-4 bg-white border border-slate-300 rounded-xl text-slate-900 text-base placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-200;
+  }
+  .admin-btn {
+    @apply w-full flex justify-center py-4 px-6 border border-transparent rounded-xl shadow-md text-base font-bold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition-all duration-200 cursor-pointer;
+  }
+  .admin-label {
+    @apply block text-sm font-bold uppercase tracking-wider text-slate-700 mb-2.5;
+  }
+  .admin-error {
+    @apply p-4 bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl font-semibold;
+  }
+}
+
+/* Base styles for the application matching Czech e-government forms */
 
 :root {
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -12,8 +32,8 @@
 body {
   margin: 0;
   padding: 0;
-  background: #090d16;
-  color: #f8fafc;
+  background: #f5f7fa;
+  color: #1a202c;
 }
 
 #root {
@@ -26,7 +46,7 @@ body {
   box-sizing: border-box;
 }
 
-/* Custom scrollbars for details panel and scrollable containers */
+/* Custom scrollbars for details panel and scrollable containers (light theme) */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -37,15 +57,15 @@ body {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.15);
+  background: rgba(148, 163, 184, 0.3);
   border-radius: 9999px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.3);
+  background: rgba(148, 163, 184, 0.5);
 }
 
-/* Micro-animations and hover transitions */
-.transition-glow {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* Hover transitions */
+.transition-all-200 {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
