@@ -308,10 +308,14 @@ export default function Admin({ onGoBack }) {
 
     if (!authChecked) {
         return (
-            <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-                <div className="text-center text-white space-y-4">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-500 mx-auto"></div>
-                    <p className="text-slate-400 font-medium">Ověřování přihlášení...</p>
+            <div className="min-h-screen bg-slate-950 flex items-center justify-center relative overflow-hidden font-sans">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.04),transparent_70%)]"></div>
+                <div className="text-center space-y-4 z-10">
+                    <div className="relative w-14 h-14 mx-auto">
+                        <div className="absolute inset-0 rounded-full border-2 border-slate-800/80"></div>
+                        <div className="absolute inset-0 rounded-full border-t-2 border-amber-500 animate-spin"></div>
+                    </div>
+                    <p className="text-slate-400 font-semibold tracking-wider text-xs uppercase animate-pulse">Ověřování přihlášení...</p>
                 </div>
             </div>
         );
@@ -319,38 +323,46 @@ export default function Admin({ onGoBack }) {
 
     if (!isAuthenticated) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans">
-                <div className="sm:mx-auto sm:w-full sm:max-w-md">
+            <div className="min-h-screen bg-slate-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden font-sans">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.03),transparent_50%)]"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(99,102,241,0.03),transparent_50%)]"></div>
+                
+                <div className="sm:mx-auto sm:w-full sm:max-w-md z-10 px-4">
                     {/* Header */}
                     <div className="text-center">
-                        <div className="inline-flex p-3 bg-amber-500/10 rounded-2xl border border-amber-500/20 text-amber-500 mb-4 animate-pulse">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div className="inline-flex p-3 bg-amber-500/10 rounded-2xl border border-amber-500/20 text-amber-500 mb-5 shadow-lg shadow-amber-500/5">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                             </svg>
                         </div>
-                        <h2 className="text-3xl font-extrabold text-white tracking-tight">KHK Administrace</h2>
-                        <p className="mt-2 text-sm text-slate-400">
+                        <h2 className="text-3xl font-extrabold text-white tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">KHK Administrace</h2>
+                        <p className="mt-2 text-sm text-slate-400 font-medium">
                             Pro přístup ke správě přihlášek se prosím přihlaste.
                         </p>
                     </div>
 
                     <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                        <div className="bg-slate-900/60 backdrop-blur-xl py-8 px-4 shadow-2xl rounded-3xl border border-slate-800 sm:px-10">
+                        <div className="bg-slate-900/40 backdrop-blur-xl py-8 px-6 shadow-2xl rounded-3xl border border-slate-800/80 sm:px-10">
                             {requiresVerification ? (
                                 <form className="space-y-6" onSubmit={handleVerifyDevice}>
-                                    <div className="p-4 bg-amber-500/10 border border-amber-500/30 text-amber-200 text-sm rounded-xl space-y-2">
-                                        <p className="font-semibold">Nové zařízení detekováno</p>
+                                    <div className="p-4 bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs rounded-2xl space-y-1.5 leading-relaxed">
+                                        <p className="font-bold text-amber-400 flex items-center gap-1.5">
+                                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                            </svg>
+                                            Nové zařízení detekováno
+                                        </p>
                                         <p>Z bezpečnostních důvodů byl na váš e-mail zaslán ověřovací kód. Zadejte jej prosím níže.</p>
                                     </div>
 
                                     {verifyError && (
-                                        <div className="p-3 bg-rose-500/10 border border-rose-500/30 text-rose-300 text-sm rounded-xl font-medium">
+                                        <div className="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs rounded-xl font-semibold">
                                             {verifyError}
                                         </div>
                                     )}
 
                                     <div>
-                                        <label htmlFor="verify-code" className="block text-sm font-semibold text-slate-300 mb-2">
+                                        <label htmlFor="verify-code" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
                                             Ověřovací kód
                                         </label>
                                         <input
@@ -361,7 +373,7 @@ export default function Admin({ onGoBack }) {
                                             value={verificationCode}
                                             onChange={(e) => setVerificationCode(e.target.value)}
                                             placeholder="Zadejte kód"
-                                            className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                                            className="w-full px-4 py-3 bg-slate-950/60 border border-slate-800/80 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/10 transition-all duration-200"
                                         />
                                     </div>
 
@@ -369,7 +381,7 @@ export default function Admin({ onGoBack }) {
                                         <button
                                             type="submit"
                                             disabled={authLoading}
-                                            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-bold text-slate-950 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 disabled:opacity-50 transition-all cursor-pointer"
+                                            className="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-xl shadow-lg shadow-amber-500/10 text-sm font-bold text-slate-950 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 disabled:opacity-50 transition-all cursor-pointer"
                                         >
                                             {authLoading ? 'Ověřování...' : 'Ověřit a pokračovat'}
                                         </button>
@@ -379,7 +391,7 @@ export default function Admin({ onGoBack }) {
                                         <button
                                             type="button"
                                             onClick={() => setRequiresVerification(false)}
-                                            className="text-sm font-semibold text-slate-400 hover:text-white transition-colors cursor-pointer"
+                                            className="text-xs font-bold text-slate-400 hover:text-white transition-colors cursor-pointer"
                                         >
                                             Zpět na přihlášení
                                         </button>
@@ -388,13 +400,13 @@ export default function Admin({ onGoBack }) {
                             ) : (
                                 <form className="space-y-6" onSubmit={handleLogin}>
                                     {authError && (
-                                        <div className="p-3 bg-rose-500/10 border border-rose-500/30 text-rose-300 text-sm rounded-xl font-medium">
+                                        <div className="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs rounded-xl font-semibold">
                                             {authError}
                                         </div>
                                     )}
 
                                     <div>
-                                        <label htmlFor="identity" className="block text-sm font-semibold text-slate-300 mb-2">
+                                        <label htmlFor="identity" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
                                             Uživatelské jméno nebo E-mail
                                         </label>
                                         <input
@@ -405,12 +417,12 @@ export default function Admin({ onGoBack }) {
                                             value={usernameOrEmail}
                                             onChange={(e) => setUsernameOrEmail(e.target.value)}
                                             placeholder="např. admin"
-                                            className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                                            className="w-full px-4 py-3 bg-slate-950/60 border border-slate-800/80 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/10 transition-all duration-200"
                                         />
                                     </div>
 
                                     <div>
-                                        <label htmlFor="password" className="block text-sm font-semibold text-slate-300 mb-2">
+                                        <label htmlFor="password" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
                                             Heslo
                                         </label>
                                         <input
@@ -421,7 +433,7 @@ export default function Admin({ onGoBack }) {
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
                                             placeholder="••••••••"
-                                            className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                                            className="w-full px-4 py-3 bg-slate-950/60 border border-slate-800/80 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/10 transition-all duration-200"
                                         />
                                     </div>
 
@@ -429,7 +441,7 @@ export default function Admin({ onGoBack }) {
                                         <button
                                             type="submit"
                                             disabled={authLoading}
-                                            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-bold text-slate-950 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 disabled:opacity-50 transition-all cursor-pointer"
+                                            className="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-xl shadow-lg shadow-amber-500/10 text-sm font-bold text-slate-950 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 disabled:opacity-50 transition-all cursor-pointer"
                                         >
                                             {authLoading ? 'Přihlašování...' : 'Přihlásit se'}
                                         </button>
@@ -442,10 +454,10 @@ export default function Admin({ onGoBack }) {
                     <div className="mt-8 text-center">
                         <button 
                             onClick={onGoBack}
-                            className="inline-flex items-center text-sm text-slate-400 hover:text-white font-medium transition-colors cursor-pointer"
+                            className="inline-flex items-center text-xs text-slate-400 hover:text-white font-semibold transition-colors cursor-pointer gap-1.5"
                         >
-                            <svg className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                             </svg>
                             Zpět na registrační formulář
                         </button>
@@ -456,36 +468,36 @@ export default function Admin({ onGoBack }) {
     }
 
     return (
-        <div className="min-h-screen bg-slate-950 text-white font-sans flex flex-col">
+        <div className="min-h-screen bg-slate-950 text-slate-100 font-sans flex flex-col antialiased selection:bg-amber-500/20 selection:text-amber-300">
             {/* Navbar */}
-            <header className="sticky top-0 z-40 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800 px-6 py-4 flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-gradient-to-tr from-amber-400 to-amber-600 rounded-xl text-slate-950">
+            <header className="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-xl border-b border-slate-900/80 px-6 py-4 flex items-center justify-between">
+                <div className="flex items-center space-x-3.5">
+                    <div className="p-2.5 bg-gradient-to-tr from-amber-400 to-amber-500 rounded-2xl text-slate-950 shadow-lg shadow-amber-500/15">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                     </div>
                     <div>
-                        <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-amber-400 to-amber-200 bg-clip-text text-transparent">KHK Administrace přihlášek</h1>
-                        <p className="text-xs text-slate-400">Systém pro správu členských žádostí</p>
+                        <h1 className="text-lg font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">KHK Administrace přihlášek</h1>
+                        <p className="text-[11px] text-slate-500 font-medium uppercase tracking-wider">Systém pro správu členských žádostí</p>
                     </div>
                 </div>
 
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-5">
                     <button
                         onClick={onGoBack}
-                        className="hidden md:inline-flex items-center px-4 py-2 border border-slate-800 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all cursor-pointer"
+                        className="hidden md:inline-flex items-center px-4 py-2 border border-slate-800/85 hover:border-slate-700/85 rounded-xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-900/60 active:scale-95 transition-all duration-200 cursor-pointer"
                     >
                         Formulář
                     </button>
-                    <div className="h-8 w-px bg-slate-800 hidden md:block"></div>
+                    <div className="h-6 w-px bg-slate-900 hidden md:block"></div>
                     <div className="text-right hidden sm:block">
-                        <p className="text-sm font-semibold text-slate-200">{userInfo?.username}</p>
-                        <p className="text-xs text-slate-500">Admin panel</p>
+                        <p className="text-xs font-bold text-slate-300">{userInfo?.username}</p>
+                        <p className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Administrátor</p>
                     </div>
                     <button
                         onClick={handleLogout}
-                        className="inline-flex items-center px-4 py-2 rounded-xl text-sm font-bold text-white bg-rose-600 hover:bg-rose-700 active:scale-95 shadow-md shadow-rose-900/10 transition-all cursor-pointer"
+                        className="inline-flex items-center px-4 py-2 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-500 active:scale-95 shadow-lg shadow-rose-950/20 transition-all duration-200 cursor-pointer"
                     >
                         Odhlásit
                     </button>
@@ -497,13 +509,13 @@ export default function Admin({ onGoBack }) {
                 {/* Left Side: Forms List */}
                 <div className="flex-1 flex flex-col space-y-6">
                     {/* Filtering tabs and Search */}
-                    <div className="bg-slate-900 border border-slate-800 rounded-3xl p-4 sm:p-6 space-y-4">
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div className="bg-slate-900/30 backdrop-blur-md border border-slate-900/80 rounded-3xl p-5 sm:p-6 space-y-5 shadow-xl">
+                        <div className="flex items-center gap-3">
                             {/* Search bar */}
                             <div className="relative flex-1">
-                                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">
-                                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500">
+                                    <svg className="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>
                                 </span>
                                 <input
@@ -511,24 +523,24 @@ export default function Admin({ onGoBack }) {
                                     placeholder="Hledat podle názvu firmy, IČO, e-mailu..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full pl-10 pr-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                                    className="w-full pl-10 pr-4 py-2.5 bg-slate-950/60 border border-slate-900 focus:border-amber-500/40 rounded-xl text-white text-xs placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-500/10 transition-all duration-200"
                                 />
                             </div>
                             
                             <button
                                 onClick={fetchApplications}
                                 disabled={loadingList}
-                                className="inline-flex items-center justify-center p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+                                className="inline-flex items-center justify-center p-2.5 bg-slate-950/60 border border-slate-900 hover:border-slate-800 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900 transition-all duration-200 cursor-pointer active:scale-95 group"
                                 title="Obnovit seznam"
                             >
-                                <svg className={`h-5 w-5 ${loadingList ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 19l-1.272-1.272" />
+                                <svg className={`h-4.5 w-4.5 transition-transform duration-500 group-hover:rotate-180 ${loadingList ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 19l-1.272-1.272" />
                                 </svg>
                             </button>
                         </div>
 
                         {/* Tabs */}
-                        <div className="flex flex-wrap gap-2 border-b border-slate-800 pb-2">
+                        <div className="flex flex-wrap gap-2 pt-1 border-t border-slate-900/60">
                             {['ALL', 'PENDING', 'APPROVED', 'REJECTED'].map((tab) => (
                                 <button
                                     key={tab}
@@ -537,10 +549,10 @@ export default function Admin({ onGoBack }) {
                                         setSelectedApp(null);
                                         setAppDetails(null);
                                     }}
-                                    className={`px-4 py-2 text-sm font-semibold rounded-xl transition-all cursor-pointer ${
+                                    className={`px-4 py-2 text-xs font-bold rounded-xl transition-all duration-200 cursor-pointer ${
                                         activeTab === tab
-                                            ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25'
-                                            : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                                            ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/20 active:scale-95'
+                                            : 'text-slate-400 hover:text-white hover:bg-slate-900/60'
                                     }`}
                                 >
                                     {tab === 'ALL' && 'Všechny'}
@@ -554,63 +566,71 @@ export default function Admin({ onGoBack }) {
 
                     {/* Applications List */}
                     {loadingList ? (
-                        <div className="flex-1 flex items-center justify-center py-20 bg-slate-900/30 border border-slate-800/50 rounded-3xl">
+                        <div className="flex-1 flex items-center justify-center py-24 bg-slate-900/10 border border-slate-900/60 rounded-3xl">
                             <div className="text-center space-y-3">
-                                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-amber-500 mx-auto"></div>
-                                <p className="text-slate-400 text-sm">Načítání seznamu...</p>
+                                <div className="relative w-10 h-10 mx-auto">
+                                    <div className="absolute inset-0 rounded-full border-2 border-slate-900"></div>
+                                    <div className="absolute inset-0 rounded-full border-t-2 border-amber-500 animate-spin"></div>
+                                </div>
+                                <p className="text-slate-500 text-xs font-semibold tracking-wider uppercase">Načítání seznamu...</p>
                             </div>
                         </div>
                     ) : filteredApplications.length === 0 ? (
-                        <div className="flex-1 flex flex-col items-center justify-center py-20 bg-slate-900/30 border border-slate-800/50 rounded-3xl text-center px-4">
-                            <div className="p-4 bg-slate-900 border border-slate-800 text-slate-500 rounded-2xl mb-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div className="flex-1 flex flex-col items-center justify-center py-20 bg-slate-900/10 border border-slate-900/60 rounded-3xl text-center px-6">
+                            <div className="p-4 bg-slate-900/40 border border-slate-900 text-slate-600 rounded-2xl mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0a2 2 0 01-2 2H6a2 2 0 01-2-2m16 0V9a2 2 0 00-2-2H6a2 2 0 00-2 2v2m16 4h-2a2 2 0 00-2 2v1a2 2 0 002 2h2a2 2 0 002-2v-1a2 2 0 00-2-2z" />
                                 </svg>
                             </div>
-                            <p className="text-slate-300 font-semibold text-lg">Žádné přihlášky k zobrazení</p>
-                            <p className="text-slate-500 text-sm mt-1">Nebyly nalezeny žádné přihlášky odpovídající vybraným kritériím.</p>
+                            <p className="text-slate-300 font-bold text-base">Žádné přihlášky k zobrazení</p>
+                            <p className="text-slate-500 text-xs mt-1.5 max-w-[280px] mx-auto leading-relaxed">Nebyly nalezeny žádné přihlášky odpovídající vybraným kritériím.</p>
                         </div>
                     ) : (
-                        <div className="grid gap-4">
+                        <div className="grid gap-3.5">
                             {filteredApplications.map((app) => (
                                 <div
                                     key={app.id}
                                     onClick={() => fetchAppDetails(app)}
-                                    className={`p-5 rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                                    className={`p-4.5 rounded-2xl border transition-all duration-300 cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:scale-[1.01] active:scale-[0.99] ${
                                         selectedApp?.id === app.id
-                                            ? 'bg-slate-800/80 border-amber-500/50 shadow-md shadow-amber-500/5 ring-1 ring-amber-500/25'
-                                            : 'bg-slate-900 border-slate-800 hover:border-slate-700 hover:bg-slate-900/60'
+                                            ? 'bg-amber-500/5 border-amber-500/40 shadow-lg shadow-amber-500/5 ring-1 ring-amber-500/20'
+                                            : 'bg-slate-900/20 border-slate-900 hover:border-slate-800 hover:bg-slate-900/40'
                                     }`}
                                 >
-                                    <div className="space-y-1">
+                                    <div className="space-y-1.5">
                                         <div className="flex items-center space-x-2.5">
-                                            <span className="text-xs font-mono font-bold text-slate-500 px-2 py-0.5 bg-slate-950 border border-slate-800 rounded">
+                                            <span className="text-[10px] font-mono font-bold text-amber-500/90 px-2 py-0.5 bg-slate-950 border border-slate-900 rounded">
                                                 ID: {app.id}
                                             </span>
-                                            <span className="text-xs text-slate-400">
+                                            <span className="text-[10px] text-slate-500 font-semibold tracking-wide">
                                                 {app.submissionDate}
                                             </span>
                                         </div>
-                                        <h3 className="text-base font-bold text-white">{app.companyName}</h3>
-                                        <p className="text-sm text-slate-400 flex items-center">
-                                            <svg className="h-4 w-4 mr-1.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <h3 className="text-sm font-bold text-white tracking-tight">{app.companyName}</h3>
+                                        <p className="text-xs text-slate-400 flex items-center font-medium">
+                                            <svg className="h-4 w-4 mr-1.5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                             </svg>
                                             {app.email}
                                         </p>
                                     </div>
-                                    <div className="flex items-center space-x-3 sm:self-center">
-                                        <span className={`px-3 py-1 text-xs font-bold rounded-full tracking-wide inline-flex items-center ${
-                                            app.status === 'APPROVED' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
-                                            app.status === 'REJECTED' ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' :
-                                            'bg-amber-500/10 text-amber-400 border border-amber-500/20 animate-pulse'
+                                    <div className="flex items-center space-x-3.5 sm:self-center">
+                                        <span className={`px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider rounded-full border inline-flex items-center gap-1 ${
+                                            app.status === 'APPROVED' ? 'bg-emerald-500/5 text-emerald-400 border-emerald-500/20' :
+                                            app.status === 'REJECTED' ? 'bg-rose-500/5 text-rose-400 border-rose-500/20' :
+                                            'bg-amber-500/5 text-amber-400 border-amber-500/20'
                                         }`}>
+                                            <span className={`h-1.5 w-1.5 rounded-full ${
+                                                app.status === 'APPROVED' ? 'bg-emerald-400' :
+                                                app.status === 'REJECTED' ? 'bg-rose-400' :
+                                                'bg-amber-400 animate-ping'
+                                            }`}></span>
                                             {app.status === 'APPROVED' && 'Schváleno'}
                                             {app.status === 'REJECTED' && 'Zamítnuto'}
                                             {app.status === 'PENDING' && 'Čekající'}
                                         </span>
-                                        <svg className="h-5 w-5 text-slate-500 hidden sm:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                        <svg className="h-4.5 w-4.5 text-slate-600 hidden sm:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                                         </svg>
                                     </div>
                                 </div>
@@ -621,47 +641,55 @@ export default function Admin({ onGoBack }) {
 
                 {/* Right Side: Details View */}
                 <div className="w-full lg:w-[480px] shrink-0">
-                    <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sticky top-24 max-h-[calc(100vh-140px)] overflow-y-auto flex flex-col space-y-6">
+                    <div className="bg-slate-900/30 backdrop-blur-md border border-slate-900/80 rounded-3xl p-6 sticky top-24 max-h-[calc(100vh-140px)] overflow-y-auto flex flex-col space-y-6 custom-scrollbar shadow-2xl">
                         {!selectedApp ? (
-                            <div className="flex flex-col items-center justify-center py-20 text-center text-slate-500">
-                                <div className="p-4 bg-slate-950 border border-slate-800/60 text-slate-600 rounded-2xl mb-4">
+                            <div className="flex flex-col items-center justify-center py-24 text-center text-slate-500 my-auto">
+                                <div className="p-4 bg-slate-950/40 border border-slate-900 text-slate-700 rounded-2xl mb-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                     </svg>
                                 </div>
-                                <h3 className="font-semibold text-slate-300">Detail přihlášky</h3>
-                                <p className="text-xs text-slate-500 mt-1 max-w-[240px]">Vyberte přihlášku ze seznamu pro zobrazení všech vyplněných detailů a stažení PDF.</p>
+                                <h3 className="font-bold text-slate-300 text-sm">Detail přihlášky</h3>
+                                <p className="text-xs text-slate-500 mt-2 max-w-[240px] leading-relaxed mx-auto">Vyberte přihlášku ze seznamu pro zobrazení všech vyplněných detailů a stažení PDF.</p>
                             </div>
                         ) : loadingDetails ? (
-                            <div className="py-20 flex flex-col items-center justify-center space-y-3">
-                                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-amber-500 mx-auto"></div>
-                                <p className="text-slate-400 text-sm">Načítání detailů...</p>
+                            <div className="py-24 flex flex-col items-center justify-center space-y-3 my-auto">
+                                <div className="relative w-8 h-8">
+                                    <div className="absolute inset-0 rounded-full border-2 border-slate-900"></div>
+                                    <div className="absolute inset-0 rounded-full border-t-2 border-amber-500 animate-spin"></div>
+                                </div>
+                                <p className="text-slate-500 text-xs font-semibold tracking-wider uppercase">Načítání detailů...</p>
                             </div>
                         ) : !appDetails ? (
-                            <div className="py-10 text-center text-rose-400">
+                            <div className="py-16 text-center text-rose-400 font-semibold text-xs my-auto">
                                 Nepodařilo se načíst data přihlášky.
                             </div>
                         ) : (
                             <div className="space-y-6">
                                 {/* Header Details */}
-                                <div className="border-b border-slate-800 pb-5">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <span className={`px-2.5 py-0.5 text-xs font-mono font-bold rounded bg-slate-950 border border-slate-800 ${
-                                            selectedApp.status === 'APPROVED' ? 'text-emerald-400' :
-                                            selectedApp.status === 'REJECTED' ? 'text-rose-400' :
-                                            'text-amber-400'
+                                <div className="border-b border-slate-900/60 pb-5">
+                                    <div className="flex items-center justify-between mb-2.5">
+                                        <span className={`px-2.5 py-0.5 text-[9px] font-mono font-bold rounded uppercase border inline-flex items-center gap-1.5 ${
+                                            selectedApp.status === 'APPROVED' ? 'text-emerald-400 bg-emerald-500/5 border-emerald-500/20' :
+                                            selectedApp.status === 'REJECTED' ? 'text-rose-400 bg-rose-500/5 border-rose-500/20' :
+                                            'text-amber-400 bg-amber-500/5 border-amber-500/20'
                                         }`}>
-                                            STATUS: {selectedApp.status}
+                                            <span className={`h-1 w-1 rounded-full ${
+                                                selectedApp.status === 'APPROVED' ? 'bg-emerald-400' :
+                                                selectedApp.status === 'REJECTED' ? 'bg-rose-400' :
+                                                'bg-amber-400'
+                                            }`}></span>
+                                            Stav: {selectedApp.status}
                                         </span>
-                                        <span className="text-xs text-slate-500">{selectedApp.submissionDate}</span>
+                                        <span className="text-[10px] text-slate-500 font-semibold">{selectedApp.submissionDate}</span>
                                     </div>
-                                    <h2 className="text-xl font-bold text-white leading-tight">{appDetails.companyName}</h2>
-                                    <p className="text-slate-400 text-sm mt-1">{appDetails.email}</p>
+                                    <h2 className="text-lg font-extrabold text-white leading-tight tracking-tight">{appDetails.companyName}</h2>
+                                    <p className="text-slate-400 text-xs mt-1.5 font-medium">{appDetails.email}</p>
                                 </div>
 
                                 {actionSuccess && (
-                                    <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm rounded-xl font-medium">
+                                    <div className="p-3.5 bg-emerald-500/5 border border-emerald-500/20 text-emerald-400 text-xs rounded-xl font-bold leading-relaxed">
                                         {actionSuccess}
                                     </div>
                                 )}
@@ -670,9 +698,9 @@ export default function Admin({ onGoBack }) {
                                 <div className="grid grid-cols-2 gap-3">
                                     <button
                                         onClick={() => window.open(`/api/khk/admin/pdf?id=${selectedApp.id}`, '_blank')}
-                                        className="col-span-2 py-3 bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-white rounded-xl text-sm font-bold flex items-center justify-center space-x-2 transition-all cursor-pointer"
+                                        className="col-span-2 py-3 bg-slate-950/60 hover:bg-slate-950 border border-slate-900 hover:border-slate-800 text-white rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition-all active:scale-[0.98] cursor-pointer"
                                     >
-                                        <svg className="h-5 w-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <svg className="h-4.5 w-4.5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                         </svg>
                                         <span>Zobrazit / Stáhnout PDF</span>
@@ -683,14 +711,14 @@ export default function Admin({ onGoBack }) {
                                             <button
                                                 disabled={actionLoading}
                                                 onClick={handleApprove}
-                                                className="py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 rounded-xl text-sm font-extrabold shadow-lg shadow-emerald-950/20 active:scale-95 disabled:opacity-50 transition-all cursor-pointer"
+                                                className="py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 rounded-xl text-xs font-extrabold shadow-lg shadow-emerald-500/10 active:scale-[0.98] disabled:opacity-50 transition-all cursor-pointer"
                                             >
                                                 {actionLoading ? 'Schvalování...' : 'Schválit'}
                                             </button>
                                             <button
                                                 disabled={actionLoading}
                                                 onClick={() => handleSetStatus('REJECTED')}
-                                                className="py-3 bg-rose-600/10 hover:bg-rose-600/25 border border-rose-500/30 hover:border-rose-500/50 text-rose-400 rounded-xl text-sm font-bold active:scale-95 disabled:opacity-50 transition-all cursor-pointer"
+                                                className="py-3 bg-rose-500/5 hover:bg-rose-500/10 border border-rose-500/20 hover:border-rose-500/40 text-rose-400 rounded-xl text-xs font-bold active:scale-[0.98] disabled:opacity-50 transition-all cursor-pointer"
                                             >
                                                 {actionLoading ? 'Zpracování...' : 'Zamítnout'}
                                             </button>
@@ -701,7 +729,7 @@ export default function Admin({ onGoBack }) {
                                         <button
                                             disabled={actionLoading}
                                             onClick={() => handleSetStatus('PENDING')}
-                                            className="col-span-2 py-3 bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-300 rounded-xl text-sm font-semibold active:scale-95 disabled:opacity-50 transition-all cursor-pointer"
+                                            className="col-span-2 py-3 bg-slate-950/60 hover:bg-slate-950 border border-slate-900 hover:border-slate-800 text-slate-300 rounded-xl text-xs font-bold active:scale-[0.98] disabled:opacity-50 transition-all cursor-pointer"
                                         >
                                             {actionLoading ? 'Ukládání...' : 'Přesunout zpět do čekajících'}
                                         </button>
@@ -709,90 +737,105 @@ export default function Admin({ onGoBack }) {
                                 </div>
 
                                 {/* Information Sections */}
-                                <div className="space-y-5 text-sm">
+                                <div className="space-y-4 text-xs">
                                     {/* Section 1: Firm & ID */}
-                                    <div className="space-y-3 bg-slate-950/60 p-4 border border-slate-800/80 rounded-2xl">
-                                        <h3 className="font-bold text-amber-500 text-xs tracking-wider uppercase">Firma a identifikační údaje</h3>
-                                        <div className="grid grid-cols-2 gap-3 text-xs">
+                                    <div className="space-y-4 bg-slate-900/20 backdrop-blur-sm p-5 border border-slate-900/60 rounded-2xl transition-all hover:border-slate-800/80">
+                                        <div className="flex items-center justify-between border-b border-slate-900/50 pb-2">
+                                            <h3 className="font-bold text-amber-500 text-xs tracking-wider uppercase">Firma a identifikační údaje</h3>
+                                            <svg className="h-4 w-4 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                            </svg>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-xs">
                                             <div>
-                                                <p className="text-slate-500 font-medium">IČO</p>
-                                                <p className="text-white font-bold font-mono mt-0.5">{appDetails.ic}</p>
+                                                <p className="text-slate-500 font-semibold tracking-wide">IČO</p>
+                                                <p className="text-slate-200 font-bold font-mono mt-1 bg-slate-950/40 px-2 py-0.5 rounded border border-slate-900 inline-block">{appDetails.ic}</p>
                                             </div>
                                             <div>
-                                                <p className="text-slate-500 font-medium">DIČ</p>
-                                                <p className="text-white font-bold font-mono mt-0.5">{appDetails.dic || '-'}</p>
+                                                <p className="text-slate-500 font-semibold tracking-wide">DIČ</p>
+                                                <p className="text-slate-200 font-bold font-mono mt-1 bg-slate-950/40 px-2 py-0.5 rounded border border-slate-900 inline-block">{appDetails.dic || '-'}</p>
                                             </div>
-                                            <div className="col-span-2">
-                                                <p className="text-slate-500 font-medium">Právní forma</p>
-                                                <p className="text-white mt-0.5">{appDetails.legalForm || '-'}</p>
+                                            <div className="col-span-2 border-t border-slate-900/30 pt-2">
+                                                <p className="text-slate-500 font-semibold tracking-wide">Právní forma</p>
+                                                <p className="text-slate-200 mt-1 font-medium leading-relaxed">{appDetails.legalForm || '-'}</p>
                                             </div>
-                                            <div className="col-span-2">
-                                                <p className="text-slate-500 font-medium">Sídlo</p>
-                                                <p className="text-white mt-0.5">
+                                            <div className="col-span-2 border-t border-slate-900/30 pt-2">
+                                                <p className="text-slate-500 font-semibold tracking-wide">Sídlo</p>
+                                                <p className="text-slate-200 mt-1 font-medium leading-relaxed">
                                                     {appDetails.streetAndNumber}, {appDetails.city}, {appDetails.postalCode}
                                                 </p>
-                                                {appDetails.region && <p className="text-slate-400 text-[10px] mt-0.5">Kraj: {appDetails.region}</p>}
+                                                {appDetails.region && <p className="text-[10px] text-slate-500 font-semibold bg-slate-950/30 px-2 py-0.5 rounded border border-slate-900 mt-1.5 inline-block">Kraj: {appDetails.region}</p>}
                                             </div>
                                             {appDetails.lat && appDetails.lon && (
-                                                <div className="col-span-2">
-                                                    <p className="text-slate-500 font-medium">GPS Souřadnice</p>
-                                                    <p className="text-white font-mono mt-0.5">{appDetails.lat}, {appDetails.lon}</p>
+                                                <div className="col-span-2 border-t border-slate-900/30 pt-2">
+                                                    <p className="text-slate-500 font-semibold tracking-wide">GPS Souřadnice</p>
+                                                    <p className="text-amber-300/80 font-mono mt-1 bg-slate-950/40 px-2 py-0.5 rounded border border-slate-900 inline-block">{appDetails.lat}, {appDetails.lon}</p>
                                                 </div>
                                             )}
                                         </div>
                                     </div>
 
                                     {/* Section 2: Contact Details */}
-                                    <div className="space-y-3 bg-slate-950/60 p-4 border border-slate-800/80 rounded-2xl">
-                                        <h3 className="font-bold text-amber-500 text-xs tracking-wider uppercase">Kontaktní informace</h3>
+                                    <div className="space-y-4 bg-slate-900/20 backdrop-blur-sm p-5 border border-slate-900/60 rounded-2xl transition-all hover:border-slate-800/80">
+                                        <div className="flex items-center justify-between border-b border-slate-900/50 pb-2">
+                                            <h3 className="font-bold text-amber-500 text-xs tracking-wider uppercase">Kontaktní informace</h3>
+                                            <svg className="h-4 w-4 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                            </svg>
+                                        </div>
                                         <div className="space-y-2 text-xs">
-                                            <div className="flex items-center justify-between border-b border-slate-900 pb-1.5">
-                                                <span className="text-slate-500">Telefon</span>
-                                                <span className="text-white font-bold font-mono">{appDetails.phone}</span>
+                                            <div className="flex items-center justify-between border-b border-slate-900/30 pb-2">
+                                                <span className="text-slate-500 font-semibold">Telefon</span>
+                                                <span className="text-white font-bold font-mono bg-slate-950/40 px-2.5 py-0.5 rounded border border-slate-900">{appDetails.phone}</span>
                                             </div>
-                                            <div className="flex items-center justify-between border-b border-slate-900 pb-1.5">
-                                                <span className="text-slate-500">E-mail</span>
+                                            <div className="flex items-center justify-between border-b border-slate-900/30 pb-2">
+                                                <span className="text-slate-500 font-semibold">E-mail</span>
                                                 <span className="text-white font-bold">{appDetails.email}</span>
                                             </div>
                                             {appDetails.website && (
-                                                <div className="flex items-center justify-between">
-                                                    <span className="text-slate-500">Web</span>
-                                                    <a href={appDetails.website.startsWith('http') ? appDetails.website : `https://${appDetails.website}`} target="_blank" rel="noreferrer" className="text-amber-400 hover:underline">
+                                                <div className="flex items-center justify-between border-b border-slate-900/30 pb-2">
+                                                    <span className="text-slate-500 font-semibold">Web</span>
+                                                    <a href={appDetails.website.startsWith('http') ? appDetails.website : `https://${appDetails.website}`} target="_blank" rel="noreferrer" className="text-amber-400 hover:text-amber-300 font-bold hover:underline">
                                                         {appDetails.website}
                                                     </a>
                                                 </div>
                                             )}
                                             {appDetails.dataBoxId && (
-                                                <div className="flex items-center justify-between border-t border-slate-900 pt-1.5">
-                                                    <span className="text-slate-500">Datová schránka</span>
-                                                    <span className="text-white font-mono font-semibold">{appDetails.dataBoxId}</span>
+                                                <div className="flex items-center justify-between pt-1">
+                                                    <span className="text-slate-500 font-semibold">Datová schránka</span>
+                                                    <span className="text-white font-mono font-bold bg-slate-950/40 px-2 py-0.5 rounded border border-slate-900">{appDetails.dataBoxId}</span>
                                                 </div>
                                             )}
                                         </div>
                                     </div>
 
                                     {/* Section 3: Statutory Representative */}
-                                    <div className="space-y-3 bg-slate-950/60 p-4 border border-slate-800/80 rounded-2xl">
-                                        <h3 className="font-bold text-amber-500 text-xs tracking-wider uppercase">Statutární zástupce</h3>
+                                    <div className="space-y-4 bg-slate-900/20 backdrop-blur-sm p-5 border border-slate-900/60 rounded-2xl transition-all hover:border-slate-800/80">
+                                        <div className="flex items-center justify-between border-b border-slate-900/50 pb-2">
+                                            <h3 className="font-bold text-amber-500 text-xs tracking-wider uppercase">Statutární zástupce</h3>
+                                            <svg className="h-4 w-4 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                            </svg>
+                                        </div>
                                         <div className="space-y-2 text-xs">
                                             <div>
-                                                <p className="text-slate-500 font-medium">Jméno</p>
-                                                <p className="text-white font-semibold mt-0.5">{appDetails.statutoryRepresentative}</p>
+                                                <p className="text-slate-500 font-semibold tracking-wide">Jméno</p>
+                                                <p className="text-white font-bold mt-1 text-sm">{appDetails.statutoryRepresentative}</p>
                                             </div>
                                             {appDetails.statutoryRepresentativeRole && (
-                                                <div>
-                                                    <p className="text-slate-500 font-medium">Funkce</p>
-                                                    <p className="text-slate-300 mt-0.5">{appDetails.statutoryRepresentativeRole}</p>
+                                                <div className="border-t border-slate-900/30 pt-2">
+                                                    <p className="text-slate-500 font-semibold tracking-wide">Funkce</p>
+                                                    <p className="text-slate-300 mt-1 font-medium">{appDetails.statutoryRepresentativeRole}</p>
                                                 </div>
                                             )}
-                                            <div className="grid grid-cols-2 gap-3 pt-1 border-t border-slate-900">
+                                            <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-900/40">
                                                 <div>
-                                                    <p className="text-slate-500 font-medium">Telefon</p>
-                                                    <p className="text-white font-mono mt-0.5">{appDetails.statutoryRepresentativePhone || '-'}</p>
+                                                    <p className="text-slate-500 font-semibold tracking-wide">Telefon</p>
+                                                    <p className="text-white font-mono font-bold mt-1">{appDetails.statutoryRepresentativePhone || '-'}</p>
                                                 </div>
                                                 <div>
-                                                    <p className="text-slate-500 font-medium">E-mail</p>
-                                                    <p className="text-white mt-0.5 break-all">{appDetails.statutoryRepresentativeEmail || '-'}</p>
+                                                    <p className="text-slate-500 font-semibold tracking-wide">E-mail</p>
+                                                    <p className="text-white font-semibold mt-1 break-all">{appDetails.statutoryRepresentativeEmail || '-'}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -800,27 +843,32 @@ export default function Admin({ onGoBack }) {
 
                                     {/* Section 4: Meeting Representative */}
                                     {appDetails.communicationRepresentativeName && (
-                                        <div className="space-y-3 bg-slate-950/60 p-4 border border-slate-800/80 rounded-2xl">
-                                            <h3 className="font-bold text-amber-500 text-xs tracking-wider uppercase">Zástupce pro komunikaci s KHK PK</h3>
+                                        <div className="space-y-4 bg-slate-900/20 backdrop-blur-sm p-5 border border-slate-900/60 rounded-2xl transition-all hover:border-slate-800/80">
+                                            <div className="flex items-center justify-between border-b border-slate-900/50 pb-2">
+                                                <h3 className="font-bold text-amber-500 text-xs tracking-wider uppercase">Zástupce pro komunikaci s KHK PK</h3>
+                                                <svg className="h-4 w-4 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                                </svg>
+                                            </div>
                                             <div className="space-y-2 text-xs">
                                                 <div>
-                                                    <p className="text-slate-500 font-medium">Jméno</p>
-                                                    <p className="text-white font-semibold mt-0.5">{appDetails.communicationRepresentativeName}</p>
+                                                    <p className="text-slate-500 font-semibold tracking-wide">Jméno</p>
+                                                    <p className="text-white font-bold mt-1 text-sm">{appDetails.communicationRepresentativeName}</p>
                                                 </div>
                                                 {appDetails.communicationRepresentativeRole && (
-                                                    <div>
-                                                        <p className="text-slate-500 font-medium">Funkce</p>
-                                                        <p className="text-slate-300 mt-0.5">{appDetails.communicationRepresentativeRole}</p>
+                                                    <div className="border-t border-slate-900/30 pt-2">
+                                                        <p className="text-slate-500 font-semibold tracking-wide">Funkce</p>
+                                                        <p className="text-slate-300 mt-1 font-medium">{appDetails.communicationRepresentativeRole}</p>
                                                     </div>
                                                 )}
-                                                <div className="grid grid-cols-2 gap-3 pt-1 border-t border-slate-900">
+                                                <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-900/40">
                                                     <div>
-                                                        <p className="text-slate-500 font-medium">Telefon</p>
-                                                        <p className="text-white font-mono mt-0.5">{appDetails.communicationRepresentativePhone || '-'}</p>
+                                                        <p className="text-slate-500 font-semibold tracking-wide">Telefon</p>
+                                                        <p className="text-white font-mono font-bold mt-1">{appDetails.communicationRepresentativePhone || '-'}</p>
                                                     </div>
                                                     <div>
-                                                        <p className="text-slate-500 font-medium">E-mail</p>
-                                                        <p className="text-white mt-0.5 break-all">{appDetails.communicationRepresentativeEmail || '-'}</p>
+                                                        <p className="text-slate-500 font-semibold tracking-wide">E-mail</p>
+                                                        <p className="text-white font-semibold mt-1 break-all">{appDetails.communicationRepresentativeEmail || '-'}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -828,60 +876,70 @@ export default function Admin({ onGoBack }) {
                                     )}
 
                                     {/* Section 5: Business operations */}
-                                    <div className="space-y-3 bg-slate-950/60 p-4 border border-slate-800/80 rounded-2xl">
-                                        <h3 className="font-bold text-amber-500 text-xs tracking-wider uppercase">Podnikání a obrat</h3>
-                                        <div className="grid grid-cols-2 gap-3 text-xs">
+                                    <div className="space-y-4 bg-slate-900/20 backdrop-blur-sm p-5 border border-slate-900/60 rounded-2xl transition-all hover:border-slate-800/80">
+                                        <div className="flex items-center justify-between border-b border-slate-900/50 pb-2">
+                                            <h3 className="font-bold text-amber-500 text-xs tracking-wider uppercase">Podnikání a obrat</h3>
+                                            <svg className="h-4 w-4 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                            </svg>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-xs">
                                             <div>
-                                                <p className="text-slate-500 font-medium">Počet zaměstnanců</p>
-                                                <p className="text-white font-semibold mt-0.5">{appDetails.employeeCount || '-'}</p>
+                                                <p className="text-slate-500 font-semibold tracking-wide">Zaměstnanci</p>
+                                                <p className="text-white font-bold mt-1 text-sm bg-slate-950/40 px-2.5 py-0.5 rounded border border-slate-900 inline-block">{appDetails.employeeCount || '-'}</p>
                                             </div>
                                             <div>
-                                                <p className="text-slate-500 font-medium">Čistý obrat (Kč)</p>
-                                                <p className="text-white font-semibold mt-0.5">{appDetails.netTurnoverCzk || '-'}</p>
+                                                <p className="text-slate-500 font-semibold tracking-wide">Čistý obrat (Kč)</p>
+                                                <p className="text-white font-bold mt-1 text-sm bg-slate-950/40 px-2.5 py-0.5 rounded border border-slate-900 inline-block">{appDetails.netTurnoverCzk || '-'}</p>
                                             </div>
-                                            <div className="col-span-2 border-t border-slate-900 pt-1.5">
-                                                <p className="text-slate-500 font-medium">Obor činnosti</p>
-                                                <p className="text-white mt-0.5">{appDetails.fieldOfActivity || '-'}</p>
+                                            <div className="col-span-2 border-t border-slate-900/30 pt-2">
+                                                <p className="text-slate-500 font-semibold tracking-wide">Obor činnosti</p>
+                                                <p className="text-slate-200 mt-1 font-medium leading-relaxed">{appDetails.fieldOfActivity || '-'}</p>
                                             </div>
-                                            <div className="col-span-2">
-                                                <p className="text-slate-500 font-medium">Převažující obor činnosti (CZ-NACE)</p>
-                                                <p className="text-white mt-0.5">{appDetails.czNace || '-'}</p>
+                                            <div className="col-span-2 border-t border-slate-900/30 pt-2">
+                                                <p className="text-slate-500 font-semibold tracking-wide">CZ-NACE</p>
+                                                <p className="text-slate-200 mt-1 font-medium leading-relaxed font-mono text-[11px] bg-slate-950/30 p-2 rounded border border-slate-900">{appDetails.czNace || '-'}</p>
                                             </div>
                                             {appDetails.productsAndServicesSpecification && (
-                                                <div className="col-span-2">
-                                                    <p className="text-slate-500 font-medium font-semibold">Specifikace produktů a služeb</p>
-                                                    <p className="text-slate-300 mt-1 bg-slate-900 p-2.5 rounded-xl border border-slate-800/50 whitespace-pre-wrap">{appDetails.productsAndServicesSpecification}</p>
+                                                <div className="col-span-2 border-t border-slate-900/30 pt-2">
+                                                    <p className="text-slate-500 font-semibold tracking-wide mb-1.5">Specifikace produktů a služeb</p>
+                                                    <p className="text-slate-300 bg-slate-950/40 p-3 rounded-xl border border-slate-900 whitespace-pre-wrap leading-relaxed">{appDetails.productsAndServicesSpecification}</p>
                                                 </div>
                                             )}
                                             {appDetails.exportCountries && (
-                                                <div className="col-span-2 border-t border-slate-900 pt-1.5">
-                                                    <p className="text-slate-500 font-medium">Exportní země</p>
-                                                    <p className="text-amber-200 mt-0.5 font-medium">{appDetails.exportCountries}</p>
+                                                <div className="col-span-2 border-t border-slate-900/30 pt-2">
+                                                    <p className="text-slate-500 font-semibold tracking-wide">Exportní země</p>
+                                                    <p className="text-amber-200 mt-1 font-bold">{appDetails.exportCountries}</p>
                                                 </div>
                                             )}
                                         </div>
                                     </div>
 
                                     {/* Section 6: Additional mailing / billing */}
-                                    <div className="space-y-3 bg-slate-950/60 p-4 border border-slate-800/80 rounded-2xl">
-                                        <h3 className="font-bold text-amber-500 text-xs tracking-wider uppercase">Faktury a mailing</h3>
+                                    <div className="space-y-4 bg-slate-900/20 backdrop-blur-sm p-5 border border-slate-900/60 rounded-2xl transition-all hover:border-slate-800/80">
+                                        <div className="flex items-center justify-between border-b border-slate-900/50 pb-2">
+                                            <h3 className="font-bold text-amber-500 text-xs tracking-wider uppercase">Faktury a mailing</h3>
+                                            <svg className="h-4 w-4 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                            </svg>
+                                        </div>
                                         <div className="space-y-2 text-xs">
                                             {appDetails.invoiceEmail && (
-                                                <div className="flex items-center justify-between border-b border-slate-900 pb-1.5">
-                                                    <span className="text-slate-500">Email pro faktury</span>
-                                                    <span className="text-white font-semibold">{appDetails.invoiceEmail}</span>
+                                                <div className="flex items-center justify-between border-b border-slate-900/30 pb-2">
+                                                    <span className="text-slate-500 font-semibold">Email pro faktury</span>
+                                                    <span className="text-white font-bold">{appDetails.invoiceEmail}</span>
                                                 </div>
                                             )}
                                             {appDetails.newsletterEmail && (
-                                                <div className="flex items-center justify-between border-b border-slate-900 pb-1.5">
-                                                    <span className="text-slate-500">Email pro newsletter</span>
-                                                    <span className="text-white font-semibold">{appDetails.newsletterEmail}</span>
+                                                <div className="flex items-center justify-between border-b border-slate-900/30 pb-2">
+                                                    <span className="text-slate-500 font-semibold">Email pro newsletter</span>
+                                                    <span className="text-white font-bold">{appDetails.newsletterEmail}</span>
                                                 </div>
                                             )}
                                             {appDetails.monitorMailingInterest && (
                                                 <div className="flex items-center justify-between">
-                                                    <span className="text-slate-500">Zasílání monitoru</span>
-                                                    <span className="text-white font-semibold">{appDetails.monitorMailingInterest}</span>
+                                                    <span className="text-slate-500 font-semibold">Zasílání monitoru</span>
+                                                    <span className="text-white font-bold bg-slate-950/40 px-2 py-0.5 rounded border border-slate-900">{appDetails.monitorMailingInterest}</span>
                                                 </div>
                                             )}
                                         </div>
