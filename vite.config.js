@@ -12,7 +12,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: "../backend/src/main/resources/static/khk",
+    outDir: "../new-web-backend/src/main/resources/static/khk",
     emptyOutDir: true,
   },
   server: {

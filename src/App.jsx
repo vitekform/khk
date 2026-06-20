@@ -1,13 +1,33 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import countryList from "react-select-country-list";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 import { LEGAL_FORM_OPTIONS } from './legalForms';
 import { INDUSTRY_OPTIONS } from './industryOptions';
+import Admin from './Admin';
 
 
 function App() {
+
+    const [currentPath, setCurrentPath] = useState(window.location.pathname);
+
+    useEffect(() => {
+        const handlePopState = () => {
+            setCurrentPath(window.location.pathname);
+        };
+        window.addEventListener('popstate', handlePopState);
+        return () => window.removeEventListener('popstate', handlePopState);
+    }, []);
+
+    const navigate = (path) => {
+        window.history.pushState(null, '', path);
+        setCurrentPath(path);
+    };
+
+    if (currentPath === '/admin' || currentPath.startsWith('/admin/')) {
+        return <Admin onGoBack={() => navigate('/')} />;
+    }
 
     const [isLoading, setIsLoading] = useState(false)
     const [ico, setIco] = useState("")
@@ -695,6 +715,30 @@ function App() {
                         </button>
                     </div>
                 </form>
+
+                <div style={{ textAlign: 'center', marginTop: '40px' }}>
+                    <button 
+                        type="button"
+                        onClick={() => navigate('/admin')}
+                        style={{
+                            background: 'transparent',
+                            border: 'none',
+                            color: '#78909c',
+                            fontSize: '14px',
+                            fontWeight: '500',
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px'
+                        }}
+                        className="hover:text-blue-600 transition-colors"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" style={{ width: '16px', height: '16px' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        Administrační rozhraní
+                    </button>
+                </div>
             </div>
         </div>
     </>
